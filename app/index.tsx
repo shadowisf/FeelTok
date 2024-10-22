@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Image, View, ScrollView } from "react-native";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
-import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomerButton";
 import { router } from "expo-router";
@@ -11,9 +11,9 @@ export default function Index() {
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
-        <StatusBar style="dark" />
-
         <View style={{ ...defaultStyle.container, ...styles.container }}>
+          <StatusBar barStyle={"dark-content"} />
+
           <Text style={{ ...defaultStyle.h1, ...styles.feeltok }}>
             FeelTok!
           </Text>
@@ -27,6 +27,7 @@ export default function Index() {
           <Text style={{ ...defaultStyle.h3, ...styles.tagline }}>
             Feel the need, {"\n"} knead the feel
           </Text>
+
           <Text style={defaultStyle.body}>
             Nurture deeper connections through love, gratitude, apology,
             appreciation, mindfulness and thankfulness.

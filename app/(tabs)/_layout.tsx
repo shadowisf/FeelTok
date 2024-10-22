@@ -3,7 +3,14 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { defaultIcons } from "@/constants/defaultStuff";
 
-function TabIcon({ name, icon, color, focused }) {
+type TabIconProps = {
+  name: string;
+  icon: any;
+  color: string;
+  focused: boolean;
+};
+
+function TabIcon({ name, icon, color, focused }: TabIconProps) {
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Image
