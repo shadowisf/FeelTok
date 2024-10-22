@@ -34,7 +34,7 @@ export default function Index() {
           </Text>
 
           <CustomButton
-            label={"Continue with email"}
+            label={"Continue with Email"}
             handlePress={() => {
               router.push("/signIn");
             }}

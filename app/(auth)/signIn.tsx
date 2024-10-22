@@ -41,7 +41,7 @@ export default function SignIn() {
 
   return (
     <SafeAreaView>
-      <ScrollView style={defaultStyle.scrollContainer}>
+      <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
         <View style={{ ...defaultStyle.container, ...styles.container }}>
           <StatusBar barStyle={"dark-content"} />
 
@@ -78,7 +78,7 @@ export default function SignIn() {
             isLoading={isSubmitting}
           />
 
-          <Text style={defaultStyle.body}>
+          <Text style={{ ...defaultStyle.body, ...styles.bottomText }}>
             Don't have an account?{" "}
             <Link style={styles.signup} href="/signUp">
               Sign up
@@ -92,6 +92,7 @@ export default function SignIn() {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "center",
     gap: 25,
   },
 
@@ -107,5 +108,9 @@ const styles = StyleSheet.create({
   signup: {
     color: defaultColors.primary,
     fontWeight: "bold",
+  },
+
+  bottomText: {
+    textAlign: "center",
   },
 });

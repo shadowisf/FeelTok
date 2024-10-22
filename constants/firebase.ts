@@ -1,5 +1,6 @@
 import { initializeApp } from "@firebase/app";
 import { getAuth } from "@firebase/auth";
+import { doc, getDoc, getFirestore } from "@firebase/firestore";
 
 const config = {
   apiKey: "AIzaSyBchBa1_Cs5HoARMfUoUtNma5i9QMBUcFU",
@@ -13,4 +14,20 @@ const config = {
 /* setLogLevel("silent"); */
 
 export const firebase = initializeApp(config);
+export const firestore = getFirestore(firebase);
 export const auth = getAuth(firebase);
+
+export async function getFullName(uid: string) {
+  try {
+    const docRef = doc(firestore, "users", uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data().fullName;
+    } else {
+      console.log("no such document!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
