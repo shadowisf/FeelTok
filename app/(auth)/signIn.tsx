@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  StatusBar,
-  Alert,
-} from "react-native";
+import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
@@ -14,6 +7,7 @@ import CustomButton from "@/components/CustomerButton";
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import { Link, router } from "expo-router";
 import { auth } from "@/constants/firebase";
+import { StatusBar } from "expo-status-bar";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -36,6 +30,7 @@ export default function SignIn() {
     } catch (error) {
       Alert.alert("Error", "Incorrect credentials. Please try again.");
     }
+
     setIsSubmitting(false);
   }
 
@@ -43,7 +38,7 @@ export default function SignIn() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
         <View style={{ ...defaultStyle.container, ...styles.container }}>
-          <StatusBar barStyle={"dark-content"} />
+          <StatusBar style={"auto"} />
 
           <Text style={{ ...defaultStyle.h1, ...styles.feeltok }}>
             FeelTok!

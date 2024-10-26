@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Image, View, ScrollView } from "react-native";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
-import { StatusBar } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomerButton";
 import { router } from "expo-router";
@@ -12,7 +12,7 @@ export default function Index() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
         <View style={{ ...defaultStyle.container, ...styles.container }}>
-          <StatusBar barStyle={"dark-content"} />
+          <StatusBar style={"auto"} />
 
           <Text style={{ ...defaultStyle.h1, ...styles.feeltok }}>
             FeelTok!
