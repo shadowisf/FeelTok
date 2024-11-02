@@ -3,9 +3,9 @@ import React from "react";
 
 type CustomInputProps = {
   label: string;
-  value: string;
-  handleChange: (e: string) => void;
-  secureText: boolean;
+  value?: string;
+  handleChange?: (e: string) => void;
+  secureText?: boolean;
 };
 
 export default function CustomInput({
