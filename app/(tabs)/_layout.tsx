@@ -1,6 +1,5 @@
 import { Image, View, Text } from "react-native";
 import { Tabs } from "expo-router";
-import React from "react";
 import { defaultIcons } from "@/constants/defaultStuff";
 
 type TabIconProps = {

@@ -8,8 +8,7 @@ export default function Home() {
     <SafeAreaView>
       <ScrollView style={defaultStyle.scrollContainer}>
         <View style={defaultStyle.container}>
-          <StatusBar style={"auto"}></StatusBar>
-
+          <StatusBar style={"auto"} />
           <Text>this is the home page</Text>
         </View>
       </ScrollView>

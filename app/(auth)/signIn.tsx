@@ -1,41 +1,55 @@
 import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 import CustomInput from "@/components/CustomInput";
-import CustomButton from "@/components/CustomerButton";
-import { signInWithEmailAndPassword } from "@firebase/auth";
+import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import { auth } from "@/constants/firebase";
+import { authenticateUser } from "@/constants/firebase";
 import { StatusBar } from "expo-status-bar";
+import Loader from "@/components/Loader";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function handleSubmit() {
-    setIsSubmitting(true);
+  useEffect(() => {
+    checkFields();
+  }, [email, password]);
 
-    try {
-      const credential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+  function checkFields() {
+    if (email && password) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }
 
-      if (credential.user) {
-        router.push("/home");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Incorrect credentials. Please try again.");
+  function clearFields() {
+    setEmail("");
+    setPassword("");
+  }
+
+  async function handleSignIn() {
+    setIsLoading(true);
+    setIsDisabled(true);
+
+    const result = await authenticateUser({ email, password });
+
+    if (result === "ok") {
+      clearFields();
+      router.replace("/home");
     }
 
-    setIsSubmitting(false);
+    setIsLoading(false);
+    setIsDisabled(false);
   }
 
   return (
     <SafeAreaView>
+      <Loader isVisible={isLoading} />
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
         <View style={{ ...defaultStyle.container, ...styles.container }}>
           <StatusBar style={"auto"} />
@@ -66,16 +80,16 @@ export default function SignIn() {
           />
 
           <CustomButton
-            label={"Sign in"}
+            label={"Sign In"}
             handlePress={() => {
-              handleSubmit();
+              handleSignIn();
             }}
-            isLoading={isSubmitting}
+            isDisabled={isDisabled}
           />
 
           <Text style={{ ...defaultStyle.body, ...styles.bottomText }}>
             Don't have an account?{" "}
-            <Link style={styles.signup} href="/signUp">
+            <Link replace style={styles.signup} href="/signUp">
               Sign up
             </Link>
           </Text>
@@ -87,7 +101,6 @@ export default function SignIn() {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
     gap: 25,
   },
 

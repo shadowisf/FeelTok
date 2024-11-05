@@ -2,10 +2,8 @@ import { StyleSheet, Text, Image, View, ScrollView } from "react-native";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomButton from "@/components/CustomerButton";
+import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
-
-const splashImage = require("../assets/images/onboardSplash.png");
 
 export default function Index() {
   return (
@@ -19,7 +17,7 @@ export default function Index() {
           </Text>
 
           <Image
-            source={splashImage}
+            source={require("../assets/images/onboard-splash.png")}
             resizeMode="contain"
             style={styles.image}
           />
@@ -36,9 +34,9 @@ export default function Index() {
           <CustomButton
             label={"Continue with Email"}
             handlePress={() => {
-              router.push("/signIn");
+              router.navigate("/signIn");
             }}
-            isLoading={false}
+            isDisabled={false}
           />
         </View>
       </ScrollView>

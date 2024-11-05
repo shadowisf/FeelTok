@@ -3,25 +3,25 @@ import React from "react";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 
 type CustomButtonProps = {
-  label: string;
+  label: React.ReactNode;
   handlePress: () => void;
-  isLoading: boolean;
+  isDisabled: boolean;
 };
 
 export default function CustomButton({
   label,
   handlePress,
-  isLoading,
+  isDisabled,
 }: CustomButtonProps) {
   return (
     <TouchableOpacity
       style={{
         ...styles.button,
-        opacity: isLoading ? 0.25 : 1,
+        opacity: isDisabled ? 0.25 : 1,
       }}
       onPress={handlePress}
       activeOpacity={0.75}
-      disabled={isLoading}
+      disabled={isDisabled}
     >
       <Text style={{ ...styles.label, ...defaultStyle.body }}>{label}</Text>
     </TouchableOpacity>

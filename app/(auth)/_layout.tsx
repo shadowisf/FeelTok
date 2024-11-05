@@ -1,14 +1,39 @@
-import { StyleSheet } from "react-native";
-import { Stack } from "expo-router";
+import { Button, StyleSheet } from "react-native";
+import { router, Stack } from "expo-router";
 
 export default function AuthLaytout() {
   return (
     <Stack>
       <Stack.Screen
         name="signIn"
-        options={{ headerShown: false, headerLeft: () => null }}
+        options={{
+          headerTitle: "",
+          headerLeft: () => (
+            <Button
+              onPress={() => {
+                router.back();
+              }}
+              title="Back"
+            />
+          ),
+          gestureEnabled: false,
+        }}
       />
-      <Stack.Screen name="signUp" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="signUp"
+        options={{
+          headerTitle: "",
+          headerLeft: () => (
+            <Button
+              onPress={() => {
+                router.back();
+              }}
+              title="Back"
+            />
+          ),
+          gestureEnabled: false,
+        }}
+      />
     </Stack>
   );
 }
