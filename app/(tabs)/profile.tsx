@@ -1,10 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getUserInfo } from "@/constants/firebase";
+import { auth, getUserInfo } from "@/constants/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { defaultStyle } from "@/constants/defaultStuff";
 import Avatar from "@/components/Avatar";
 import Loader from "@/components/Loader";
+import CustomButton from "@/components/CustomButton";
+import { router } from "expo-router";
 
 export default function Profile() {
   const [fullName, setFullName] = useState("");
@@ -39,6 +41,7 @@ export default function Profile() {
 
   return (
     <SafeAreaView>
+      <Loader isVisible={isLoading} />
       <ScrollView style={defaultStyle.scrollContainer}>
         <View style={defaultStyle.container}>
           <Text>this is the profile page</Text>
@@ -47,10 +50,17 @@ export default function Profile() {
           <Text>username: {username}</Text>
           <Text>email: {email}</Text>
           <Avatar source={profilePicture} />
+
+          <CustomButton
+            label="Sign Out"
+            handlePress={() => {
+              auth.signOut();
+              router.push("/");
+            }}
+            isDisabled={false}
+          />
         </View>
       </ScrollView>
-
-      <Loader isVisible={isLoading} />
     </SafeAreaView>
   );
 }

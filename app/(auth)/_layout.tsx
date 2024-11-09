@@ -1,41 +1,24 @@
-import { Button, StyleSheet } from "react-native";
 import { router, Stack } from "expo-router";
+import { defaultIcons } from "@/constants/defaultStuff";
+import ClickableIcon from "@/components/ClickableIcon";
 
 export default function AuthLaytout() {
   return (
-    <Stack>
-      <Stack.Screen
-        name="signIn"
-        options={{
-          headerTitle: "",
-          headerLeft: () => (
-            <Button
-              onPress={() => {
-                router.back();
-              }}
-              title="Back"
-            />
-          ),
-          gestureEnabled: false,
-        }}
-      />
-      <Stack.Screen
-        name="signUp"
-        options={{
-          headerTitle: "",
-          headerLeft: () => (
-            <Button
-              onPress={() => {
-                router.back();
-              }}
-              title="Back"
-            />
-          ),
-          gestureEnabled: false,
-        }}
-      />
+    <Stack
+      screenOptions={{
+        headerTitle: "",
+        headerLeft: () => (
+          <ClickableIcon
+            icon={defaultIcons.arrowLeft}
+            onPress={() => {
+              router.back();
+            }}
+          />
+        ),
+      }}
+    >
+      <Stack.Screen name="signIn" />
+      <Stack.Screen name="signUp" />
     </Stack>
   );
 }
-
-const styles = StyleSheet.create({});

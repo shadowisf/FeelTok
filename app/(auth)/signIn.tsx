@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
@@ -70,6 +70,7 @@ export default function SignIn() {
             label={"Email"}
             secureText={false}
           />
+          
           <CustomInput
             value={password}
             handleChange={(e) => {

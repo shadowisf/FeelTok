@@ -4,10 +4,12 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
+import Loader from "@/components/Loader";
 
 export default function Index() {
   return (
     <SafeAreaView>
+      <Loader isVisible={false} />
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
         <View style={{ ...defaultStyle.container, ...styles.container }}>
           <StatusBar style={"auto"} />
