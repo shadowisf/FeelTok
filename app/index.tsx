@@ -1,7 +1,13 @@
-import { StyleSheet, Text, Image, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Image,
+  View,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
 import Loader from "@/components/Loader";
@@ -54,8 +60,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 350,
-    height: 350,
+    width: "100%",
+    height: 300,
   },
 
   feeltok: {

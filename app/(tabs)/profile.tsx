@@ -1,7 +1,6 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { auth, getUserInfo } from "@/constants/firebase";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { defaultStyle } from "@/constants/defaultStuff";
 import Avatar from "@/components/Avatar";
 import Loader from "@/components/Loader";
@@ -42,7 +41,7 @@ export default function Profile() {
   return (
     <SafeAreaView>
       <Loader isVisible={isLoading} />
-      <ScrollView style={defaultStyle.scrollContainer}>
+      <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
         <View style={defaultStyle.container}>
           <Text>this is the profile page</Text>
 

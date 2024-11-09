@@ -1,6 +1,5 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, ScrollView, StyleSheet, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
@@ -70,7 +69,7 @@ export default function SignIn() {
             label={"Email"}
             secureText={false}
           />
-          
+
           <CustomInput
             value={password}
             handleChange={(e) => {
@@ -102,6 +101,7 @@ export default function SignIn() {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 25,
     gap: 25,
   },
 
