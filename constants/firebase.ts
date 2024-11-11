@@ -86,7 +86,8 @@ export async function verifyUser({ email, password }: verifyUserProps) {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
 
-    if (result.user && result.user.emailVerified) {
+    // commenting "result.user.emailVerified" for devs to login without verifying email. uncomment if project is finalized.
+    if (result.user /* && result.user.emailVerified */) {
       return "ok";
     } else {
       Alert.alert(
