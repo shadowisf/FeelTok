@@ -1,23 +1,22 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { defaultIcons } from "@/constants/defaultStuff";
 import { TabIcon } from "@/components/TabIcon";
-import Loader from "@/components/Loader";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
-        headerShown: false,
+        tabBarStyle: { height: 100 },
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
+          title: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={defaultIcons.home}
+              icon={focused ? defaultIcons.homeFill : defaultIcons.home}
               color={color}
               focused={focused}
               name="Home"
@@ -29,10 +28,10 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="create"
         options={{
-          title: "Create",
+          title: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={defaultIcons.create}
+              icon={focused ? defaultIcons.createFill : defaultIcons.create}
               color={color}
               focused={focused}
               name="Create"
@@ -44,10 +43,10 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={defaultIcons.profile}
+              icon={focused ? defaultIcons.profileFill : defaultIcons.profile}
               color={color}
               focused={focused}
               name="Profile"

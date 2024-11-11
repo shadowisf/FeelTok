@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
+import { defaultColors } from "@/constants/defaultStuff";
 
 type CustomInputProps = {
   label: string;
@@ -15,28 +16,23 @@ export default function CustomInput({
   secureText,
 }: CustomInputProps) {
   return (
-    <View style={styles.container}>
-      <Text>{label}</Text>
-      <TextInput
-        style={styles.inputField}
-        value={value}
-        onChangeText={handleChange}
-        secureTextEntry={secureText ? true : false}
-        autoCapitalize="none"
-      />
-    </View>
+    <TextInput
+      style={styles.inputField}
+      value={value}
+      onChangeText={handleChange}
+      secureTextEntry={secureText ? true : false}
+      autoCapitalize="none"
+      placeholder={label}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 5,
-  },
-
   inputField: {
-    backgroundColor: "lightgray",
-    borderRadius: 10,
-    padding: 15,
+    padding: 15, // Padding for better alignment
+    borderRadius: 3, // Reduced radius for a tighter look
     color: "black",
+    borderColor: defaultColors.primary,
+    borderWidth: 1,
   },
 });

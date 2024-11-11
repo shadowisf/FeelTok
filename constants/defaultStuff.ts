@@ -2,9 +2,13 @@ import { StyleSheet } from "react-native";
 
 export const defaultIcons = {
   home: require("../assets/icons/home.png"),
+  homeFill: require("../assets/icons/homeFill.png"),
   create: require("../assets/icons/create.png"),
+  createFill: require("../assets/icons/createFill.png"),
   profile: require("../assets/icons/profile.png"),
-  arrowLeft: require("../assets/icons/arrow-left.png"),
+  profileFill: require("../assets/icons/profileFill.png"),
+  arrowLeft: require("../assets/icons/arrowLeft.png"),
+  settings: require("../assets/icons/settings.png"),
 };
 
 export const defaultImages = {

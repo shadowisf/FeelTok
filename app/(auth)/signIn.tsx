@@ -4,27 +4,26 @@ import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import { authenticateUser } from "@/constants/firebase";
-import { StatusBar } from "expo-status-bar";
-import Loader from "@/components/Loader";
+import { verifyUser } from "@/constants/firebase";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    function checkFields() {
+      if (email && password) {
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
+    }
+
     checkFields();
   }, [email, password]);
-
-  function checkFields() {
-    if (email && password) {
-      setIsDisabled(false);
-    } else {
-      setIsDisabled(true);
-    }
-  }
 
   function clearFields() {
     setEmail("");
@@ -33,9 +32,9 @@ export default function SignIn() {
 
   async function handleSignIn() {
     setIsLoading(true);
-    setIsDisabled(true);
+    setIsDisabled(false);
 
-    const result = await authenticateUser({ email, password });
+    const result = await verifyUser({ email, password });
 
     if (result === "ok") {
       clearFields();
@@ -48,51 +47,60 @@ export default function SignIn() {
 
   return (
     <SafeAreaView>
-      <Loader isVisible={isLoading} />
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
-        <View style={{ ...defaultStyle.container, ...styles.container }}>
-          <StatusBar style={"auto"} />
+        <View
+          style={{
+            ...defaultStyle.container,
+            ...styles.screenContainer,
+            pointerEvents: isLoading ? "none" : "auto",
+          }}
+        >
+          <View style={styles.headerContainer}>
+            <Text style={{ ...defaultStyle.h1, ...styles.header }}>
+              Welcome back!
+            </Text>
 
-          <Text style={{ ...defaultStyle.h1, ...styles.feeltok }}>
-            FeelTok!
-          </Text>
+            <Text style={{ ...defaultStyle.h5, ...styles.subHeader }}>
+              Sign-in to FeelTok
+            </Text>
+          </View>
 
-          <Text style={{ ...defaultStyle.h5, ...styles.header }}>
-            Sign-in to FeelTok
-          </Text>
+          <View style={styles.inputContainer}>
+            <CustomInput
+              value={email}
+              handleChange={(e) => {
+                setEmail(e);
+              }}
+              label={"Email"}
+              secureText={false}
+            />
 
-          <CustomInput
-            value={email}
-            handleChange={(e) => {
-              setEmail(e);
-            }}
-            label={"Email"}
-            secureText={false}
-          />
+            <CustomInput
+              value={password}
+              handleChange={(e) => {
+                setPassword(e);
+              }}
+              label={"Password"}
+              secureText={true}
+            />
+          </View>
 
-          <CustomInput
-            value={password}
-            handleChange={(e) => {
-              setPassword(e);
-            }}
-            label={"Password"}
-            secureText={true}
-          />
+          <View style={styles.buttonContainer}>
+            <CustomButton
+              label={"Sign In"}
+              handlePress={handleSignIn}
+              isLoading={isLoading}
+              isDisabled={isDisabled}
+              color={defaultColors.primary}
+            />
 
-          <CustomButton
-            label={"Sign In"}
-            handlePress={() => {
-              handleSignIn();
-            }}
-            isDisabled={isDisabled}
-          />
-
-          <Text style={{ ...defaultStyle.body, ...styles.bottomText }}>
-            Don't have an account?{" "}
-            <Link replace style={styles.signup} href="/signUp">
-              Sign up
-            </Link>
-          </Text>
+            <Text style={{ ...defaultStyle.body, ...styles.bottomText }}>
+              Don't have an account?{" "}
+              <Link replace style={styles.signUpLink} href="/signUp">
+                Sign-up
+              </Link>
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -100,26 +108,38 @@ export default function SignIn() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screenContainer: {
+    gap: 50,
     paddingTop: 25,
-    gap: 25,
   },
 
-  feeltok: {
-    fontWeight: "bold",
-    color: defaultColors.primary,
+  headerContainer: {
+    gap: 15,
+  },
+
+  inputContainer: {
+    gap: 15,
+  },
+
+  buttonContainer: {
+    gap: 15,
   },
 
   header: {
     fontWeight: "bold",
+    color: defaultColors.primary,
   },
 
-  signup: {
-    color: defaultColors.primary,
+  subHeader: {
     fontWeight: "bold",
   },
 
   bottomText: {
     textAlign: "center",
+  },
+
+  signUpLink: {
+    color: defaultColors.primary,
+    fontWeight: "bold",
   },
 });

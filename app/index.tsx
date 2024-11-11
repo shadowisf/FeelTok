@@ -7,22 +7,18 @@ import {
   SafeAreaView,
 } from "react-native";
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
-import { StatusBar } from "expo-status-bar";
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
-import Loader from "@/components/Loader";
 
 export default function Index() {
+  function handleContinueWithEmail() {
+    router.push("/signIn");
+  }
   return (
     <SafeAreaView>
-      <Loader isVisible={false} />
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
-        <View style={{ ...defaultStyle.container, ...styles.container }}>
-          <StatusBar style={"auto"} />
-
-          <Text style={{ ...defaultStyle.h1, ...styles.feeltok }}>
-            FeelTok!
-          </Text>
+        <View style={{ ...defaultStyle.container, ...styles.screenContainer }}>
+          <Text style={{ ...defaultStyle.h1, ...styles.header }}>FeelTok!</Text>
 
           <Image
             source={require("../assets/images/onboard-splash.png")}
@@ -41,10 +37,8 @@ export default function Index() {
 
           <CustomButton
             label={"Continue with Email"}
-            handlePress={() => {
-              router.navigate("/signIn");
-            }}
-            isDisabled={false}
+            handlePress={handleContinueWithEmail}
+            color={defaultColors.primary}
           />
         </View>
       </ScrollView>
@@ -53,18 +47,19 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screenContainer: {
     justifyContent: "center",
-    alignItems: "center",
     gap: 20,
   },
 
   image: {
+    alignSelf: "center",
     width: "100%",
-    height: 300,
+    height: "40%",
   },
 
-  feeltok: {
+  header: {
+    textAlign: "center",
     fontWeight: "bold",
     color: defaultColors.primary,
   },
