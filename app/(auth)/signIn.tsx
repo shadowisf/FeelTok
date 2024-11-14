@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
   screenContainer: {
     gap: 50,
     paddingTop: 25,
+    paddingBottom: 25,
   },
 
   headerContainer: {

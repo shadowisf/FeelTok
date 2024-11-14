@@ -14,6 +14,7 @@ export default function Index() {
   function handleContinueWithEmail() {
     router.push("/signIn");
   }
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>

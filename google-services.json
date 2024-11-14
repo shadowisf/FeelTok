@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1071064634777",
+    "firebase_url": "https://feeltok-9a12f-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "feeltok-9a12f",
+    "storage_bucket": "feeltok-9a12f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071064634777:android:c43a7ab7ec796799fe2f08",
+        "android_client_info": {
+          "package_name": "com.shadowisf.FeelTok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071064634777-tg9as9l7sb6o59da2ci81ts7llbhu12v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shadowisf.FeelTok",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1071064634777-379l502bp0sk52sq0affujco4dko1dne.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXZltP3Ja9FTsFLI1mm6vaTPUswV2rvRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071064634777-379l502bp0sk52sq0affujco4dko1dne.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1071064634777-an6eolqb7cf8q6kdakne9l0c8sp8lngi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shadowisf.FeelTok"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

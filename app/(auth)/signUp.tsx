@@ -107,7 +107,7 @@ export default function SignUp() {
             </Text>
 
             <Text style={{ ...defaultStyle.h5, ...styles.subHeader }}>
-              Create a new account
+              Sign-up to FeelTok
             </Text>
           </View>
 
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   screenContainer: {
     gap: 50, // Minimized gap between items
     paddingTop: 25, // Padding for better alignment
+    paddingBottom: 25,
   },
 
   headerContainer: {
