@@ -1,4 +1,4 @@
-import { router, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { defaultIcons } from "@/constants/defaultStuff";
 import { TabIcon } from "@/components/TabIcon";
 
@@ -7,7 +7,6 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: { height: 100 },
       }}
     >
       <Tabs.Screen

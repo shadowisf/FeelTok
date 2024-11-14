@@ -1,11 +1,12 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "FeelTok",
     "slug": "FeelTok",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "feeltok",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -35,10 +36,13 @@
       [
         "expo-build-properties",
         {
-          "ios": { "useFrameworks": "static" }
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ],
-      "@react-native-firebase/app"
+      "@react-native-firebase/app",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,10 +1,11 @@
-import auth, {
+import {
   FirebaseAuthTypes,
   sendEmailVerification,
   updateProfile,
 } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { Alert } from "react-native";
+import auth from "@react-native-firebase/auth";
 
 type createUserProps = {
   email: string;

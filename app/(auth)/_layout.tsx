@@ -1,6 +1,6 @@
 import { router, Stack } from "expo-router";
 import { defaultIcons } from "@/constants/defaultStuff";
-import ClickableIcon from "@/components/ClickableIcon";
+import ClickableIcon from "@/components/HeaderIcon";
 
 export default function AuthLaytout() {
   return (
