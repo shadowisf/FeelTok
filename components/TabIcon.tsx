@@ -9,7 +9,7 @@ type TabIconProps = {
 
 export function TabIcon({ name, icon, color, focused }: TabIconProps) {
   return (
-    <View style={{ alignItems: "center", justifyContent: "center" }}>
+    <View style={styles.container}>
       <Image
         source={icon}
         resizeMode="contain"
@@ -28,6 +28,12 @@ export function TabIcon({ name, icon, color, focused }: TabIconProps) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 100,
+  },
+
   icon: {
     alignItems: "center",
     justifyContent: "center",
@@ -37,6 +43,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontSize: 9,
+    fontSize: 10,
   },
 });
