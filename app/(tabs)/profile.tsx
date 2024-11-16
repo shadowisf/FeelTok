@@ -1,25 +1,34 @@
-import { ScrollView, StyleSheet, Text, View, SafeAreaView } from "react-native";
-import { defaultStyle } from "@/constants/defaultStuff";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Alert,
+  Switch,
+} from "react-native";
+import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 import CustomInput from "@/components/CustomInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CustomButton from "@/components/CustomButton";
+import auth from "@react-native-firebase/auth";
+import { readUser } from "@/constants/firebase";
 
 export default function Profile() {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isOtpEnabled, setIsOtpEnabled] = useState(false);
 
   return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
-        <View style={{ ...defaultStyle.container, ...styles.screenContainer }}>
-          <Text>this is the profile page</Text>
-
-          <CustomInput
-            label={"Phone Number"}
-            value={phoneNumber}
-            handleChange={setPhoneNumber}
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <>
+      <SafeAreaView>
+        <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
+          <View
+            style={{ ...defaultStyle.container, ...styles.screenContainer }}
+          >
+            <Switch value={isOtpEnabled} onValueChange={setIsOtpEnabled} />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 }
 

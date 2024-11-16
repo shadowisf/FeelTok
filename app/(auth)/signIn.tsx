@@ -4,106 +4,174 @@ import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import { verifyUser } from "@/constants/firebase";
+import { sendOtp, verifyOtp, verifyUser } from "@/constants/firebase";
+import auth from "@react-native-firebase/auth";
+import Dialog from "react-native-dialog";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
 
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isSignInDisabled, setIsSignInDisabled] = useState(true);
+  const [isOtpConfirmDisabled, setIsOtpConfirmDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isOtpVisible, setIsOtpVisible] = useState(false);
 
   useEffect(() => {
     function checkFields() {
+      const numbers = /^[0-9]+$/;
+
       if (email && password) {
-        setIsDisabled(false);
+        setIsSignInDisabled(false);
       } else {
-        setIsDisabled(true);
+        setIsSignInDisabled(true);
+      }
+
+      if (otp && numbers.test(otp)) {
+        setIsOtpConfirmDisabled(false);
+      } else {
+        setIsOtpConfirmDisabled(true);
       }
     }
 
     checkFields();
-  }, [email, password]);
+  }, [email, password, otp]);
 
-  function clearFields() {
+  function clearSomeFields() {
+    setPassword("");
+    setOtp("");
+  }
+
+  function clearAllFields() {
     setEmail("");
     setPassword("");
+    setOtp("");
+  }
+
+  function handleOtpCancel() {
+    clearSomeFields();
+
+    setIsOtpVisible(false);
+    setIsLoading(false);
+    setIsSignInDisabled(false);
+  }
+
+  async function handleOtpConfirm() {
+    const currentUser = auth().currentUser;
+
+    if (currentUser) {
+      const result = await verifyOtp({ otp, currentUser });
+
+      if (result === "ok") {
+        router.replace("/home");
+        clearAllFields();
+      } else {
+        setIsOtpVisible(false);
+        clearSomeFields();
+      }
+    }
+
+    setIsLoading(false);
+    setIsSignInDisabled(false);
   }
 
   async function handleSignIn() {
     setIsLoading(true);
-    setIsDisabled(false);
+    setIsSignInDisabled(false);
 
-    const result = await verifyUser({ email, password });
+    const userResult = await verifyUser({ email, password });
+    const currentUser = auth().currentUser;
 
-    if (result === "ok") {
-      clearFields();
-      router.replace("/home");
+    if (userResult === "ok" && currentUser) {
+      const otpResult = await sendOtp(currentUser);
+
+      if (otpResult === "ok") {
+        setIsOtpVisible(true);
+      }
     }
 
     setIsLoading(false);
-    setIsDisabled(false);
+    setIsSignInDisabled(false);
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
-        <View
-          style={{
-            ...defaultStyle.container,
-            ...styles.screenContainer,
-            pointerEvents: isLoading ? "none" : "auto",
-          }}
-        >
-          <View style={styles.headerContainer}>
-            <Text style={{ ...defaultStyle.h1, ...styles.header }}>
-              Welcome back!
-            </Text>
+    <>
+      <SafeAreaView>
+        <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
+          <View
+            style={{
+              ...defaultStyle.container,
+              ...styles.screenContainer,
+              pointerEvents: isLoading ? "none" : "auto",
+            }}
+          >
+            <View style={styles.headerContainer}>
+              <Text style={{ ...defaultStyle.h1, ...styles.header }}>
+                Welcome back!
+              </Text>
 
-            <Text style={{ ...defaultStyle.h5, ...styles.subHeader }}>
-              Sign-in to FeelTok
-            </Text>
+              <Text style={{ ...defaultStyle.h5, ...styles.subHeader }}>
+                Sign-in to FeelTok
+              </Text>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <CustomInput
+                value={email}
+                handleChange={setEmail}
+                label={"Email"}
+                secureText={false}
+              />
+
+              <CustomInput
+                value={password}
+                handleChange={setPassword}
+                label={"Password"}
+                secureText={true}
+              />
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <CustomButton
+                label={"Sign In"}
+                handlePress={handleSignIn}
+                isLoading={isLoading}
+                isDisabled={isSignInDisabled}
+                color={defaultColors.primary}
+              />
+
+              <Text style={{ ...defaultStyle.body, ...styles.bottomText }}>
+                Don't have an account?{" "}
+                <Link replace style={styles.signUpLink} href="/signUp">
+                  Sign-up
+                </Link>
+              </Text>
+            </View>
           </View>
+        </ScrollView>
+      </SafeAreaView>
 
-          <View style={styles.inputContainer}>
-            <CustomInput
-              value={email}
-              handleChange={(e) => {
-                setEmail(e);
-              }}
-              label={"Email"}
-              secureText={false}
-            />
-
-            <CustomInput
-              value={password}
-              handleChange={(e) => {
-                setPassword(e);
-              }}
-              label={"Password"}
-              secureText={true}
-            />
-          </View>
-
-          <View style={styles.buttonContainer}>
-            <CustomButton
-              label={"Sign In"}
-              handlePress={handleSignIn}
-              isLoading={isLoading}
-              isDisabled={isDisabled}
-              color={defaultColors.primary}
-            />
-
-            <Text style={{ ...defaultStyle.body, ...styles.bottomText }}>
-              Don't have an account?{" "}
-              <Link replace style={styles.signUpLink} href="/signUp">
-                Sign-up
-              </Link>
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <Dialog.Container visible={isOtpVisible}>
+        <Dialog.Title>Two-Factor Authentication</Dialog.Title>
+        <Dialog.Description>
+          Enter the OTP sent to your email to sign-in.
+        </Dialog.Description>
+        <Dialog.Input
+          placeholder="One-time password"
+          value={otp}
+          onChangeText={setOtp}
+          keyboardType="numeric"
+        />
+        <Dialog.Button label="Cancel" onPress={handleOtpCancel} />
+        <Dialog.Button
+          disabled={isOtpConfirmDisabled}
+          label="Confirm"
+          onPress={handleOtpConfirm}
+        />
+      </Dialog.Container>
+    </>
   );
 }
 

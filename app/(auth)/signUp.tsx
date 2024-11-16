@@ -128,36 +128,28 @@ export default function SignUp() {
 
             <CustomInput
               value={fullName}
-              handleChange={(e) => {
-                setFullName(e);
-              }}
+              handleChange={setFullName}
               label={"Full Name"}
               secureText={false}
             />
 
             <CustomInput
               value={username}
-              handleChange={(e) => {
-                setUsername(e);
-              }}
+              handleChange={setUsername}
               label={"Username"}
               secureText={false}
             />
 
             <CustomInput
               value={email}
-              handleChange={(e) => {
-                setEmail(e);
-              }}
+              handleChange={setEmail}
               label={"Email"}
               secureText={false}
             />
 
             <CustomInput
               value={password}
-              handleChange={(e) => {
-                setPassword(e);
-              }}
+              handleChange={setPassword}
               label={"Password"}
               secureText={true}
             />
@@ -166,9 +158,7 @@ export default function SignUp() {
           <View style={styles.buttonContainer}>
             <CustomButton
               label={"Sign Up"}
-              handlePress={() => {
-                handleSignUp();
-              }}
+              handlePress={handleSignUp}
               isDisabled={isSignUpDisabled}
               isLoading={isSignUpLoading}
               color={defaultColors.primary}
