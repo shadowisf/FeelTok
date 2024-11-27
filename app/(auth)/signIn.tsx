@@ -1,45 +1,73 @@
-import { View, Text, ScrollView, StyleSheet, SafeAreaView } from "react-native";
-import { useEffect, useState } from "react";
-import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  defaultColors,
+  defaultIcons,
+  defaultStyle,
+} from "@/constants/defaultStuff";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import { sendOtp, verifyOtp, verifyUser } from "@/constants/firebase";
-import auth from "@react-native-firebase/auth";
-import Dialog from "react-native-dialog";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { deleteOtp, sendOtp, verifyOtp } from "@/constants/twoFactorAuth";
+import { checkOtp } from "@/constants/twoFactorAuth";
+import { verifyUser } from "@/constants/userCRUD";
+import OtpScreen from "./otp";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
 
-  const [isSignInDisabled, setIsSignInDisabled] = useState(true);
-  const [isOtpConfirmDisabled, setIsOtpConfirmDisabled] = useState(true);
+  const [isDisabled, SetIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isOtpVisible, setIsOtpVisible] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  const [isOtp, setIsOtp] = useState(false);
+
+  const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
+
+  let content;
 
   useEffect(() => {
-    function checkFields() {
-      const numbers = /^[0-9]+$/;
-
+    function checkEmailAndPasswordFields() {
+      // checks if email and password are not empty
       if (email && password) {
-        setIsSignInDisabled(false);
+        SetIsDisabled(false);
       } else {
-        setIsSignInDisabled(true);
-      }
-
-      if (otp && numbers.test(otp)) {
-        setIsOtpConfirmDisabled(false);
-      } else {
-        setIsOtpConfirmDisabled(true);
+        SetIsDisabled(true);
       }
     }
 
-    checkFields();
-  }, [email, password, otp]);
+    checkEmailAndPasswordFields();
+    // every time email, password, and otp change; execute checkEmailAndPasswordFields()
+  }, [email, password]);
 
-  function clearSomeFields() {
+  useEffect(() => {
+    function checkOtpField() {
+      // regex for numbers 0-9
+      const numbers = /^[0-9]+$/;
+
+      // checks if otp is not empty, is numbers and has length of 6
+      if (otp && numbers.test(otp) && otp.length === 6) {
+        SetIsDisabled(false);
+      } else {
+        SetIsDisabled(true);
+      }
+    }
+
+    checkOtpField();
+  }, [otp]);
+
+  function clearImportantFields() {
     setPassword("");
     setOtp("");
   }
@@ -50,128 +78,145 @@ export default function SignIn() {
     setOtp("");
   }
 
-  function handleOtpCancel() {
-    clearSomeFields();
+  async function handleOtpCancel() {
+    clearImportantFields();
+    setIsOtp(false);
 
-    setIsOtpVisible(false);
-    setIsLoading(false);
-    setIsSignInDisabled(false);
+    // deletes otp in firestore if user cancels
+    await deleteOtp({ firebaseUser });
   }
 
   async function handleOtpConfirm() {
-    const currentUser = auth().currentUser;
+    setIsLoading(true);
 
-    if (currentUser) {
-      const result = await verifyOtp({ otp, currentUser });
+    // execute otp verification
+    const verifyOtpResult = await verifyOtp({ otp, firebaseUser });
 
-      if (result === "ok") {
-        router.replace("/home");
-        clearAllFields();
-      } else {
-        setIsOtpVisible(false);
-        clearSomeFields();
-      }
+    // if otp is verified, redirect to home
+    if (verifyOtpResult === "ok") {
+      clearAllFields();
+      router.replace("/home");
+    } else {
+      setIsOtp(false);
+      clearImportantFields();
+
+      Alert.alert("Oops!", "Incorrect OTP. Please try again.");
     }
 
     setIsLoading(false);
-    setIsSignInDisabled(false);
   }
 
   async function handleSignIn() {
     setIsLoading(true);
-    setIsSignInDisabled(false);
 
-    const userResult = await verifyUser({ email, password });
-    const currentUser = auth().currentUser;
+    // execute sign-in verification via email and password
+    const verifyUserResult = await verifyUser({
+      email,
+      password,
+    });
 
-    if (userResult === "ok" && currentUser) {
-      const otpResult = await sendOtp(currentUser);
+    if (verifyUserResult) {
+      // if sign-in is successful, check if otp is enabled
+      const checkOtpResult = await checkOtp({ firebaseUser: verifyUserResult });
 
-      if (otpResult === "ok") {
-        setIsOtpVisible(true);
+      // if otp is enabled, send otp
+      if (checkOtpResult === true) {
+        const sendOtpResult = await sendOtp({ firebaseUser: verifyUserResult });
+
+        // if otp is sent, redirect to otp screen
+        if (sendOtpResult === "ok") {
+          SetIsDisabled(true);
+          setIsOtp(true);
+        }
+      }
+
+      // if otp is disabled, redirect to home
+      if (checkOtpResult === false) {
+        router.replace("/home");
       }
     }
 
     setIsLoading(false);
-    setIsSignInDisabled(false);
+  }
+
+  // otp screen
+  if (isOtp) {
+    content = (
+      <OtpScreen
+        otp={otp}
+        setOtp={setOtp}
+        isDisabled={isDisabled}
+        isLoading={isLoading}
+        handleOtpConfirm={handleOtpConfirm}
+        handleOtpCancel={handleOtpCancel}
+      />
+    );
+  }
+
+  // sign-in screen
+  if (!isOtp) {
+    content = (
+      <>
+        <View style={styles.headerContainer}>
+          <Text style={[defaultStyle.h1, styles.header]}>Welcome back!</Text>
+
+          <Text style={[defaultStyle.h5, styles.subHeader]}>
+            Sign-in to FeelTok
+          </Text>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <CustomInput
+            value={email}
+            handleChange={setEmail}
+            label={"Email"}
+            secureText={false}
+          />
+
+          <CustomInput
+            value={password}
+            handleChange={setPassword}
+            label={"Password"}
+            secureText={true}
+          />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <CustomButton
+            label={"Sign In"}
+            handlePress={handleSignIn}
+            isLoading={isLoading}
+            isDisabled={isDisabled}
+            color={defaultColors.primary}
+          />
+
+          <Text style={[defaultStyle.body, styles.bottomText]}>
+            New to FeelTok?{" "}
+            <Link replace style={styles.signUpLink} href="/signUp">
+              Sign-up
+            </Link>
+          </Text>
+        </View>
+      </>
+    );
   }
 
   return (
-    <>
-      <SafeAreaView>
-        <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
-          <View
-            style={{
-              ...defaultStyle.container,
-              ...styles.screenContainer,
-              pointerEvents: isLoading ? "none" : "auto",
-            }}
-          >
-            <View style={styles.headerContainer}>
-              <Text style={{ ...defaultStyle.h1, ...styles.header }}>
-                Welcome back!
-              </Text>
-
-              <Text style={{ ...defaultStyle.h5, ...styles.subHeader }}>
-                Sign-in to FeelTok
-              </Text>
-            </View>
-
-            <View style={styles.inputContainer}>
-              <CustomInput
-                value={email}
-                handleChange={setEmail}
-                label={"Email"}
-                secureText={false}
-              />
-
-              <CustomInput
-                value={password}
-                handleChange={setPassword}
-                label={"Password"}
-                secureText={true}
-              />
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <CustomButton
-                label={"Sign In"}
-                handlePress={handleSignIn}
-                isLoading={isLoading}
-                isDisabled={isSignInDisabled}
-                color={defaultColors.primary}
-              />
-
-              <Text style={{ ...defaultStyle.body, ...styles.bottomText }}>
-                Don't have an account?{" "}
-                <Link replace style={styles.signUpLink} href="/signUp">
-                  Sign-up
-                </Link>
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-
-      <Dialog.Container visible={isOtpVisible}>
-        <Dialog.Title>Two-Factor Authentication</Dialog.Title>
-        <Dialog.Description>
-          Enter the OTP sent to your email to sign-in.
-        </Dialog.Description>
-        <Dialog.Input
-          placeholder="One-time password"
-          value={otp}
-          onChangeText={setOtp}
-          keyboardType="numeric"
-        />
-        <Dialog.Button label="Cancel" onPress={handleOtpCancel} />
-        <Dialog.Button
-          disabled={isOtpConfirmDisabled}
-          label="Confirm"
-          onPress={handleOtpConfirm}
-        />
-      </Dialog.Container>
-    </>
+    <SafeAreaView>
+      <ScrollView style={defaultStyle.scrollContainer}>
+        <View
+          style={[
+            defaultStyle.container,
+            styles.screenContainer,
+            {
+              pointerEvents: isLoading || isGoogleLoading ? "none" : "auto",
+            },
+          ]}
+        >
+          {content}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -210,5 +255,10 @@ const styles = StyleSheet.create({
   signUpLink: {
     color: defaultColors.primary,
     fontWeight: "bold",
+  },
+
+  socialButtonContainer: {
+    paddingTop: 50,
+    gap: 10,
   },
 });

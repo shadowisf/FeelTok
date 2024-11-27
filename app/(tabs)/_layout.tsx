@@ -1,8 +1,15 @@
-import { Tabs } from "expo-router";
-import { defaultIcons } from "@/constants/defaultStuff";
+import { router, Tabs } from "expo-router";
+import { defaultColors, defaultIcons } from "@/constants/defaultStuff";
 import { TabIcon } from "@/components/TabIcon";
+import ClickableIcon from "@/components/HeaderIcon";
+import { Image, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 export default function TabsLayout() {
+  function handleProfileSettings() {
+    router.navigate("/profile/settings");
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -21,13 +28,18 @@ export default function TabsLayout() {
               name="Home"
             />
           ),
+          headerLeft: () => (
+            <View style={{ paddingLeft: 20 }}>
+              <Image source={defaultIcons.logo} style={styles.logo} />
+            </View>
+          ),
         }}
       />
 
       <Tabs.Screen
         name="create"
         options={{
-          title: "",
+          title: "Create Post",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={focused ? defaultIcons.createFill : defaultIcons.create}
@@ -42,7 +54,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "",
+          title: "My Profile",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={focused ? defaultIcons.profileFill : defaultIcons.profile}
@@ -51,8 +63,24 @@ export default function TabsLayout() {
               name="Profile"
             />
           ),
+          headerRight: () => (
+            <ClickableIcon
+              icon={defaultIcons.settings}
+              onPress={handleProfileSettings}
+              additionalStyles={{ paddingRight: 20 }}
+            />
+          ),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  logo: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
+    tintColor: defaultColors.primary,
+  },
+});

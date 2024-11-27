@@ -1,48 +1,38 @@
-import { View, Image, Text, StyleSheet } from "react-native";
+import { defaultColors } from "@/constants/defaultStuff";
+import { View, Image, StyleSheet } from "react-native";
 
 type TabIconProps = {
   name: string;
   icon: any;
-  color: string;
-  focused: boolean;
+  color?: string;
+  focused?: boolean;
 };
 
-export function TabIcon({ name, icon, color, focused }: TabIconProps) {
+export function TabIcon({ icon, color, focused }: TabIconProps) {
   return (
     <View style={styles.container}>
       <Image
         source={icon}
         resizeMode="contain"
-        style={{ ...styles.icon, tintColor: focused ? "#883AE1" : color }}
+        style={[
+          styles.icon,
+          { tintColor: focused ? defaultColors.primary : color },
+        ]}
       />
-      <Text
-        style={{
-          ...styles.text,
-          color: focused ? "#883AE1" : color,
-        }}
-      >
-        {name}
-      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    justifyContent: "center",
     width: 100,
-  },
-
-  icon: {
-    alignItems: "center",
     justifyContent: "center",
-    width: 30,
-    height: 30,
+    alignItems: "center",
     marginTop: 20,
   },
 
-  text: {
-    fontSize: 10,
+  icon: {
+    width: 35,
+    height: 35,
   },
 });

@@ -1,19 +1,12 @@
 import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
-import {
-  View,
-  Text,
-  ScrollView,
-  Alert,
-  StyleSheet,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, ScrollView, StyleSheet, SafeAreaView } from "react-native";
 import CustomInput from "@/components/CustomInput";
 import { useEffect, useState } from "react";
 import CustomButton from "@/components/CustomButton";
-import { createUser } from "@/constants/firebase";
+import { createUser, verifyUser } from "@/constants/userCRUD";
 import Avatar from "@/components/Avatar";
 import { Link, router } from "expo-router";
-import { imagePicker } from "@/constants/imagePicker";
+import { runImagePicker } from "@/constants/imagePicker";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -22,20 +15,21 @@ export default function SignUp() {
   const [username, setUsername] = useState("");
   const [profilePicture, setProfilePicture] = useState("default");
 
-  const [isPickerLoading, setIsPickerLoading] = useState(false);
-  const [isSignUpDisabled, setIsSignUpDisabled] = useState(true);
-  const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     function checkFields() {
+      // checks if all fields are not empty
       if (email && password && fullName && username) {
-        setIsSignUpDisabled(false);
+        setIsDisabled(false);
       } else {
-        setIsSignUpDisabled(true);
+        setIsDisabled(true);
       }
     }
 
     checkFields();
+    // if email, password, fullName or username changes, execute checkFields()
   }, [email, password, fullName, username]);
 
   function clearFields() {
@@ -47,22 +41,18 @@ export default function SignUp() {
   }
 
   async function handleUploadProfilePicture() {
-    setIsPickerLoading(true);
-
-    const result = await imagePicker();
+    const result = await runImagePicker(1, 1);
 
     if (result) {
       setProfilePicture(result);
     }
-
-    setIsPickerLoading(false);
   }
 
   async function handleSignUp() {
-    setIsSignUpDisabled(false);
-    setIsSignUpLoading(true);
+    setIsLoading(true);
 
-    const result = await createUser({
+    // execute user creation
+    const createUserResult = await createUser({
       email,
       password,
       fullName,
@@ -70,66 +60,67 @@ export default function SignUp() {
       profilePicture,
     });
 
-    if (result === "ok") {
-      Alert.alert(
-        "Success",
-        "Account created successfully.\n\nPlease verify your account via the link sent to your email before signing in.",
-        [
-          {
-            text: "Sign in",
-            onPress: () => {
-              clearFields();
-              router.replace("/signIn");
-            },
-          },
-        ],
-        { cancelable: false }
-      );
+    if (createUserResult === "ok") {
+      // if user is created, execute user verification
+      const verifyUserResult = await verifyUser({ email, password });
+
+      // if user is verified, redirect to home
+      if (verifyUserResult) {
+        clearFields();
+        router.replace("/home");
+      }
     }
 
-    setIsSignUpDisabled(false);
-    setIsSignUpLoading(false);
+    setIsLoading(false);
+  }
+
+  function handleRemoveProfilePicture() {
+    setProfilePicture("default");
   }
 
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
+      <ScrollView style={defaultStyle.scrollContainer}>
         <View
-          style={{
-            ...defaultStyle.container,
-            ...styles.screenContainer,
-            pointerEvents: isSignUpLoading ? "none" : "auto",
-          }}
+          style={[
+            defaultStyle.container,
+            styles.screenContainer,
+            {
+              pointerEvents: isLoading ? "none" : "auto",
+            },
+          ]}
         >
           <View style={styles.headerContainer}>
-            <Text style={{ ...defaultStyle.h1, ...styles.header }}>
-              Let's get acquainted!
+            <Text style={[defaultStyle.h1, styles.header]}>
+              Let's be friends!
             </Text>
 
-            <Text style={{ ...defaultStyle.h5, ...styles.subHeader }}>
+            <Text style={[defaultStyle.h5, styles.subHeader]}>
               Sign-up to FeelTok
             </Text>
           </View>
 
           <View style={styles.inputContainer}>
             <View style={styles.avatarContainer}>
-              <Avatar size={100} source={profilePicture} />
+              <Avatar
+                type="upload"
+                handleButtonPress={handleUploadProfilePicture}
+                size={100}
+                source={profilePicture}
+              />
 
               <CustomButton
-                label={"Upload Profile Picture"}
-                handlePress={() => {
-                  handleUploadProfilePicture();
-                }}
-                isLoading={isPickerLoading}
-                additionalStyles={{ flex: 1 }}
+                label="Remove Profile Picture"
+                handlePress={handleRemoveProfilePicture}
                 color={defaultColors.primary}
+                isDisabled={profilePicture === "default"}
               />
             </View>
 
             <CustomInput
               value={fullName}
               handleChange={setFullName}
-              label={"Full Name"}
+              label={"Name"}
               secureText={false}
             />
 
@@ -159,8 +150,8 @@ export default function SignUp() {
             <CustomButton
               label={"Sign Up"}
               handlePress={handleSignUp}
-              isDisabled={isSignUpDisabled}
-              isLoading={isSignUpLoading}
+              isDisabled={isDisabled}
+              isLoading={isLoading}
               color={defaultColors.primary}
             />
 

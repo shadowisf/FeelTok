@@ -6,20 +6,89 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
+import {
+  defaultColors,
+  defaultIcons,
+  defaultStyle,
+} from "@/constants/defaultStuff";
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
+import { useEffect } from "react";
+import auth from "@react-native-firebase/auth";
+import * as SplashScreen from "expo-splash-screen";
+import { getCredentials } from "@/constants/asyncStorage";
 
 export default function Index() {
-  function handleContinueWithEmail() {
+  function handleContinue() {
     router.push("/signIn");
   }
+
+  useEffect(() => {
+    const startup = auth().onAuthStateChanged(async (user) => {
+      SplashScreen.preventAutoHideAsync();
+
+      if (user && user.providerData[0]?.providerId === "password") {
+        try {
+          const data = await getCredentials();
+          const result = await auth().signInWithEmailAndPassword(
+            data?.email,
+            data?.password
+          );
+
+          if (result.user) {
+            console.log(
+              "indexSignInPersistence",
+              "|",
+              "password user verified"
+            );
+            router.replace("/home");
+          }
+        } catch (error) {
+          console.error("indexSignInPersistence", "|", error);
+        }
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      SplashScreen.hide();
+    });
+
+    startup();
+  }, []);
 
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
-        <View style={{ ...defaultStyle.container, ...styles.screenContainer }}>
-          <Text style={{ ...defaultStyle.h1, ...styles.header }}>FeelTok!</Text>
+        <View style={[defaultStyle.container, styles.screenContainer]}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-end",
+              position: "relative",
+            }}
+          >
+            <Image
+              source={defaultIcons.logo}
+              style={{
+                width: 65,
+                height: 100,
+                alignSelf: "center",
+                tintColor: defaultColors.primary,
+                borderWidth: 1,
+                borderColor: "#ccc",
+              }}
+              resizeMode="contain"
+            />
+
+            <Text
+              style={[
+                defaultStyle.h1,
+                styles.feeltok,
+                { position: "absolute", left: 50 },
+              ]}
+            >
+              eeltok!
+            </Text>
+          </View>
 
           <Image
             source={require("../assets/images/onboard-splash.png")}
@@ -27,7 +96,7 @@ export default function Index() {
             style={styles.image}
           />
 
-          <Text style={{ ...defaultStyle.h3, ...styles.tagline }}>
+          <Text style={[defaultStyle.h3, styles.tagline]}>
             Feel the need, {"\n"} knead the feel
           </Text>
 
@@ -37,8 +106,8 @@ export default function Index() {
           </Text>
 
           <CustomButton
-            label={"Continue with Email"}
-            handlePress={handleContinueWithEmail}
+            label={"Continue"}
+            handlePress={handleContinue}
             color={defaultColors.primary}
           />
         </View>
@@ -59,7 +128,7 @@ const styles = StyleSheet.create({
     height: "40%",
   },
 
-  header: {
+  feeltok: {
     textAlign: "center",
     fontWeight: "bold",
     color: defaultColors.primary,

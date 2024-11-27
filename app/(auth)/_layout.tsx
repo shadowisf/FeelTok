@@ -2,11 +2,10 @@ import { router, Stack } from "expo-router";
 import { defaultIcons } from "@/constants/defaultStuff";
 import ClickableIcon from "@/components/HeaderIcon";
 
-export default function AuthLaytout() {
+export default function AuthLayout() {
   return (
     <Stack
       screenOptions={{
-        headerTitle: "",
         headerLeft: () => (
           <ClickableIcon
             icon={defaultIcons.arrowLeft}
@@ -17,8 +16,8 @@ export default function AuthLaytout() {
         ),
       }}
     >
-      <Stack.Screen name="signIn" />
-      <Stack.Screen name="signUp" />
+      <Stack.Screen name="signIn" options={{ title: "Sign-in" }} />
+      <Stack.Screen name="signUp" options={{ title: "Sign-up" }} />
     </Stack>
   );
 }

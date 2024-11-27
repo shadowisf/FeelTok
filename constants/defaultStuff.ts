@@ -1,5 +1,9 @@
 import { StyleSheet } from "react-native";
 
+export async function delay(seconds: number) {
+  await new Promise((resolve) => setTimeout(resolve, seconds));
+}
+
 export const defaultIcons = {
   home: require("../assets/icons/home.png"),
   homeFill: require("../assets/icons/homeFill.png"),
@@ -9,10 +13,22 @@ export const defaultIcons = {
   profileFill: require("../assets/icons/profileFill.png"),
   arrowLeft: require("../assets/icons/arrowLeft.png"),
   settings: require("../assets/icons/settings.png"),
+  google: require("../assets/icons/google.png"),
+  notification: require("../assets/icons/notification.png"),
+  like: require("../assets/icons/like.png"),
+  share: require("../assets/icons/share.png"),
+  comment: require("../assets/icons/comment.png"),
+  signout: require("../assets/icons/signOut.png"),
+  addFill: require("../assets/icons/addFill.png"),
+  imageAdd: require("../assets/icons/imageAdd.png"),
+  trash: require("../assets/icons/trash.png"),
+  folderClose: require("../assets/icons/folderClose.png"),
+  logo: require("../assets/icons/logo.png"),
 };
 
 export const defaultImages = {
   background: require("../assets/images/background.png"),
+  defaultProfile: require("../assets/images/default-profile.jpeg"),
 };
 
 export const defaultColors = {
@@ -65,3 +81,18 @@ export const defaultStyle = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];

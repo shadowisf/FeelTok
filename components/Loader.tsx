@@ -9,7 +9,7 @@ export default function Loader({ isVisible }: LoaderProps) {
     return (
       <View style={styles.container}>
         <View style={styles.innerContainer}>
-          <ActivityIndicator size={"large"} />
+          <ActivityIndicator size={"large"} color={"black"} />
         </View>
       </View>
     );
@@ -25,16 +25,16 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1,
+    zIndex: 999,
   },
 
   innerContainer: {
     width: 125,
     height: 125,
-    backgroundColor: "black",
+    backgroundColor: "rgb(218, 220, 224)",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
