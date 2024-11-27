@@ -59,35 +59,9 @@ export default function Index() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={defaultStyle.scrollContainer}>
         <View style={[defaultStyle.container, styles.screenContainer]}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-end",
-              position: "relative",
-            }}
-          >
-            <Image
-              source={defaultIcons.logo}
-              style={{
-                width: 65,
-                height: 100,
-                alignSelf: "center",
-                tintColor: defaultColors.primary,
-                borderWidth: 1,
-                borderColor: "#ccc",
-              }}
-              resizeMode="contain"
-            />
-
-            <Text
-              style={[
-                defaultStyle.h1,
-                styles.feeltok,
-                { position: "absolute", left: 50 },
-              ]}
-            >
-              eeltok!
-            </Text>
+          <View style={styles.headerContainer}>
+            <Image source={defaultIcons.logo} style={styles.logo} />
+            <Text style={[defaultStyle.h1, styles.feeltok]}>eelTok!</Text>
           </View>
 
           <Image
@@ -132,10 +106,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: defaultColors.primary,
+    marginLeft: -20,
   },
 
   tagline: {
     fontWeight: "bold",
     textAlign: "center",
+  },
+
+  logo: {
+    width: 65,
+    height: 100,
+    tintColor: defaultColors.primary,
+  },
+
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "center",
   },
 });

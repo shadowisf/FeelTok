@@ -1,9 +1,12 @@
 import { router, Tabs } from "expo-router";
-import { defaultColors, defaultIcons } from "@/constants/defaultStuff";
+import {
+  defaultColors,
+  defaultIcons,
+  defaultStyle,
+} from "@/constants/defaultStuff";
 import { TabIcon } from "@/components/TabIcon";
 import ClickableIcon from "@/components/HeaderIcon";
-import { Image, View } from "react-native";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
 export default function TabsLayout() {
   function handleProfileSettings() {
@@ -29,9 +32,7 @@ export default function TabsLayout() {
             />
           ),
           headerLeft: () => (
-            <View style={{ paddingLeft: 20 }}>
-              <Image source={defaultIcons.logo} style={styles.logo} />
-            </View>
+            <Text style={[defaultStyle.h3, styles.feeltok]}>FeelTok!</Text>
           ),
         }}
       />
@@ -77,10 +78,9 @@ export default function TabsLayout() {
 }
 
 const styles = StyleSheet.create({
-  logo: {
-    width: 30,
-    height: 30,
-    resizeMode: "contain",
-    tintColor: defaultColors.primary,
+  feeltok: {
+    fontWeight: "bold",
+    color: defaultColors.primary,
+    paddingLeft: 20,
   },
 });

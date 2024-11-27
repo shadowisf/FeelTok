@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
 import { defaultStyle } from "@/constants/defaultStuff";
 
 type CustomButtonProps = {
@@ -26,12 +25,14 @@ export default function CustomButton({
 }: CustomButtonProps) {
   return (
     <TouchableOpacity
-      style={{
-        ...styles.button,
-        opacity: isDisabled ? 0.25 : 1,
-        ...additionalStyles,
-        backgroundColor: color,
-      }}
+      style={[
+        styles.button,
+        additionalStyles,
+        {
+          backgroundColor: color,
+          opacity: isDisabled ? 0.25 : 1,
+        },
+      ]}
       onPress={handlePress}
       activeOpacity={0.75}
       disabled={isDisabled}
@@ -39,7 +40,7 @@ export default function CustomButton({
       {isLoading ? (
         <ActivityIndicator color={"white"} />
       ) : (
-        <Text style={{ ...styles.label, ...defaultStyle.body }}>{label}</Text>
+        <Text style={[styles.label, defaultStyle.body]}>{label}</Text>
       )}
     </TouchableOpacity>
   );
