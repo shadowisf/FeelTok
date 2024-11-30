@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Avatar from "./Avatar";
-import { defaultStyle } from "@/constants/defaultStuff";
+import { defaultColors, defaultStyle } from "@/constants/defaultStuff";
 
 type ProfileInfoProps = {
   type: string;
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderColor: "rgb(218, 220, 224)",
+    borderColor: defaultColors.secondary,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     paddingTop: 10,

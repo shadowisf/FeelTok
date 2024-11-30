@@ -74,10 +74,6 @@ export default function SignUp() {
     setIsLoading(false);
   }
 
-  function handleRemoveProfilePicture() {
-    setProfilePicture("default");
-  }
-
   return (
     <SafeAreaView>
       <ScrollView style={defaultStyle.scrollContainer}>
@@ -90,17 +86,17 @@ export default function SignUp() {
             },
           ]}
         >
-          <View style={styles.headerContainer}>
+          <View style={{ gap: 15 }}>
             <Text style={[defaultStyle.h1, styles.header]}>
               Let's be friends!
             </Text>
 
-            <Text style={[defaultStyle.h5, styles.subHeader]}>
+            <Text style={[defaultStyle.h5, { fontWeight: "bold" }]}>
               Sign-up to FeelTok
             </Text>
           </View>
 
-          <View style={styles.inputContainer}>
+          <View style={{ gap: 15 }}>
             <View style={styles.avatarContainer}>
               <Avatar
                 type="upload"
@@ -111,7 +107,7 @@ export default function SignUp() {
 
               <CustomButton
                 label="Remove Profile Picture"
-                handlePress={handleRemoveProfilePicture}
+                handlePress={() => setProfilePicture("default")}
                 color={defaultColors.primary}
                 isDisabled={profilePicture === "default"}
               />
@@ -146,7 +142,7 @@ export default function SignUp() {
             />
           </View>
 
-          <View style={styles.buttonContainer}>
+          <View style={{ gap: 15 }}>
             <CustomButton
               label={"Sign Up"}
               handlePress={handleSignUp}
@@ -155,7 +151,7 @@ export default function SignUp() {
               color={defaultColors.primary}
             />
 
-            <Text style={styles.bottomText}>
+            <Text style={{ textAlign: "center" }}>
               Already have an account?{" "}
               <Link replace href="/signIn" style={styles.signUpLink}>
                 Sign-in
@@ -175,25 +171,9 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
   },
 
-  headerContainer: {
-    gap: 15, // Reduced space below header
-  },
-
-  inputContainer: {
-    gap: 15, // Minimized spacing between fields
-  },
-
-  buttonContainer: {
-    gap: 15,
-  },
-
   header: {
     fontWeight: "bold",
     color: defaultColors.primary,
-  },
-
-  subHeader: {
-    fontWeight: "bold",
   },
 
   avatarContainer: {
@@ -201,10 +181,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 25,
-  },
-
-  bottomText: {
-    textAlign: "center",
   },
 
   signUpLink: {

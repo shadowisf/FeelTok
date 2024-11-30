@@ -1,3 +1,4 @@
+import { defaultColors } from "@/constants/defaultStuff";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 type LoaderProps = {
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     width: 125,
     height: 125,
-    backgroundColor: "rgb(218, 220, 224)",
+    backgroundColor: defaultColors.secondary,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",

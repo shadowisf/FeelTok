@@ -13,10 +13,9 @@ import Avatar from "@/components/Avatar";
 import Loader from "@/components/Loader";
 import { PostData, readPost } from "@/constants/postCRUD";
 import DisplayPost from "@/components/DisplayPost";
-import { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import auth from "@react-native-firebase/auth";
+import { useLocalSearchParams } from "expo-router";
 
-export default function Profile() {
+export default function OtherProfile() {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [profilePicture, setProfilePicture] = useState("default");
@@ -27,11 +26,11 @@ export default function Profile() {
 
   const [posts, setPosts] = useState<PostData[]>([]);
 
-  const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
+  const { uid } = useLocalSearchParams<{ uid: string }>();
 
   async function onRefresh() {
-    const userData = await readUser({ firebaseUser });
-    const postData = await readPost({ firebaseUser });
+    const userData = await readUser({ uid });
+    const postData = await readPost({ uid });
 
     if (userData) {
       setProfilePicture(

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import { router, Stack } from "expo-router";
-import ClickableIcon from "@/components/HeaderIcon";
+import ClickableIcon from "@/components/ClickableIcon";
 import { defaultIcons } from "@/constants/defaultStuff";
 
 export default function ProfileSettingsLayout() {

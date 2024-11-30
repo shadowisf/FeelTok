@@ -11,10 +11,11 @@ import { defaultColors, defaultStyle, delay } from "@/constants/defaultStuff";
 import React, { useEffect, useState } from "react";
 import { readUser, signOutUser } from "@/constants/userCRUD";
 import Loader from "@/components/Loader";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { router } from "expo-router";
 import CustomButton from "@/components/CustomButton";
 import ProfileInfo from "@/components/ProfileInfo";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import auth from "@react-native-firebase/auth";
 
 export default function ProfileSettings() {
   const [profilePicture, setProfilePicture] = useState("default");
@@ -31,7 +32,7 @@ export default function ProfileSettings() {
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
 
   async function onRefresh() {
-    const data = await readUser(firebaseUser);
+    const data = await readUser({ firebaseUser });
 
     if (data) {
       // assign user data to states
@@ -80,14 +81,6 @@ export default function ProfileSettings() {
       // if result is ok, redirect to index
       router.replace("/");
     }
-  }
-
-  function handleEditProfile() {
-    router.navigate("/profile/edit");
-  }
-
-  function handleDeleteAccount() {
-    router.navigate("/profile/delete");
   }
 
   return (
@@ -145,7 +138,7 @@ export default function ProfileSettings() {
 
               <CustomButton
                 label="Edit Profile"
-                handlePress={handleEditProfile}
+                handlePress={() => router.navigate("/profile/edit")}
                 color={defaultColors.primary}
                 isDisabled={!emailVerifyStatus}
               />
@@ -158,7 +151,7 @@ export default function ProfileSettings() {
 
             <CustomButton
               label="Delete Account"
-              handlePress={handleDeleteAccount}
+              handlePress={() => router.navigate("/profile/delete")}
               color={"darkred"}
               isDisabled={!emailVerifyStatus}
             />

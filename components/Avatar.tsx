@@ -1,9 +1,10 @@
-import { Image, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, View, StyleSheet } from "react-native";
 import {
   defaultColors,
   defaultIcons,
   defaultImages,
 } from "@/constants/defaultStuff";
+import ClickableIcon from "./ClickableIcon";
 
 type AvatarProps = {
   source: string;
@@ -41,13 +42,16 @@ export default function Avatar({
           style={[{ width: size, height: size, borderRadius: 100 }]}
         />
 
-        <TouchableOpacity onPress={handleButtonPress}>
-          <Image
-            source={defaultIcons.addFill}
-            resizeMode="contain"
-            style={[styles.addIcon, { width: size * 0.3, height: size * 0.3 }]}
-          />
-        </TouchableOpacity>
+        <ClickableIcon
+          icon={defaultIcons.addFill}
+          imageAdditionalStyles={[
+            styles.addIcon,
+            { width: size * 0.3, height: size * 0.3 },
+          ]}
+          onPress={() => {
+            handleButtonPress ? handleButtonPress() : null;
+          }}
+        />
       </View>
     );
   }

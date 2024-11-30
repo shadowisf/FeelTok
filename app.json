@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.shadowisf.FeelTok",
+      "bundleIdentifier": "com.g2.FeelTok",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shadowisf.FeelTok",
+      "package": "com.g2.FeelTok",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -43,7 +43,8 @@
       ],
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "expo-font"
+      "expo-font",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true

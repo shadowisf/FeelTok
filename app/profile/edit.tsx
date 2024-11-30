@@ -15,11 +15,11 @@ import CustomInput from "@/components/CustomInput";
 import { defaultColors, defaultStyle, delay } from "@/constants/defaultStuff";
 import { Dropdown } from "react-native-element-dropdown";
 import Loader from "@/components/Loader";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { readUser, signOutUser, updateUser } from "@/constants/userCRUD";
 import { runImagePicker } from "@/constants/imagePicker";
-import { router } from "expo-router";
 import VerifyChangesToProfile from "./verify";
+import { router } from "expo-router";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 export default function EditProfile() {
   const [profilePicture, setProfilePicture] = useState("default");
@@ -54,7 +54,7 @@ export default function EditProfile() {
   let content;
 
   async function onRefresh() {
-    const data = await readUser(firebaseUser);
+    const data = await readUser({ firebaseUser });
 
     if (data) {
       // assign user data to states
@@ -89,7 +89,7 @@ export default function EditProfile() {
     async function checkEditFields() {
       // checks fields in editing mode
       // this is for both social and normal accounts
-      const data = await readUser(firebaseUser);
+      const data = await readUser({ firebaseUser });
       const mustNotBeEmpty =
         email && profilePicture && fullName && username && gender; // checks if all fields are not empty
 
@@ -166,14 +166,6 @@ export default function EditProfile() {
       // else if social account, directly save changes
       saveChanges();
     }
-  }
-
-  function handleCancel() {
-    router.back();
-  }
-
-  function handleRemoveProfilePicture() {
-    setProfilePicture("default");
   }
 
   async function saveChanges() {
@@ -258,7 +250,7 @@ export default function EditProfile() {
         setPassword={setPassword}
         setNewPassword={setNewPassword}
         saveChanges={saveChanges}
-        handleCancel={handleCancel}
+        handleCancel={() => router.back()}
       />
     );
   }
@@ -277,7 +269,7 @@ export default function EditProfile() {
 
             <CustomButton
               label="Remove Profile Picture"
-              handlePress={handleRemoveProfilePicture}
+              handlePress={() => setProfilePicture("default")}
               color={defaultColors.primary}
               isDisabled={profilePicture === "default"}
             />
@@ -305,7 +297,7 @@ export default function EditProfile() {
               labelField={"value"}
               valueField={"value"}
               data={genderData}
-              placeholder={gender ? gender : "Gender"}
+              placeholder={gender}
               value={gender}
               placeholderStyle={{ fontSize: 14 }}
               itemTextStyle={{ fontSize: 14 }}
@@ -357,7 +349,7 @@ export default function EditProfile() {
         <View style={styles.buttonContainer}>
           <CustomButton
             label="Cancel"
-            handlePress={handleCancel}
+            handlePress={() => router.back()}
             color={defaultColors.primary}
             additionalStyles={{ flex: 1 }}
           />
@@ -435,7 +427,7 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    backgroundColor: "rgb(218, 220, 224)",
+    backgroundColor: defaultColors.secondary,
     padding: 15,
     borderRadius: 3,
     flex: 1,

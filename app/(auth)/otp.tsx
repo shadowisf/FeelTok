@@ -23,8 +23,8 @@ export default function OtpScreen({
 }: OtpScreenProps) {
   return (
     <>
-      <View style={styles.headerContainer}>
-        <Text style={[defaultStyle.h5, styles.subHeader]}>
+      <View style={{ gap: 15 }}>
+        <Text style={[defaultStyle.h5, { fontWeight: "bold" }]}>
           Two-Factor Authentication
         </Text>
 
@@ -40,7 +40,7 @@ export default function OtpScreen({
         additionalStyles={styles.otp}
       />
 
-      <View style={styles.inputContainer}>
+      <View style={{ gap: 15 }}>
         <CustomButton
           label={"Confirm"}
           handlePress={handleOtpConfirm}
@@ -59,18 +59,6 @@ export default function OtpScreen({
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    gap: 15,
-  },
-
-  subHeader: {
-    fontWeight: "bold",
-  },
-
-  inputContainer: {
-    gap: 15,
-  },
-
   otp: {
     textAlign: "center",
     fontSize: 36,

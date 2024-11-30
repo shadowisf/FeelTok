@@ -5,7 +5,7 @@ import {
   defaultStyle,
 } from "@/constants/defaultStuff";
 import { TabIcon } from "@/components/TabIcon";
-import ClickableIcon from "@/components/HeaderIcon";
+import ClickableIcon from "@/components/ClickableIcon";
 import { StyleSheet, Text } from "react-native";
 
 export default function TabsLayout() {
@@ -68,7 +68,7 @@ export default function TabsLayout() {
             <ClickableIcon
               icon={defaultIcons.settings}
               onPress={handleProfileSettings}
-              additionalStyles={{ paddingRight: 20 }}
+              touchableAdditionalStyles={{ paddingRight: 20 }}
             />
           ),
         }}

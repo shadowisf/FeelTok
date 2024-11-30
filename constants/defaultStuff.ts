@@ -13,8 +13,18 @@ export const defaultIcons = {
   profileFill: require("../assets/icons/profileFill.png"),
   arrowLeft: require("../assets/icons/arrowLeft.png"),
   settings: require("../assets/icons/settings.png"),
+  google: require("../assets/icons/google.png"),
+  notification: require("../assets/icons/notification.png"),
+  like: require("../assets/icons/like.png"),
+  share: require("../assets/icons/share.png"),
+  comment: require("../assets/icons/comment.png"),
+  signout: require("../assets/icons/signOut.png"),
   addFill: require("../assets/icons/addFill.png"),
+  imageAdd: require("../assets/icons/imageAdd.png"),
+  trash: require("../assets/icons/trash.png"),
+  folderClose: require("../assets/icons/folderClose.png"),
   logo: require("../assets/icons/logo.png"),
+  more: require("../assets/icons/more.png"),
 };
 
 export const defaultImages = {
@@ -24,6 +34,7 @@ export const defaultImages = {
 
 export const defaultColors = {
   primary: "#883AE1",
+  secondary: "rgb(218, 220, 224)",
 };
 
 export const defaultStyle = StyleSheet.create({
@@ -36,8 +47,8 @@ export const defaultStyle = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    paddingLeft: 25,
-    paddingRight: 25,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 
   scrollContainer: {
@@ -72,18 +83,3 @@ export const defaultStyle = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];

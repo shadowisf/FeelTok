@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1071064634777:android:c43a7ab7ec796799fe2f08",
+        "mobilesdk_app_id": "1:1071064634777:android:4f631e8ea7adc5a1fe2f08",
         "android_client_info": {
-          "package_name": "com.shadowisf.FeelTok"
+          "package_name": "com.g2.FeelTok"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1071064634777-tg9as9l7sb6o59da2ci81ts7llbhu12v.apps.googleusercontent.com",
+          "client_id": "1071064634777-oe81806f6llb6f2gbkonv7ll683j809f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.shadowisf.FeelTok",
+            "package_name": "com.g2.FeelTok",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },

@@ -5,12 +5,14 @@ import auth, {
   verifyBeforeUpdateEmail,
   updatePassword,
   FirebaseAuthTypes,
+  sendEmailVerification,
 } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Alert } from "react-native";
 import { deleteCredentials, setCredentials } from "./asyncStorage";
-import { months } from "./defaultStuff";
-import { uploadImage, deleteImage } from "./cloudinaryAPI";
+import { deleteImage, uploadImage } from "./cloudinaryAPI";
+import { deletePost } from "./postCRUD";
 
 type verifyUserProps = {
   email: string;
@@ -54,9 +56,13 @@ export async function createUser({
       password
     );
     const userDoc = firestore().collection("users").doc(credential.user.uid);
-    const defaultBio = `FeelTok user since ${
-      months[new Date().getMonth()]
-    } ${new Date().getFullYear()}`;
+    const defaultBio = `FeelTok user since ${new Date().toLocaleDateString(
+      "en-US",
+      {
+        month: "short",
+        day: "2-digit",
+      }
+    )}`;
     const defaultGender = "Prefer not to say";
 
     let profileURL;
@@ -84,11 +90,12 @@ export async function createUser({
       otpStatus: false,
       bio: defaultBio,
       gender: defaultGender,
+      userSince: firestore.FieldValue.serverTimestamp(),
     });
 
     // uncomment if project is finalized
-    /* await sendEmailVerification(credential.user); */
-    /* console.log(createUser.name, "|", "email verification sent to user"); */
+    /* await sendEmailVerification(credential.user);
+    console.log(createUser.name, "|", "email verification sent to user"); */
 
     console.log(createUser.name, "|", "new password user created");
 
@@ -99,45 +106,52 @@ export async function createUser({
   }
 }
 
-export async function readUser(firebaseUser: FirebaseAuthTypes.User) {
+type ReadUserProps = {
+  firebaseUser?: FirebaseAuthTypes.User;
+  uid?: string;
+};
+
+export async function readUser({ firebaseUser, uid }: ReadUserProps) {
   try {
-    const userDoc = firestore().collection("users").doc(firebaseUser.uid);
-    const docSnap = await userDoc.get();
+    let userDoc;
+    let docSnap;
 
-    const idToken = await firebaseUser.getIdToken();
-
-    if (
-      docSnap.exists &&
-      firebaseUser.email &&
-      firebaseUser.displayName &&
-      firebaseUser.photoURL &&
-      firebaseUser.providerData[0].providerId
-    ) {
-      const fullName = docSnap.data()?.fullName;
-      const email = firebaseUser.email;
-      const username = firebaseUser.displayName;
-      const profilePicture = firebaseUser.photoURL;
-      const provider = firebaseUser.providerData[0].providerId;
-      const emailVerified = firebaseUser.emailVerified;
-      const otpStatus = docSnap.data()?.otpStatus;
-      const gender = docSnap.data()?.gender;
-      const bio = docSnap.data()?.bio;
-
-      return {
-        email,
-        fullName,
-        username,
-        profilePicture,
-        provider,
-        emailVerified,
-        otpStatus,
-        idToken,
-        gender,
-        bio,
-      };
+    // current user
+    if (firebaseUser) {
+      userDoc = firestore().collection("users").doc(firebaseUser.uid);
+      docSnap = await userDoc.get();
     }
 
-    console.log(readUser.name, "|", "user data read successfully");
+    // reading other users
+    if (uid) {
+      userDoc = firestore().collection("users").doc(uid);
+      docSnap = await userDoc.get();
+    }
+
+    const fullName = docSnap?.data()?.fullName;
+    const email = docSnap?.data()?.email;
+    const username = docSnap?.data()?.username;
+    const profilePicture = docSnap?.data()?.profilePicture;
+    const otpStatus = docSnap?.data()?.otpStatus;
+    const gender = docSnap?.data()?.gender;
+    const bio = docSnap?.data()?.bio;
+    const provider = firebaseUser
+      ? firebaseUser.providerData[0].providerId
+      : "";
+    const emailVerified = firebaseUser ? firebaseUser.emailVerified : false;
+
+    console.log(readUser.name, "|", "user read successfully");
+    return {
+      email,
+      fullName,
+      username,
+      profilePicture,
+      provider,
+      emailVerified,
+      otpStatus,
+      gender,
+      bio,
+    };
   } catch (error) {
     console.error(readUser.name, "|", error);
     Alert.alert("Oops!", "Something went wrong. Please try again.\n\n" + error);
@@ -196,6 +210,15 @@ export async function updateUser({
       console.log(updateUser.name, "|", "password user verified");
     }
 
+    if (firebaseUser.providerData[0]?.providerId === "google.com") {
+      const idToken = GoogleSignin.getCurrentUser()?.idToken;
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        idToken ? idToken : ""
+      );
+      await reauthenticateWithCredential(firebaseUser, googleCredential);
+      console.log(updateUser.name, "|", "google user verified");
+    }
+
     if (firebaseUser.email !== email) {
       await verifyBeforeUpdateEmail(firebaseUser, email);
       console.log(
@@ -244,13 +267,35 @@ type deleteUserProps = {
   email?: string;
 };
 
-export async function killEmAll({ firebaseUser, password }: deleteUserProps) {
+export async function killEmAll({
+  firebaseUser,
+  password,
+  email,
+}: deleteUserProps) {
   try {
-    const userDoc = firestore().collection("users").doc(firebaseUser.uid);
+    const userCol = firestore().collection("users");
+    const postCol = firestore().collection("posts");
 
     let verified;
 
-    // password account
+    // google account re-authentication
+    if (firebaseUser.providerData[0]?.providerId === "google.com") {
+      const idToken = GoogleSignin.getCurrentUser()?.idToken;
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        idToken ? idToken : ""
+      );
+      const reAuthResult = await reauthenticateWithCredential(
+        firebaseUser,
+        googleCredential
+      );
+
+      if (reAuthResult.user && firebaseUser.email === email) {
+        verified = true;
+        console.log(killEmAll.name, "|", "google user verified");
+      }
+    }
+
+    // password account re-authentication
     if (firebaseUser.providerData[0]?.providerId === "password") {
       const emailCredential = auth.EmailAuthProvider.credential(
         firebaseUser.email ? firebaseUser.email : "",
@@ -268,23 +313,32 @@ export async function killEmAll({ firebaseUser, password }: deleteUserProps) {
     }
 
     if (verified) {
+      const postSnap = await postCol
+        .where("author", "==", firebaseUser.uid)
+        .get();
+
+      postSnap.docs.map(async (postDoc) => {
+        await deletePost(postDoc.id);
+      });
+
       await deleteUser(firebaseUser);
-      await userDoc.delete();
+      await userCol.doc(firebaseUser.uid).delete();
       await deleteImage(`user-${firebaseUser.uid}`);
       await deleteCredentials();
 
-      console.log(killEmAll.name, "|", "deleted user and user data");
+      console.log(killEmAll.name, "|", "deleted user and all related data");
       return "ok";
     }
   } catch (error) {
     console.error(killEmAll.name, "|", error);
-    Alert.alert("Error", "Something went wrong. Please try again.\n\n" + error);
+    Alert.alert("Error", "something went wrong. Please try again.\n\n" + error);
   }
 }
 
 export async function signOutUser() {
   try {
     await auth().signOut();
+    await GoogleSignin.signOut();
     await deleteCredentials();
 
     console.log(signOutUser.name, "|", "user logged out successfully");
@@ -292,5 +346,34 @@ export async function signOutUser() {
   } catch (error) {
     console.error(signOutUser.name, "|", error);
     Alert.alert("Error", "Something went wrong. Please try again.\n\n" + error);
+  }
+}
+
+type reportUserProps = {
+  firebaseUser: FirebaseAuthTypes.User;
+  targetUID: string;
+  reason: string;
+};
+
+export async function reportUser({
+  targetUID,
+  firebaseUser,
+  reason,
+}: reportUserProps) {
+  try {
+    const userDoc = firestore().collection("users").doc(targetUID);
+    const docSnap = await userDoc.get();
+
+    if (docSnap.exists) {
+      const reportCol = userDoc.collection("reports");
+      await reportCol.add({
+        author: firebaseUser.uid,
+        reason: reason,
+      });
+      console.log(reportUser.name, "|", "user reported successfully");
+      return "ok";
+    }
+  } catch (error) {
+    console.error(reportUser.name, "|", error);
   }
 }

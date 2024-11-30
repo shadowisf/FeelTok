@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1071064634777-an6eolqb7cf8q6kdakne9l0c8sp8lngi.apps.googleusercontent.com</string>
+	<string>1071064634777-epsa562q7tp8tfpvh5m113ekobm0vov4.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1071064634777-an6eolqb7cf8q6kdakne9l0c8sp8lngi</string>
+	<string>com.googleusercontent.apps.1071064634777-epsa562q7tp8tfpvh5m113ekobm0vov4</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>1071064634777-tg9as9l7sb6o59da2ci81ts7llbhu12v.apps.googleusercontent.com</string>
+	<string>1071064634777-oe81806f6llb6f2gbkonv7ll683j809f.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCKSJ3nu0NBFU2qwriK7xCbRho0B0FVKls</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.shadowisf.FeelTok</string>
+	<string>com.g2.FeelTok</string>
 	<key>PROJECT_ID</key>
 	<string>feeltok-9a12f</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1071064634777:ios:2b970e81fa897ea7fe2f08</string>
+	<string>1:1071064634777:ios:65edc90cbac7c4c0fe2f08</string>
 	<key>DATABASE_URL</key>
 	<string>https://feeltok-9a12f-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

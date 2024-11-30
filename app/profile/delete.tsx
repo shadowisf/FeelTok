@@ -19,10 +19,9 @@ export default function DeleteProfile() {
 
   useEffect(() => {
     async function onRefresh() {
-      const data = await readUser(firebaseUser);
+      const data = await readUser({ firebaseUser });
 
       if (data) {
-        // assign user data to states
         setProvider(data.provider);
       }
 
@@ -64,10 +63,6 @@ export default function DeleteProfile() {
     }
 
     setIsLoading(false);
-  }
-
-  function handleCancel() {
-    router.back();
   }
 
   return (
@@ -118,7 +113,7 @@ export default function DeleteProfile() {
           <View style={styles.buttonContainer}>
             <CustomButton
               label="Cancel"
-              handlePress={handleCancel}
+              handlePress={() => router.back()}
               color={defaultColors.primary}
               additionalStyles={{ flex: 1 }}
             />

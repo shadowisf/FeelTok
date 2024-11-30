@@ -1,17 +1,14 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { Alert } from "react-native";
 import firestore from "@react-native-firebase/firestore";
+import emailjs from "@emailjs/react-native";
 
 const EMAILJS_PUBLIC_KEY = "IQK6m6KVn2GfsEzlU";
 const EMAILJS_PRIVATE_KEY = "MZc7VCeBQV5k_mEgzGLhx";
 const EMAILJS_SERVICE_ID = "service_i5hx7rb";
 const EMAILJS_TEMPLATE_ID = "template_rac60ac";
 
-type checkOtpProps = {
-  firebaseUser: FirebaseAuthTypes.User;
-};
-
-export async function checkOtp({ firebaseUser }: checkOtpProps) {
+export async function checkOtp(firebaseUser: FirebaseAuthTypes.User) {
   try {
     const userDoc = firestore().collection("users").doc(firebaseUser.uid);
     const docSnap = await userDoc.get();
@@ -27,11 +24,7 @@ export async function checkOtp({ firebaseUser }: checkOtpProps) {
   }
 }
 
-type sendOtpProps = {
-  firebaseUser: FirebaseAuthTypes.User;
-};
-
-export async function sendOtp({ firebaseUser }: sendOtpProps) {
+export async function sendOtp(firebaseUser: FirebaseAuthTypes.User) {
   try {
     const userDoc = firestore().collection("users").doc(firebaseUser.uid);
     const docSnap = await userDoc.get();
@@ -50,15 +43,15 @@ export async function sendOtp({ firebaseUser }: sendOtpProps) {
 
     // uncomment this method if project is finalized
     /* await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          otp: otp,
-          to_name: firebaseUser.displayName,
-          to_email: firebaseUser.email,
-        },
-        { publicKey: EMAILJS_PUBLIC_KEY }
-      ); */
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      {
+        otp: otp,
+        to_name: firebaseUser.displayName,
+        to_email: firebaseUser.email,
+      },
+      { publicKey: EMAILJS_PUBLIC_KEY }
+    ); */
 
     console.log(sendOtp.name, "|", "OTP sent to user's email");
 
@@ -90,15 +83,11 @@ export async function verifyOtp({ otp, firebaseUser }: verifyOtpProps) {
     console.error(verifyOtp.name, "|", error);
     Alert.alert("Oops!", "Something went wrong. Please try again.\n\n" + error);
   } finally {
-    await deleteOtp({ firebaseUser });
+    await deleteOtp(firebaseUser);
   }
 }
 
-type deleteOtpProps = {
-  firebaseUser: FirebaseAuthTypes.User;
-};
-
-export async function deleteOtp({ firebaseUser }: deleteOtpProps) {
+export async function deleteOtp(firebaseUser: FirebaseAuthTypes.User) {
   try {
     const userDoc = firestore().collection("users").doc(firebaseUser.uid);
     const docSnap = await userDoc.get();

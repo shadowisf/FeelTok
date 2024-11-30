@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   defaultColors,
   defaultIcons,
@@ -15,10 +15,16 @@ import {
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { deleteOtp, sendOtp, verifyOtp } from "@/constants/twoFactorAuth";
-import { checkOtp } from "@/constants/twoFactorAuth";
 import { verifyUser } from "@/constants/userCRUD";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { googleSignIn } from "@/constants/googleAuth";
+import SocialAuthButton from "@/components/SocialAuthButton";
+import {
+  deleteOtp,
+  verifyOtp,
+  sendOtp,
+  checkOtp,
+} from "@/constants/twoFactorAuth";
 import OtpScreen from "./otp";
 
 export default function SignIn() {
@@ -83,7 +89,7 @@ export default function SignIn() {
     setIsOtp(false);
 
     // deletes otp in firestore if user cancels
-    await deleteOtp({ firebaseUser });
+    await deleteOtp(firebaseUser);
   }
 
   async function handleOtpConfirm() {
@@ -117,11 +123,11 @@ export default function SignIn() {
 
     if (verifyUserResult) {
       // if sign-in is successful, check if otp is enabled
-      const checkOtpResult = await checkOtp({ firebaseUser: verifyUserResult });
+      const checkOtpResult = await checkOtp(verifyUserResult);
 
       // if otp is enabled, send otp
       if (checkOtpResult === true) {
-        const sendOtpResult = await sendOtp({ firebaseUser: verifyUserResult });
+        const sendOtpResult = await sendOtp(verifyUserResult);
 
         // if otp is sent, redirect to otp screen
         if (sendOtpResult === "ok") {
@@ -137,6 +143,36 @@ export default function SignIn() {
     }
 
     setIsLoading(false);
+  }
+
+  async function handleContinueWithGoogle() {
+    setIsGoogleLoading(true);
+
+    // executes google sign-in popup
+    const googleSignInResult = await googleSignIn();
+
+    if (googleSignInResult) {
+      // if google sign-in is successful, check if otp is enabled
+      const checkOtpResult = await checkOtp(googleSignInResult);
+
+      // if otp is enabled, send otp
+      if (checkOtpResult === true) {
+        const sendOtpResult = await sendOtp(googleSignInResult);
+
+        // if otp is sent, redirect to otp screen
+        if (sendOtpResult === "ok") {
+          SetIsDisabled(true);
+          setIsOtp(true);
+        }
+      }
+
+      // if otp is disabled, redirect to home
+      if (checkOtpResult === false) {
+        router.replace("/home");
+      }
+    }
+
+    setIsGoogleLoading(false);
   }
 
   // otp screen
@@ -157,15 +193,15 @@ export default function SignIn() {
   if (!isOtp) {
     content = (
       <>
-        <View style={styles.headerContainer}>
+        <View style={{ gap: 15 }}>
           <Text style={[defaultStyle.h1, styles.header]}>Welcome back!</Text>
 
-          <Text style={[defaultStyle.h5, styles.subHeader]}>
+          <Text style={[defaultStyle.h5, { fontWeight: "bold" }]}>
             Sign-in to FeelTok
           </Text>
         </View>
 
-        <View style={styles.inputContainer}>
+        <View style={{ gap: 15 }}>
           <CustomInput
             value={email}
             handleChange={setEmail}
@@ -181,7 +217,7 @@ export default function SignIn() {
           />
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View style={{ gap: 15 }}>
           <CustomButton
             label={"Sign In"}
             handlePress={handleSignIn}
@@ -190,12 +226,26 @@ export default function SignIn() {
             color={defaultColors.primary}
           />
 
-          <Text style={[defaultStyle.body, styles.bottomText]}>
+          <Text style={[defaultStyle.body, { textAlign: "center" }]}>
             New to FeelTok?{" "}
             <Link replace style={styles.signUpLink} href="/signUp">
               Sign-up
             </Link>
           </Text>
+        </View>
+
+        <View>
+          <View style={styles.orContainer}>
+            <View style={styles.line} />
+            <Text style={styles.orText}>OR</Text>
+            <View style={styles.line} />
+          </View>
+          <SocialAuthButton
+            label="Continue with Google"
+            icon={defaultIcons.google}
+            handlePress={handleContinueWithGoogle}
+            isLoading={isGoogleLoading}
+          />
         </View>
       </>
     );
@@ -227,29 +277,9 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
   },
 
-  headerContainer: {
-    gap: 15,
-  },
-
-  inputContainer: {
-    gap: 15,
-  },
-
-  buttonContainer: {
-    gap: 15,
-  },
-
   header: {
     fontWeight: "bold",
     color: defaultColors.primary,
-  },
-
-  subHeader: {
-    fontWeight: "bold",
-  },
-
-  bottomText: {
-    textAlign: "center",
   },
 
   signUpLink: {
@@ -257,8 +287,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  socialButtonContainer: {
-    paddingTop: 50,
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: defaultColors.secondary,
+  },
+
+  orContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
+    marginBottom: 15,
+  },
+
+  orText: {
+    color: "gray",
+    textAlign: "center",
   },
 });

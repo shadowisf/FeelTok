@@ -1,5 +1,6 @@
 import { StyleSheet, TextInput, View, Text } from "react-native";
 import React from "react";
+import { defaultColors } from "@/constants/defaultStuff";
 
 type CustomInputProps = {
   label?: string;
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     padding: 15, // Padding for better alignment
     borderRadius: 3, // Reduced radius for a tighter look
     color: "black",
-    backgroundColor: "rgb(218, 220, 224)",
+    backgroundColor: defaultColors.secondary,
     flex: 1,
   },
 

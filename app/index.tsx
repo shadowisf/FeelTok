@@ -16,16 +16,26 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import auth from "@react-native-firebase/auth";
 import * as SplashScreen from "expo-splash-screen";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getCredentials } from "@/constants/asyncStorage";
 
 export default function Index() {
-  function handleContinue() {
-    router.push("/signIn");
-  }
-
   useEffect(() => {
     const startup = auth().onAuthStateChanged(async (user) => {
       SplashScreen.preventAutoHideAsync();
+
+      if (user && user.providerData[0]?.providerId === "google.com") {
+        try {
+          const response = await GoogleSignin.signInSilently();
+
+          if (response) {
+            console.log("indexSignInPersistence", "|", "google user verified");
+            router.replace("/home");
+          }
+        } catch (error) {
+          console.error("indexSignInPersistence", "|", error);
+        }
+      }
 
       if (user && user.providerData[0]?.providerId === "password") {
         try {
@@ -81,7 +91,7 @@ export default function Index() {
 
           <CustomButton
             label={"Continue"}
-            handlePress={handleContinue}
+            handlePress={() => router.navigate("/signIn")}
             color={defaultColors.primary}
           />
         </View>

@@ -4,17 +4,23 @@ import React from "react";
 type TabIconProps = {
   icon: any;
   onPress: () => void;
-  additionalStyles?: {};
+  touchableAdditionalStyles?: {};
+  imageAdditionalStyles?: {};
 };
 
-export default function HeaderIcon({
+export default function ClickableIcon({
   icon,
   onPress,
-  additionalStyles,
+  touchableAdditionalStyles,
+  imageAdditionalStyles,
 }: TabIconProps) {
   return (
-    <TouchableOpacity onPress={onPress} style={[additionalStyles]}>
-      <Image source={icon} style={styles.icon} />
+    <TouchableOpacity onPress={onPress} style={[touchableAdditionalStyles]}>
+      <Image
+        source={icon}
+        style={[styles.icon, imageAdditionalStyles]}
+        resizeMode="contain"
+      />
     </TouchableOpacity>
   );
 }
