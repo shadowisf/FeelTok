@@ -9,4 +9,4 @@
    ```bash
     npx expo start
    ```
-3. Open installed development build
+3. Open installed development build on mobile device or simulator
