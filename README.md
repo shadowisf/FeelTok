@@ -5,12 +5,13 @@
    ```bash
    npm install
    ```
+https://github.com/shadowisf/FeelTok/blob/main/README.md
+2. Download and install development build on real device or simulator
 
-2. Start the app and take note of the exp:// link
+2. Start Expo in development mode
 
    ```bash
     npx expo start
    ```
 
-3. Open Expo Go on your mobile device or device simulator
-4. Connect to the app by typing given URL manually (like "exp://192.168.1.24:8081")
+3. Open installed development build
