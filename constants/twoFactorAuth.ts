@@ -3,10 +3,10 @@ import { Alert } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import emailjs from "@emailjs/react-native";
 
-const EMAILJS_PUBLIC_KEY = "IQK6m6KVn2GfsEzlU";
-const EMAILJS_PRIVATE_KEY = "MZc7VCeBQV5k_mEgzGLhx";
-const EMAILJS_SERVICE_ID = "service_i5hx7rb";
-const EMAILJS_TEMPLATE_ID = "template_rac60ac";
+const EMAILJS_PUBLIC_KEY = process.env.EXPO_PUBLIC_EMAILJS_PUBLIC_KEY as string;
+const EMAILJS_SERVICE_ID = process.env.EXPO_PUBLIC_EMAILJS_SERVICE_ID as string;
+const EMAILJS_TEMPLATE_ID = process.env
+  .EXPO_PUBLIC_EMAILJS_TEMPLATE_ID as string;
 
 export async function checkOtp(firebaseUser: FirebaseAuthTypes.User) {
   try {
@@ -49,9 +49,8 @@ export async function sendOtp(firebaseUser: FirebaseAuthTypes.User) {
       otp: otp,
     });
 
-    // uncomment this method if project is finalized
     // send otp to user's email via emailJS api
-    /* await emailjs.send(
+    await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
       {
@@ -60,7 +59,7 @@ export async function sendOtp(firebaseUser: FirebaseAuthTypes.User) {
         to_email: firebaseUser.email,
       },
       { publicKey: EMAILJS_PUBLIC_KEY }
-    ); */
+    );
 
     console.log(sendOtp.name, "|", "OTP sent to user's email");
     return "ok";

@@ -1,8 +1,10 @@
 import * as Crypto from "expo-crypto";
 
-const CLOUDINARY_CLOUD_NAME = "feeltok";
-const CLOUDINARY_API_KEY = "115257816966197";
-const CLOUDINARY_API_SECRET = "a61YkqSHEBxabMJlCI64uytGt_s";
+const CLOUDINARY_CLOUD_NAME = process.env
+  .EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME as string;
+const CLOUDINARY_API_KEY = process.env.EXPO_PUBLIC_CLOUDINARY_API_KEY as string;
+const CLOUDINARY_API_SECRET = process.env
+  .EXPO_PUBLIC_CLOUDINARY_API_SECRET as string;
 
 type UploadProfilePicture = {
   name: string;

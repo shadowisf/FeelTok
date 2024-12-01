@@ -29,7 +29,6 @@ type DisplayPostProps = {
   feeling: string;
   image?: string;
   createdAt: FirebaseFirestoreTypes.Timestamp;
-  onRefresh?: () => void;
 };
 
 export default function DisplayPost({
@@ -42,7 +41,6 @@ export default function DisplayPost({
   feeling,
   image,
   createdAt,
-  onRefresh,
 }: DisplayPostProps) {
   const [reason, setReason] = useState("");
 

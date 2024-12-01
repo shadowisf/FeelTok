@@ -102,10 +102,9 @@ export async function createUser({
       userSince: firestore.FieldValue.serverTimestamp(),
     });
 
-    // uncomment if project is finalized
     // send email verification once sign-up is done
-    /* await sendEmailVerification(credential.user);
-    console.log(createUser.name, "|", "email verification sent to user"); */
+    await sendEmailVerification(credential.user);
+    console.log(createUser.name, "|", "email verification sent to user");
 
     console.log(createUser.name, "|", "new password user created");
     return "ok";

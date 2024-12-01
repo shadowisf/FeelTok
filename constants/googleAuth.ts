@@ -7,10 +7,11 @@ import { Alert } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
 export async function googleSignIn() {
+  const webClientID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID as string;
+
   // web client id from firebase authentication
   GoogleSignin.configure({
-    webClientId:
-      "1071064634777-379l502bp0sk52sq0affujco4dko1dne.apps.googleusercontent.com",
+    webClientId: webClientID,
   });
 
   try {
