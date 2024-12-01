@@ -26,6 +26,7 @@ export default function SocialAuthButton({
       style={[styles.button, styles.content]}
     >
       {isLoading ? (
+        // if isLoading is true, show ActivityIndicator
         <ActivityIndicator color={"black"} />
       ) : (
         <>

@@ -51,18 +51,21 @@ export default function DisplayPost({
 
   const { backgroundColor, textColor, emotion } = giveThemeFromEmotion(feeling);
 
+  // translate timestamp to date
   const date = new Date(createdAt.seconds * 1000).toLocaleDateString("en-US", {
     day: "2-digit",
     month: "short",
     year: "numeric",
   });
 
+  // translate timestamp to time
   const time = new Date(createdAt.seconds * 1000).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
 
   async function handleReportPost() {
+    // execute reportPost function with values from states
     const reportResult = await reportPost({
       firebaseUser,
       postID: id,
@@ -70,6 +73,7 @@ export default function DisplayPost({
     });
 
     if (reportResult === "ok") {
+      // if reportResult is ok, display alert
       Alert.alert("Success", "Post reported");
     }
   }
@@ -84,9 +88,11 @@ export default function DisplayPost({
       {
         text: "Confirm",
         onPress: async () => {
+          // execute delete post function with post id
           const deletePostResult = await deletePost(id);
 
           if (deletePostResult === "ok") {
+            // if deletePostResult is ok, display alert
             /* onRefresh(); */
 
             Alert.alert("Success", "Post deleted");
@@ -99,8 +105,10 @@ export default function DisplayPost({
 
   function handleOtherProfile() {
     if (firebaseUser.uid === author) {
+      // if author is current user, navigate to profile tab
       router.navigate(`/profile`);
     } else {
+      // if author is not current user, navigate to other profile
       router.navigate(`/otherProfile/${author}`);
     }
   }
@@ -146,6 +154,7 @@ export default function DisplayPost({
           <View style={{ gap: 15 }}>
             <Text style={{ color: textColor }}>{caption}</Text>
 
+            {/* if image is not empty, display image */}
             {image === "" ? null : (
               <Image source={{ uri: image }} style={styles.image} />
             )}

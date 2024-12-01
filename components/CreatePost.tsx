@@ -75,6 +75,7 @@ export default function CreatePost({
             value={caption}
           />
 
+          {/* if image exists, show image component */}
           {image === "" ? null : (
             <Image source={{ uri: image }} style={styles.image} />
           )}

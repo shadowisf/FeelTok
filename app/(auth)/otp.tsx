@@ -33,6 +33,7 @@ export default function OtpScreen({
         </Text>
       </View>
 
+      {/* otp input field */}
       <CustomInput
         value={otp}
         handleChange={setOtp}

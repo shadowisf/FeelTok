@@ -29,21 +29,39 @@ export default function UserMoreOptionsModal({
   let content;
 
   useEffect(() => {
-    if (reason) {
-      setIsDisabled(false);
-    } else {
-      setIsDisabled(true);
+    function checkField() {
+      if (reason) {
+        // check if reason is not empty
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
     }
+
+    checkField();
+    // execute checkField function every time reason value changes
   }, [reason]);
 
+  function handleSendReport() {
+    () => {
+      setIsLoading(true);
+
+      handleReport();
+
+      setReason("");
+
+      setIsModalOpen(false);
+      setIsReporting(false);
+
+      setIsLoading(false);
+    };
+  }
+
+  // if user is in reporting page
   if (isReporting) {
     content = (
       <>
-        <Text
-          style={[defaultStyle.h4, { fontWeight: "bold", textAlign: "center" }]}
-        >
-          Report User
-        </Text>
+        <Text style={[defaultStyle.h4, styles.header]}>Report User</Text>
 
         <View style={{ height: 100 }}>
           <CustomInput
@@ -58,18 +76,7 @@ export default function UserMoreOptionsModal({
           <CustomButton
             label="Send Report"
             color={defaultColors.primary}
-            handlePress={() => {
-              setIsLoading(true);
-
-              handleReport();
-
-              setReason("");
-
-              setIsModalOpen(false);
-              setIsReporting(false);
-
-              setIsLoading(false);
-            }}
+            handlePress={handleSendReport}
             isDisabled={isDisabled}
           />
 
@@ -83,14 +90,11 @@ export default function UserMoreOptionsModal({
     );
   }
 
+  // if user is not in reporting page
   if (!isReporting) {
     content = (
       <>
-        <Text
-          style={[defaultStyle.h4, { fontWeight: "bold", textAlign: "center" }]}
-        >
-          More Options
-        </Text>
+        <Text style={[defaultStyle.h4, styles.header]}>More Options</Text>
 
         <CustomButton
           label="Report User"
@@ -122,6 +126,11 @@ export default function UserMoreOptionsModal({
 }
 
 const styles = StyleSheet.create({
+  header: {
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
   modalOverlay: {
     flex: 1,
     justifyContent: "center",

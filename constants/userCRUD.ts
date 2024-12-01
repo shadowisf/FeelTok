@@ -21,9 +21,11 @@ type verifyUserProps = {
 
 export async function verifyUser({ email, password }: verifyUserProps) {
   try {
+    // execute sign-in with entered email and password
     const result = await auth().signInWithEmailAndPassword(email, password);
 
     if (result.user) {
+      // if user is verified, store credentials in async storage
       await setCredentials({ email, password });
 
       console.log(verifyUser.name, "|", "password user verified successfully");
@@ -51,10 +53,13 @@ export async function createUser({
   profilePicture,
 }: createUserProps) {
   try {
+    // execute sign-up with entered email and password
     const credential = await auth().createUserWithEmailAndPassword(
       email,
       password
     );
+
+    // assign general references
     const userDoc = firestore().collection("users").doc(credential.user.uid);
     const defaultBio = `FeelTok user since ${new Date().toLocaleDateString(
       "en-US",
@@ -68,8 +73,10 @@ export async function createUser({
     let profileURL;
 
     if (profilePicture === "default") {
+      // if user does not upload profile picture, use default value
       profileURL = "default";
     } else {
+      // else upload profile picture to cloudinary
       profileURL = await uploadImage({
         uri: profilePicture,
         publicID: `user-${credential.user.uid}`,
@@ -77,11 +84,13 @@ export async function createUser({
       });
     }
 
+    // update user's display name and photo url in authentication
     await updateProfile(credential.user, {
       displayName: username,
       photoURL: profileURL,
     });
 
+    // create new user entry in firestore
     await userDoc.set({
       fullName: fullName,
       email: credential.user.email,
@@ -94,11 +103,11 @@ export async function createUser({
     });
 
     // uncomment if project is finalized
+    // send email verification once sign-up is done
     /* await sendEmailVerification(credential.user);
     console.log(createUser.name, "|", "email verification sent to user"); */
 
     console.log(createUser.name, "|", "new password user created");
-
     return "ok";
   } catch (error) {
     console.error(createUser.name, "|", error);

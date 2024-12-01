@@ -7,24 +7,32 @@ import { Alert } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
 export async function googleSignIn() {
+  // web client id from firebase authentication
   GoogleSignin.configure({
     webClientId:
       "1071064634777-379l502bp0sk52sq0affujco4dko1dne.apps.googleusercontent.com",
   });
 
   try {
+    // check if play services are available
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
+    // execute google sign in
     const response = await GoogleSignin.signIn();
     const idToken = response.data?.idToken;
 
     if (idToken) {
+      // if idToken exists, assign idToken to credential
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
+      // execute firebase sign in using google credential
       const result = await auth().signInWithCredential(googleCredential);
+
+      // get current google user details
       const currentGoogleUser = GoogleSignin.getCurrentUser()?.user;
 
       if (result.user && currentGoogleUser?.name && currentGoogleUser?.id) {
+        // if user is signed in, execute create user function with user details
         const createResponse = await googleCreateUser({
           firebaseUser: result.user,
           fullName: currentGoogleUser?.name,
@@ -32,6 +40,7 @@ export async function googleSignIn() {
         });
 
         if (createResponse === "ok") {
+          // if create user is successful, return the user object
           console.log(
             googleSignIn.name,
             "|",
@@ -59,6 +68,7 @@ export async function googleCreateUser({
   username,
 }: googleCreateUserProps) {
   try {
+    // assign general references
     const userDoc = firestore().collection("users").doc(firebaseUser.uid);
     const docSnap = await userDoc.get();
     const defaultBio = `FeelTok user since ${new Date().toLocaleDateString(
@@ -71,6 +81,7 @@ export async function googleCreateUser({
     const defaultGender = "Prefer not to say";
 
     if (!docSnap.exists) {
+      // if user does not exist, create new user in firestore
       await userDoc.set({
         fullName: fullName,
         email: firebaseUser.email,
@@ -82,6 +93,7 @@ export async function googleCreateUser({
         userSince: firestore.FieldValue.serverTimestamp(),
       });
 
+      // update user display name in authentication
       await updateProfile(firebaseUser, {
         displayName: username,
       });

@@ -4,7 +4,6 @@ import {
   View,
   SafeAreaView,
   RefreshControl,
-  Text,
 } from "react-native";
 import { defaultStyle, delay } from "@/constants/defaultStuff";
 import { useEffect, useState } from "react";
@@ -30,8 +29,10 @@ export default function Home() {
 
   async function onRefresh() {
     const data = await readPost({});
+    // execute readPost function, empty means it will read all posts from database
 
     if (data) {
+      // if data exists, assign user data to states
       setPosts(data || []);
     }
 
@@ -39,16 +40,6 @@ export default function Home() {
 
     setIsRefreshing(false);
   }
-
-  useEffect(() => {
-    async function fetchUserInfo() {
-      setIsPageLoading(true);
-      await onRefresh();
-      setIsPageLoading(false);
-    }
-
-    fetchUserInfo();
-  }, []);
 
   return (
     <>
@@ -78,6 +69,7 @@ export default function Home() {
           >
             {posts.map((post, index) =>
               post.author === "" || post.author === "test_user" ? null : (
+                // if author is not empty or author is test_user, display posts
                 <DisplayPost
                   key={index}
                   author={post.author}

@@ -10,10 +10,14 @@ export async function setCredentials({
   password,
 }: saveCredentialsProps) {
   try {
+    // create new entry in async storage
+    // this is executed when user is signed in
+
     await AsyncStorage.setItem(
       "userCredentials",
       JSON.stringify({ email, password })
     );
+
     console.log(setCredentials.name, "|", "credentials saved successfully");
   } catch (error) {
     console.error(setCredentials.name, "|", error);
@@ -22,10 +26,14 @@ export async function setCredentials({
 
 export async function getCredentials() {
   try {
+    // returns the credentials from async storage
+    // this is executed with persistence sign-in
+
     const value = await AsyncStorage.getItem("userCredentials");
 
     if (value !== null) {
       const { email, password } = JSON.parse(value);
+
       console.log(getCredentials.name, "|", "credentials found");
       return { email, password };
     }
@@ -36,7 +44,11 @@ export async function getCredentials() {
 
 export async function deleteCredentials() {
   try {
+    // deletes credentials from async storage
+    // this is executed when signing out
+
     await AsyncStorage.removeItem("userCredentials");
+
     console.log(
       deleteCredentials.name,
       "|",

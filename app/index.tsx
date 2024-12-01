@@ -10,6 +10,7 @@ import {
   defaultColors,
   defaultIcons,
   defaultStyle,
+  delay,
 } from "@/constants/defaultStuff";
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
@@ -21,14 +22,18 @@ import { getCredentials } from "@/constants/asyncStorage";
 
 export default function Index() {
   useEffect(() => {
+    // check if async storage has user credential entries
     const startup = auth().onAuthStateChanged(async (user) => {
       SplashScreen.preventAutoHideAsync();
 
+      // google account re-authentication
       if (user && user.providerData[0]?.providerId === "google.com") {
         try {
           const response = await GoogleSignin.signInSilently();
+          // execute signInSilently
 
           if (response) {
+            // if user is signed in, redirect to home
             console.log("indexSignInPersistence", "|", "google user verified");
             router.replace("/home");
           }
@@ -37,15 +42,19 @@ export default function Index() {
         }
       }
 
+      // password account re-authentication
       if (user && user.providerData[0]?.providerId === "password") {
         try {
           const data = await getCredentials();
+          // get data from async storage
           const result = await auth().signInWithEmailAndPassword(
             data?.email,
             data?.password
           );
+          // execute signInWithEmailAndPassword with stored credentials
 
           if (result.user) {
+            // if user is signed in, redirect to home
             console.log(
               "indexSignInPersistence",
               "|",
@@ -58,7 +67,8 @@ export default function Index() {
         }
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await delay(2000);
+
       SplashScreen.hide();
     });
 

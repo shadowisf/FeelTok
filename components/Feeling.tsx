@@ -21,6 +21,7 @@ export default function Feeling({
         styles.feeling,
         {
           backgroundColor:
+            // if this feeling is selected, background color should be purple
             currentFeeling === feeling
               ? defaultColors.primary
               : defaultColors.secondary,
@@ -34,7 +35,9 @@ export default function Feeling({
         style={[
           {
             fontSize: 11,
-            color: currentFeeling === feeling ? "white" : "black",
+            color:
+              // if this feeling is selected, text color should be white
+              currentFeeling === feeling ? "white" : "black",
           },
         ]}
       >

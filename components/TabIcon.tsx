@@ -16,6 +16,7 @@ export function TabIcon({ icon, color, focused }: TabIconProps) {
         resizeMode="contain"
         style={[
           styles.icon,
+          // if focused, color should be purple
           { tintColor: focused ? defaultColors.primary : color },
         ]}
       />

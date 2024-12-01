@@ -10,13 +10,21 @@ const EMAILJS_TEMPLATE_ID = "template_rac60ac";
 
 export async function checkOtp(firebaseUser: FirebaseAuthTypes.User) {
   try {
-    const userDoc = firestore().collection("users").doc(firebaseUser.uid);
-    const docSnap = await userDoc.get();
+    // assign general references
+    const userSnap = await firestore()
+      .collection("users")
+      .doc(firebaseUser.uid)
+      .get();
 
-    if (docSnap.exists) {
-      console.log(checkOtp.name, "|", "user's otp status found");
+    if (userSnap.exists) {
+      // if user exists, return user's otp status
 
-      return docSnap.data()?.otpStatus;
+      console.log(
+        checkOtp.name,
+        "|",
+        "user's otp status found: " + userSnap.data()?.otpStatus
+      );
+      return userSnap.data()?.otpStatus;
     }
   } catch (error) {
     console.log(checkOtp.name, "|", error);
@@ -26,22 +34,23 @@ export async function checkOtp(firebaseUser: FirebaseAuthTypes.User) {
 
 export async function sendOtp(firebaseUser: FirebaseAuthTypes.User) {
   try {
+    // assign general references
     const userDoc = firestore().collection("users").doc(firebaseUser.uid);
     const docSnap = await userDoc.get();
     let otp = "";
 
     if (docSnap.exists) {
-      // generates a random 6 digit number
+      // if user exists, generate otp
       otp = Math.floor(100000 + Math.random() * 900000).toString();
-    } else {
-      console.error(sendOtp.name, "|", "no document found");
     }
 
+    // update otp value in firestore
     await userDoc.update({
       otp: otp,
     });
 
     // uncomment this method if project is finalized
+    // send otp to user's email via emailJS api
     /* await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
@@ -54,7 +63,6 @@ export async function sendOtp(firebaseUser: FirebaseAuthTypes.User) {
     ); */
 
     console.log(sendOtp.name, "|", "OTP sent to user's email");
-
     return "ok";
   } catch (error) {
     console.error(sendOtp.name, "|", error);
@@ -69,11 +77,16 @@ type verifyOtpProps = {
 
 export async function verifyOtp({ otp, firebaseUser }: verifyOtpProps) {
   try {
-    const userDoc = firestore().collection("users").doc(firebaseUser.uid);
-    const docSnap = await userDoc.get();
+    // assign general references
+    const userSnap = await firestore()
+      .collection("users")
+      .doc(firebaseUser.uid)
+      .get();
 
     // uncomment "otp === 123456" if project is finalized
-    if ((docSnap.exists && docSnap.data()?.otp === otp) || otp === "123456") {
+    if ((userSnap.exists && userSnap.data()?.otp === otp) || otp === "123456") {
+      // if user exists and entered otp is correct, return ok
+
       console.log(verifyOtp.name, "|", "OTP verified");
       return "ok";
     } else {
@@ -83,22 +96,24 @@ export async function verifyOtp({ otp, firebaseUser }: verifyOtpProps) {
     console.error(verifyOtp.name, "|", error);
     Alert.alert("Oops!", "Something went wrong. Please try again.\n\n" + error);
   } finally {
+    // if otp is correct or incorrect, delete otp from firestore
     await deleteOtp(firebaseUser);
   }
 }
 
 export async function deleteOtp(firebaseUser: FirebaseAuthTypes.User) {
   try {
+    // assign general references
     const userDoc = firestore().collection("users").doc(firebaseUser.uid);
     const docSnap = await userDoc.get();
 
     if (docSnap.exists) {
+      // if user exists, delete otp field
       await userDoc.update({
         otp: firestore.FieldValue.delete(),
       });
 
       console.log(deleteOtp.name, "|", "OTP deleted");
-
       return "ok";
     }
   } catch (error) {

@@ -4,12 +4,26 @@ import firestore, {
 } from "@react-native-firebase/firestore";
 import { deleteImage, uploadImage } from "./cloudinaryAPI";
 
+export type PostData = {
+  id: string;
+  fullName: string;
+  username: string;
+  profilePicture: string;
+  caption: string;
+  feeling: string;
+  image: string;
+  createdAt: FirebaseFirestoreTypes.Timestamp;
+  author: string;
+};
+
 export function giveThemeFromEmotion(feeling: string) {
   let backgroundColor;
   let textColor;
   let emotion;
 
   switch (feeling) {
+    // returns backgroundColor, textColor, and emotion based on what emotion the user has selected
+
     case "Love":
       backgroundColor = "#FCE7F3"; // bg-pink-100
       textColor = "#9B2C2C"; // text-pink-800
@@ -54,18 +68,6 @@ export function giveThemeFromEmotion(feeling: string) {
   };
 }
 
-export type PostData = {
-  id: string;
-  fullName: string;
-  username: string;
-  profilePicture: string;
-  caption: string;
-  feeling: string;
-  image: string;
-  createdAt: FirebaseFirestoreTypes.Timestamp;
-  author: string;
-};
-
 type createPostProps = {
   firebaseUser: FirebaseAuthTypes.User;
   feeling: string;
@@ -82,13 +84,16 @@ export async function createPost({
   createdAt,
 }: createPostProps) {
   try {
+    // assign references
     const postDoc = firestore().collection("posts").doc();
 
     let imageURL;
 
     if (image === "") {
+      // if user selected no image, assign imageURL to be empty
       imageURL = "";
     } else {
+      // else upload image using uploadImage function
       imageURL = await uploadImage({
         uri: image,
         publicID: `post-${postDoc.id}`,
@@ -96,6 +101,7 @@ export async function createPost({
       });
     }
 
+    // create new post and store details in firestore database
     await postDoc.set({
       author: firebaseUser.uid,
       feeling: feeling,
@@ -105,7 +111,6 @@ export async function createPost({
     });
 
     console.log(createPost.name, "|", "post created succesfully");
-
     return "ok";
   } catch (error) {
     console.error(createPost.name, "|", error);
@@ -119,22 +124,27 @@ type readPostProps = {
 
 export async function readPost({ firebaseUser, uid }: readPostProps) {
   try {
+    // assign general references
     const userCol = firestore().collection("users");
     const postCol = firestore().collection("posts");
 
+    // get all the posts in firestore database
     const postSnap = await postCol.get();
 
     let posts;
 
+    // if querying posts for current user
     if (firebaseUser) {
       posts = await Promise.all(
         postSnap.docs
           .filter((doc) => doc.data().author === firebaseUser.uid)
+          // filters out posts that belong to the current user
           .map(async (doc) => {
             const postData = doc.data();
             const userSnap = await userCol.doc(postData.author).get();
             const userData = userSnap.exists ? userSnap.data() : null;
 
+            // maps through all the posts and returns an array of post data
             return {
               id: doc.id || "",
               caption: postData.caption || "",
@@ -150,15 +160,18 @@ export async function readPost({ firebaseUser, uid }: readPostProps) {
       );
     }
 
+    // if querying posts for a specific user
     if (uid) {
       posts = await Promise.all(
         postSnap.docs
           .filter((doc) => doc.data().author === uid)
+          // filters out posts that belong to specific user
           .map(async (doc) => {
             const postData = doc.data();
             const userSnap = await userCol.doc(postData.author).get();
             const userData = userSnap.exists ? userSnap.data() : null;
 
+            // maps through all the posts and returns an array of post data
             return {
               id: doc.id || "",
               caption: postData.caption || "",
@@ -174,13 +187,17 @@ export async function readPost({ firebaseUser, uid }: readPostProps) {
       );
     }
 
+    // if querying posts for ALL users
+    // this is default for home page
     if (!firebaseUser && !uid) {
       posts = await Promise.all(
         postSnap.docs.map(async (doc) => {
+          // does not filter anything
           const postData = doc.data();
           const userSnap = await userCol.doc(postData.author).get();
           const userData = userSnap.exists ? userSnap.data() : null;
 
+          // maps through all the posts and returns an array of post data
           return {
             id: doc.id || "",
             caption: postData.caption || "",
@@ -205,7 +222,10 @@ export async function readPost({ firebaseUser, uid }: readPostProps) {
 
 export async function deletePost(postID: string) {
   try {
+    // assign general references
     await firestore().collection("posts").doc(postID).delete();
+
+    // deletes post image from cloudinary
     await deleteImage(`post-${postID}`);
 
     console.log(deletePost.name, "|", "post deleted successfully");
@@ -227,12 +247,14 @@ export async function reportPost({
   reason,
 }: reportPostProps) {
   try {
+    // assign general references
     const reportDoc = firestore()
       .collection("posts")
       .doc(postID)
       .collection("reports")
       .doc();
 
+    // create a new report collection on specific post, and store report details
     await reportDoc.set({
       author: firebaseUser.uid,
       reason: reason,

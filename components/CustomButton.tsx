@@ -37,6 +37,7 @@ export default function CustomButton({
       activeOpacity={0.75}
       disabled={isDisabled}
     >
+      {/* if isLoading is true, show ActivityIndicator */}
       {isLoading ? (
         <ActivityIndicator color={"white"} />
       ) : (

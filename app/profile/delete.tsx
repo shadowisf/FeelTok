@@ -19,9 +19,11 @@ export default function DeleteProfile() {
 
   useEffect(() => {
     async function onRefresh() {
+      // execute readUser function of currentUser
       const data = await readUser({ firebaseUser });
 
       if (data) {
+        // if data exists, assign provider to states
         setProvider(data.provider);
       }
 

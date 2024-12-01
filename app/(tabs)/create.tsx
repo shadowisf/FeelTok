@@ -33,9 +33,11 @@ export default function Create() {
 
   useEffect(() => {
     async function fetchUserInfo() {
+      // execute readUser function of currentUser
       const data = await readUser({ firebaseUser });
 
       if (data) {
+        // if data exists, assign user data to states
         setProfilePicture(
           data.profilePicture === "" ? "default" : data.profilePicture
         );
@@ -49,6 +51,7 @@ export default function Create() {
     fetchUserInfo();
   }, []);
 
+  // check feeling and caption if they are not empty
   useEffect(() => {
     function checkFields() {
       if (feeling && caption) {
@@ -59,11 +62,13 @@ export default function Create() {
     }
 
     checkFields();
+    // execute checkFields() whenever feeling or caption value changes
   }, [feeling, caption]);
 
   async function handlePost() {
     setIsLoading(true);
 
+    // execute create post function with values from state
     const createPostResult = await createPost({
       firebaseUser,
       feeling,
@@ -72,7 +77,8 @@ export default function Create() {
       createdAt: firestore.FieldValue.serverTimestamp(),
     });
 
-    if (createPostResult) {
+    // if createPostResult is ok, remove all values from state and display alert
+    if (createPostResult === "ok") {
       handleRemoveAll();
       Alert.alert("Success", "Post created");
     }
@@ -80,6 +86,7 @@ export default function Create() {
     setIsLoading(false);
   }
 
+  // upload image function
   async function handleUploadImage() {
     const result = await runImagePicker(4, 3);
 
@@ -118,6 +125,7 @@ export default function Create() {
 
           <View style={{ gap: 10 }}>
             <View style={[styles.feelingContainer]}>
+              {/* love emotion */}
               <Feeling
                 currentFeeling={feeling}
                 feeling={"Love"}
@@ -125,6 +133,7 @@ export default function Create() {
                 emoji="❤️"
               />
 
+              {/* gratitude emotion */}
               <Feeling
                 currentFeeling={feeling}
                 feeling={"Gratitude"}
@@ -132,6 +141,7 @@ export default function Create() {
                 emoji={"☀️"}
               />
 
+              {/* apology emotion */}
               <Feeling
                 currentFeeling={feeling}
                 feeling={"Apology"}
@@ -141,6 +151,7 @@ export default function Create() {
             </View>
 
             <View style={[styles.feelingContainer]}>
+              {/* appreciation emotion */}
               <Feeling
                 currentFeeling={feeling}
                 feeling={"Appreciation"}
@@ -148,6 +159,7 @@ export default function Create() {
                 emoji={"🌟"}
               />
 
+              {/* mindfulness emotion */}
               <Feeling
                 currentFeeling={feeling}
                 feeling={"Mindfulness"}
@@ -155,6 +167,7 @@ export default function Create() {
                 emoji={"🧘"}
               />
 
+              {/* thankfulness emotion */}
               <Feeling
                 currentFeeling={feeling}
                 feeling={"Thankfulness"}
@@ -165,6 +178,7 @@ export default function Create() {
           </View>
 
           {feeling === "" ? null : (
+            // if user selected a feeling, display post template component
             <CreatePost
               profilePicture={profilePicture}
               fullName={fullName}
@@ -179,6 +193,7 @@ export default function Create() {
           )}
 
           {feeling === "" ? null : (
+            // if user selected a feeling, display post button
             <CustomButton
               label="Post"
               color={defaultColors.primary}

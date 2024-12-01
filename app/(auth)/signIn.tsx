@@ -202,6 +202,7 @@ export default function SignIn() {
         </View>
 
         <View style={{ gap: 15 }}>
+          {/* email input field */}
           <CustomInput
             value={email}
             handleChange={setEmail}
@@ -209,6 +210,7 @@ export default function SignIn() {
             secureText={false}
           />
 
+          {/* password input field */}
           <CustomInput
             value={password}
             handleChange={setPassword}

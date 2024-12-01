@@ -98,6 +98,7 @@ export default function SignUp() {
 
           <View style={{ gap: 15 }}>
             <View style={styles.avatarContainer}>
+              {/* avatar component */}
               <Avatar
                 type="upload"
                 handleButtonPress={handleUploadProfilePicture}
@@ -113,6 +114,7 @@ export default function SignUp() {
               />
             </View>
 
+            {/* name input field */}
             <CustomInput
               value={fullName}
               handleChange={setFullName}
@@ -120,6 +122,7 @@ export default function SignUp() {
               secureText={false}
             />
 
+            {/* username input field */}
             <CustomInput
               value={username}
               handleChange={setUsername}
@@ -127,6 +130,7 @@ export default function SignUp() {
               secureText={false}
             />
 
+            {/* email input field */}
             <CustomInput
               value={email}
               handleChange={setEmail}
@@ -134,6 +138,7 @@ export default function SignUp() {
               secureText={false}
             />
 
+            {/* password input field */}
             <CustomInput
               value={password}
               handleChange={setPassword}

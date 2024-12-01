@@ -54,10 +54,11 @@ export default function EditProfile() {
   let content;
 
   async function onRefresh() {
+    // execut readUser function of currentUser
     const data = await readUser({ firebaseUser });
 
     if (data) {
-      // assign user data to states
+      // if data, assign user data to states
       setEmail(data.email);
       setProfilePicture(
         data.profilePicture === "" ? "default" : data.profilePicture
@@ -82,6 +83,7 @@ export default function EditProfile() {
       setIsPageLoading(false);
     }
 
+    // on startup, fetch user info
     fetchUserInfo();
   }, []);
 
@@ -240,6 +242,7 @@ export default function EditProfile() {
     setIsLoading(false);
   }
 
+  // if user is in verification mode, display verification screen
   if (isVerifying) {
     content = (
       <VerifyChangesToProfile
@@ -255,6 +258,7 @@ export default function EditProfile() {
     );
   }
 
+  // if user is not in verification mode, display edit profile screen
   if (!isVerifying) {
     content = (
       <>
@@ -393,6 +397,7 @@ export default function EditProfile() {
               },
             ]}
           >
+            {/* main content goes here */}
             {content}
           </View>
         </ScrollView>

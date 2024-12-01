@@ -30,10 +30,12 @@ export default function Profile() {
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
 
   async function onRefresh() {
+    // execute readUser and readPost function of currentUser
     const userData = await readUser({ firebaseUser });
     const postData = await readPost({ firebaseUser });
 
     if (userData) {
+      // if userData exists, assign user data to states
       setProfilePicture(
         userData.profilePicture === "" ? "default" : userData.profilePicture
       );
@@ -43,6 +45,7 @@ export default function Profile() {
     }
 
     if (postData) {
+      // if postData exists, assign postData to states
       setPosts(postData || []);
     }
 
@@ -97,6 +100,7 @@ export default function Profile() {
 
               <View>
                 {posts.map((post, index) => (
+                  // display posts of currentUser
                   <DisplayPost
                     key={index}
                     author={post.author}

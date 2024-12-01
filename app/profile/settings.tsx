@@ -32,10 +32,11 @@ export default function ProfileSettings() {
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
 
   async function onRefresh() {
+    // execute readUser function of currentUser
     const data = await readUser({ firebaseUser });
 
     if (data) {
-      // assign user data to states
+      // if data exists, assign user data to states
       setEmail(data.email);
       setProfilePicture(
         data.profilePicture === "" ? "default" : data.profilePicture
@@ -59,6 +60,7 @@ export default function ProfileSettings() {
       setIsPageLoading(false);
     }
 
+    // on startup, fetch user info
     fetchUserInfo();
   }, []);
 

@@ -33,9 +33,8 @@ export default function VerifyChangesToProfile({
 
         <Text>
           To apply changes to your profile, please enter your{" "}
-          {newPassword === "" ? (
-            ""
-          ) : (
+          {newPassword === "" ? null : (
+            // if newPassword is not empty, display "previous"
             <Text
               style={{ fontWeight: "bold", textDecorationLine: "underline" }}
             >
@@ -46,6 +45,7 @@ export default function VerifyChangesToProfile({
         </Text>
       </View>
 
+      {/* password input field */}
       <CustomInput
         value={password}
         handleChange={setPassword}

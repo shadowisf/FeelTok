@@ -14,10 +14,12 @@ export default function OtherProfileLayout() {
   const [isReporting, setIsReporting] = useState(false);
 
   const { uid } = useLocalSearchParams<{ uid: string }>();
+  // get dynamic uid from url
 
   const currentUser = auth().currentUser as FirebaseAuthTypes.User;
 
   async function handleReportUser() {
+    // execute reportUser function with values from state and dynamic uid
     const reportUserResult = await reportUser({
       targetUID: uid,
       firebaseUser: currentUser,
@@ -25,6 +27,7 @@ export default function OtherProfileLayout() {
     });
 
     if (reportUserResult === "ok") {
+      // if reportUserResult is ok, display alert
       Alert.alert("Success", "User reported");
     }
   }
@@ -48,6 +51,7 @@ export default function OtherProfileLayout() {
           options={{
             title: "Other User's Profile",
             headerRight: () => (
+              // three dots button
               <ClickableIcon
                 icon={defaultIcons.more}
                 onPress={() => setIsModalOpen(true)}

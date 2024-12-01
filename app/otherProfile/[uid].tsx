@@ -27,12 +27,15 @@ export default function OtherProfile() {
   const [posts, setPosts] = useState<PostData[]>([]);
 
   const { uid } = useLocalSearchParams<{ uid: string }>();
+  // get dynamic uid from url
 
   async function onRefresh() {
+    // execute readUser and readPost function using dynamic uid
     const userData = await readUser({ uid });
     const postData = await readPost({ uid });
 
     if (userData) {
+      // if userData exists, assign user data to states
       setProfilePicture(
         userData.profilePicture === "" ? "default" : userData.profilePicture
       );
@@ -42,6 +45,7 @@ export default function OtherProfile() {
     }
 
     if (postData) {
+      // if postData exists, assign postData to states
       setPosts(postData || []);
     }
 
@@ -57,6 +61,7 @@ export default function OtherProfile() {
       setIsPageLoading(false);
     }
 
+    // on startup, execute fetchUserInfo
     fetchUserInfo();
   }, []);
 
@@ -79,6 +84,7 @@ export default function OtherProfile() {
         >
           <View style={[defaultStyle.container, styles.screenContainer]}>
             <View style={styles.profileContainer}>
+              {/* display profile picture, name, username, and bio of other user */}
               <Avatar type="display" size={100} source={profilePicture} />
               <Text style={[defaultStyle.h4, { fontWeight: "bold" }]}>
                 {fullName}
@@ -96,6 +102,7 @@ export default function OtherProfile() {
 
               <View>
                 {posts.map((post, index) => (
+                  // display posts of other user
                   <DisplayPost
                     key={index}
                     author={post.author}

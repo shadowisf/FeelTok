@@ -36,21 +36,45 @@ export default function PostMoreOptionsModal({
   let content;
 
   useEffect(() => {
-    if (reason) {
-      setIsDisabled(false);
-    } else {
-      setIsDisabled(true);
+    function checkField() {
+      if (reason) {
+        // if reason is not empty
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
     }
+
+    checkField();
+    // execute checkField function every time reason value changes
   }, [reason]);
 
+  function handleSendReport() {
+    setIsLoading(true);
+
+    handleReport();
+
+    setReason("");
+
+    setIsModalOpen(false);
+    setIsReporting(false);
+
+    setIsLoading(false);
+  }
+
+  async function handleDeletePost() {
+    setIsModalOpen(false);
+
+    await delay(500);
+
+    handleDelete();
+  }
+
+  // if user is in reporting page
   if (isReporting) {
     content = (
       <>
-        <Text
-          style={[defaultStyle.h4, { fontWeight: "bold", textAlign: "center" }]}
-        >
-          Report Post
-        </Text>
+        <Text style={[defaultStyle.h4, styles.header]}>Report Post</Text>
 
         <View style={{ height: 100 }}>
           <CustomInput
@@ -65,18 +89,7 @@ export default function PostMoreOptionsModal({
           <CustomButton
             label="Send Report"
             color={defaultColors.primary}
-            handlePress={() => {
-              setIsLoading(true);
-
-              handleReport();
-
-              setReason("");
-
-              setIsModalOpen(false);
-              setIsReporting(false);
-
-              setIsLoading(false);
-            }}
+            handlePress={handleSendReport}
             isDisabled={isDisabled}
           />
 
@@ -93,28 +106,22 @@ export default function PostMoreOptionsModal({
   if (!isReporting) {
     content = (
       <>
-        <Text
-          style={[defaultStyle.h4, { fontWeight: "bold", textAlign: "center" }]}
-        >
-          More Options
-        </Text>
+        <Text style={[defaultStyle.h4, styles.header]}>More Options</Text>
 
         <View style={{ gap: 10 }}>
           {author === firebaseUser.uid ? (
+            /* if post author is current user, show delete button */
             <CustomButton
               label="Delete Post"
               color={"darkred"}
-              handlePress={async () => {
-                setIsModalOpen(false);
-                await delay(500);
-                handleDelete();
-              }}
+              handlePress={handleDeletePost}
             />
           ) : (
+            /*  if post author is not current user, show report button */
             <CustomButton
               label="Report Post"
               color={defaultColors.primary}
-              handlePress={async () => {
+              handlePress={() => {
                 setIsReporting(true);
               }}
             />
@@ -145,6 +152,11 @@ export default function PostMoreOptionsModal({
 }
 
 const styles = StyleSheet.create({
+  header: {
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
