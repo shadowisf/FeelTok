@@ -6,10 +6,13 @@ import CustomInput from "./CustomInput";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 type PostMoreOptionsModalProps = {
+  firebaseUser: FirebaseAuthTypes.User;
   author: string;
   isModalOpen: boolean;
   isReporting: boolean;
   reason: string;
+  isLoading: boolean;
+  isDisabled: boolean;
   setReason: (reason: string) => void;
   setIsModalOpen: (value: boolean) => void;
   setIsReporting: (value: boolean) => void;
@@ -18,57 +21,20 @@ type PostMoreOptionsModalProps = {
 };
 
 export default function PostMoreOptionsModal({
+  firebaseUser,
   author,
   isModalOpen,
   isReporting,
   reason,
+  isLoading,
+  isDisabled,
   setReason,
   setIsModalOpen,
   setIsReporting,
   handleDelete,
   handleReport,
 }: PostMoreOptionsModalProps) {
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
-
   let content;
-
-  useEffect(() => {
-    function checkField() {
-      if (reason) {
-        // if reason is not empty
-        setIsDisabled(false);
-      } else {
-        setIsDisabled(true);
-      }
-    }
-
-    checkField();
-    // execute checkField function every time reason value changes
-  }, [reason]);
-
-  function handleSendReport() {
-    setIsLoading(true);
-
-    handleReport();
-
-    setReason("");
-
-    setIsModalOpen(false);
-    setIsReporting(false);
-
-    setIsLoading(false);
-  }
-
-  async function handleDeletePost() {
-    setIsModalOpen(false);
-
-    await delay(500);
-
-    handleDelete();
-  }
 
   // if user is in reporting page
   if (isReporting) {
@@ -89,7 +55,7 @@ export default function PostMoreOptionsModal({
           <CustomButton
             label="Send Report"
             color={defaultColors.primary}
-            handlePress={handleSendReport}
+            handlePress={handleReport}
             isDisabled={isDisabled}
           />
 
@@ -114,7 +80,7 @@ export default function PostMoreOptionsModal({
             <CustomButton
               label="Delete Post"
               color={"darkred"}
-              handlePress={handleDeletePost}
+              handlePress={handleDelete}
             />
           ) : (
             /*  if post author is not current user, show report button */

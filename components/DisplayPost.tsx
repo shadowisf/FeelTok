@@ -7,9 +7,9 @@ import {
   Alert,
 } from "react-native";
 import Avatar from "./Avatar";
-import { defaultColors, defaultIcons } from "@/constants/defaultStuff";
+import { defaultColors, defaultIcons, delay } from "@/constants/defaultStuff";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   deletePost,
   giveThemeFromEmotion,
@@ -29,6 +29,7 @@ type DisplayPostProps = {
   feeling: string;
   image?: string;
   createdAt: FirebaseFirestoreTypes.Timestamp;
+  onRefresh?: () => void;
 };
 
 export default function DisplayPost({
@@ -41,11 +42,15 @@ export default function DisplayPost({
   feeling,
   image,
   createdAt,
+  onRefresh,
 }: DisplayPostProps) {
   const [reason, setReason] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReporting, setIsReporting] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
 
@@ -64,7 +69,23 @@ export default function DisplayPost({
     minute: "2-digit",
   });
 
+  useEffect(() => {
+    function checkField() {
+      if (reason) {
+        // if reason is not empty
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
+    }
+
+    checkField();
+    // execute checkField function every time reason value changes
+  }, [reason]);
+
   async function handleReportPost() {
+    setIsLoading(true);
+
     // execute reportPost function with values from states
     const reportResult = await reportPost({
       firebaseUser,
@@ -76,9 +97,20 @@ export default function DisplayPost({
       // if reportResult is ok, display alert
       Alert.alert("Success", "Post reported");
     }
+
+    setReason("");
+
+    setIsModalOpen(false);
+    setIsReporting(false);
+
+    setIsLoading(false);
   }
 
   async function handleDeletePost() {
+    setIsModalOpen(false);
+
+    await delay(500);
+
     Alert.alert("Delete Post", "Are you sure you want to delete this post?", [
       {
         text: "Cancel",
@@ -93,7 +125,6 @@ export default function DisplayPost({
 
           if (deletePostResult === "ok") {
             // if deletePostResult is ok, display alert
-            /* onRefresh(); */
 
             Alert.alert("Success", "Post deleted");
           }
@@ -187,6 +218,7 @@ export default function DisplayPost({
       </View>
 
       <PostMoreOptionsModal
+        firebaseUser={firebaseUser}
         author={author}
         isModalOpen={isModalOpen}
         isReporting={isReporting}
@@ -196,6 +228,8 @@ export default function DisplayPost({
         handleReport={handleReportPost}
         reason={reason}
         setReason={setReason}
+        isLoading={isLoading}
+        isDisabled={isDisabled}
       />
     </>
   );

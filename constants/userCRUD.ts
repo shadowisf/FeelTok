@@ -127,6 +127,7 @@ export async function readUser({ firebaseUser, uid }: ReadUserProps) {
 
     // current user
     if (firebaseUser) {
+      firebaseUser.reload();
       userDoc = firestore().collection("users").doc(firebaseUser.uid);
       docSnap = await userDoc.get();
     }

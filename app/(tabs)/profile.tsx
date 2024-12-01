@@ -99,21 +99,27 @@ export default function Profile() {
               </View>
 
               <View>
-                {posts.map((post, index) => (
-                  // display posts of currentUser
-                  <DisplayPost
-                    key={index}
-                    author={post.author}
-                    profilePicture={post.profilePicture}
-                    fullName={post.fullName}
-                    username={post.username}
-                    caption={post.caption}
-                    feeling={post.feeling}
-                    createdAt={post.createdAt}
-                    image={post.image}
-                    id={post.id}
-                  />
-                ))}
+                {posts
+                  // sort the posts with latest being at the top
+                  .sort(
+                    (a, b) =>
+                      b.createdAt.seconds * 1000 - a.createdAt.seconds * 1000
+                  )
+                  .map((post, index) => (
+                    // display posts of currentUser
+                    <DisplayPost
+                      key={index}
+                      author={post.author}
+                      profilePicture={post.profilePicture}
+                      fullName={post.fullName}
+                      username={post.username}
+                      caption={post.caption}
+                      feeling={post.feeling}
+                      createdAt={post.createdAt}
+                      image={post.image}
+                      id={post.id}
+                    />
+                  ))}
               </View>
             </View>
           </View>

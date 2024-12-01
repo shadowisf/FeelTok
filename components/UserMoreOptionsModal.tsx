@@ -7,6 +7,8 @@ import CustomInput from "./CustomInput";
 type UserMoreOptionsModalProps = {
   isModalOpen: boolean;
   isReporting: boolean;
+  isLoading: boolean;
+  isDisabled: boolean;
   reason: string;
   setReason: (reason: string) => void;
   setIsModalOpen: (value: boolean) => void;
@@ -17,45 +19,15 @@ type UserMoreOptionsModalProps = {
 export default function UserMoreOptionsModal({
   isModalOpen,
   isReporting,
+  isLoading,
+  isDisabled,
   reason,
   setReason,
   setIsModalOpen,
   setIsReporting,
   handleReport,
 }: UserMoreOptionsModalProps) {
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-
   let content;
-
-  useEffect(() => {
-    function checkField() {
-      if (reason) {
-        // check if reason is not empty
-        setIsDisabled(false);
-      } else {
-        setIsDisabled(true);
-      }
-    }
-
-    checkField();
-    // execute checkField function every time reason value changes
-  }, [reason]);
-
-  function handleSendReport() {
-    () => {
-      setIsLoading(true);
-
-      handleReport();
-
-      setReason("");
-
-      setIsModalOpen(false);
-      setIsReporting(false);
-
-      setIsLoading(false);
-    };
-  }
 
   // if user is in reporting page
   if (isReporting) {
@@ -76,7 +48,7 @@ export default function UserMoreOptionsModal({
           <CustomButton
             label="Send Report"
             color={defaultColors.primary}
-            handlePress={handleSendReport}
+            handlePress={handleReport}
             isDisabled={isDisabled}
           />
 
