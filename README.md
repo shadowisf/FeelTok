@@ -4,7 +4,7 @@
    ```bash
    npm install
    ```
-2. Download and install development build on real device or simulator
+2. Install development build on real device or simulator, using the .app or .apk provided in "builds" folder
 2. Start Expo in development mode
    ```bash
     npx expo start
