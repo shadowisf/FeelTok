@@ -20,6 +20,7 @@ export default function OtherProfile() {
   const [username, setUsername] = useState("");
   const [profilePicture, setProfilePicture] = useState("default");
   const [bio, setBio] = useState("");
+  const [imageKey, setImageKey] = useState(0);
 
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -42,11 +43,13 @@ export default function OtherProfile() {
       setUsername(userData.username);
       setFullName(userData.fullName);
       setBio(userData.bio);
+      setImageKey(imageKey + 1);
     }
 
     if (postData) {
       // if postData exists, assign postData to states
       setPosts(postData || []);
+      setImageKey(imageKey + 1);
     }
 
     await delay(500);
@@ -57,7 +60,9 @@ export default function OtherProfile() {
   useEffect(() => {
     async function fetchUserInfo() {
       setIsPageLoading(true);
+
       await onRefresh();
+
       setIsPageLoading(false);
     }
 
@@ -85,7 +90,12 @@ export default function OtherProfile() {
           <View style={[defaultStyle.container, styles.screenContainer]}>
             <View style={styles.profileContainer}>
               {/* display profile picture, name, username, and bio of other user */}
-              <Avatar type="display" size={100} source={profilePicture} />
+              <Avatar
+                type="display"
+                size={100}
+                source={profilePicture}
+                imageKey={imageKey}
+              />
               <Text style={[defaultStyle.h4, { fontWeight: "bold" }]}>
                 {fullName}
               </Text>
@@ -120,6 +130,7 @@ export default function OtherProfile() {
                       createdAt={post.createdAt}
                       image={post.image}
                       id={post.id}
+                      imageKey={imageKey}
                     />
                   ))}
               </View>

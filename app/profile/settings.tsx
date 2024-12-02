@@ -25,6 +25,7 @@ export default function ProfileSettings() {
   const [gender, setGender] = useState("");
   const [bio, setBio] = useState("");
   const [emailVerifyStatus, setEmailVerifyStatus] = useState(false);
+  const [imageKey, setImageKey] = useState(0);
 
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -46,6 +47,7 @@ export default function ProfileSettings() {
       setEmailVerifyStatus(data.emailVerified);
       setGender(data.gender);
       setBio(data.bio);
+      setImageKey(imageKey + 1);
     }
 
     await delay(500);
@@ -56,7 +58,9 @@ export default function ProfileSettings() {
   useEffect(() => {
     async function fetchUserInfo() {
       setIsPageLoading(true);
+
       await onRefresh();
+
       setIsPageLoading(false);
     }
 
@@ -116,6 +120,7 @@ export default function ProfileSettings() {
                 type="avatar"
                 header="Profile Picture"
                 value={profilePicture}
+                imageKey={imageKey}
               />
               <ProfileInfo type="text" header="Name" value={fullName} />
               <ProfileInfo type="text" header="Username" value={username} />

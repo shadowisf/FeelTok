@@ -21,6 +21,7 @@ export default function Create() {
   const [profilePicture, setProfilePicture] = useState("");
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
+  const [imageKey, setImageKey] = useState(0);
 
   const [feeling, setFeeling] = useState("");
   const [caption, setCaption] = useState("");
@@ -43,6 +44,7 @@ export default function Create() {
         );
         setUsername(data.username);
         setFullName(data.fullName);
+        setImageKey(imageKey + 1);
       }
 
       await delay(500);
@@ -92,13 +94,20 @@ export default function Create() {
 
     if (result) {
       setImage(result);
+      setImageKey(imageKey + 1);
     }
+  }
+
+  function handleRemoveImage() {
+    setImage("");
+    setImageKey(imageKey + 1);
   }
 
   function handleRemoveAll() {
     setFeeling("");
     setCaption("");
     setImage("");
+    setImageKey(imageKey + 1);
   }
 
   return (
@@ -188,7 +197,8 @@ export default function Create() {
               setCaption={setCaption}
               image={image}
               handleAddMedia={handleUploadImage}
-              handleRemoveMedia={() => setImage("")}
+              handleRemoveMedia={handleRemoveImage}
+              imageKey={imageKey}
             />
           )}
 

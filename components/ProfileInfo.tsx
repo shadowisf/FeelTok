@@ -20,7 +20,13 @@ export default function ProfileInfo({
 
   if (type === "avatar") {
     component = (
-      <Avatar type="display" key={imageKey} source={value} size={100} />
+      <Avatar
+        imageKey={imageKey ? imageKey : 0}
+        type="display"
+        key={imageKey}
+        source={value}
+        size={100}
+      />
     );
   }
 

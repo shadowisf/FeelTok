@@ -152,7 +152,12 @@ export default function DisplayPost({
         <View style={styles.topContainer}>
           <View style={styles.profileContainer}>
             <TouchableOpacity onPress={handleOtherProfile}>
-              <Avatar type="display" size={50} source={profilePicture} />
+              <Avatar
+                type="display"
+                size={50}
+                source={profilePicture}
+                imageKey={imageKey}
+              />
             </TouchableOpacity>
 
             <View>

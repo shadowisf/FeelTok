@@ -32,6 +32,7 @@ export default function EditProfile() {
   const [bio, setBio] = useState("");
   const [otpStatus, setOtpStatus] = useState(false);
   const [provider, setProvider] = useState("");
+  const [imageKey, setImageKey] = useState(0);
 
   const [isPageLoading, setIsPageLoading] = useState(false);
 
@@ -69,6 +70,7 @@ export default function EditProfile() {
       setOtpStatus(data.otpStatus);
       setGender(data.gender);
       setBio(data.bio);
+      setImageKey(imageKey + 1);
     }
 
     await delay(500);
@@ -79,7 +81,9 @@ export default function EditProfile() {
   useEffect(() => {
     async function fetchUserInfo() {
       setIsPageLoading(true);
+
       await onRefresh();
+
       setIsPageLoading(false);
     }
 
@@ -147,6 +151,11 @@ export default function EditProfile() {
       // if result is not null, set profile picture
       setProfilePicture(result);
     }
+  }
+
+  function handleRemoveProfilePicture() {
+    setProfilePicture("default");
+    setImageKey(imageKey + 1);
   }
 
   async function handleSignOut() {
@@ -269,11 +278,12 @@ export default function EditProfile() {
               handleButtonPress={handleUploadProfilePicture}
               size={100}
               source={profilePicture}
+              imageKey={imageKey}
             />
 
             <CustomButton
               label="Remove Profile Picture"
-              handlePress={() => setProfilePicture("default")}
+              handlePress={handleRemoveProfilePicture}
               color={defaultColors.primary}
               isDisabled={profilePicture === "default"}
             />

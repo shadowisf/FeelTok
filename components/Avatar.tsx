@@ -9,7 +9,7 @@ import ClickableIcon from "./ClickableIcon";
 type AvatarProps = {
   source: string;
   size: number;
-  imageKey?: number;
+  imageKey: number;
   type: string;
   handleButtonPress?: () => void;
   additionalStyles?: {};

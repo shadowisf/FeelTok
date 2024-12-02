@@ -15,6 +15,7 @@ type CreatePostProps = {
   setCaption: (caption: string) => void;
   handleAddMedia: () => void;
   handleRemoveMedia: () => void;
+  imageKey: number;
 };
 
 export default function CreatePost({
@@ -27,6 +28,7 @@ export default function CreatePost({
   setCaption,
   handleAddMedia,
   handleRemoveMedia,
+  imageKey,
 }: CreatePostProps) {
   const { backgroundColor, textColor, emotion } = giveThemeFromEmotion(feeling);
 
@@ -45,7 +47,12 @@ export default function CreatePost({
     <View style={[styles.postContainer, { backgroundColor: backgroundColor }]}>
       <View style={styles.topContainer}>
         <View style={styles.profileContainer}>
-          <Avatar type="display" size={50} source={profilePicture} />
+          <Avatar
+            type="display"
+            size={50}
+            source={profilePicture}
+            imageKey={imageKey}
+          />
           <View>
             <Text style={[{ color: textColor, fontWeight: "bold" }]}>
               {fullName}
@@ -77,7 +84,11 @@ export default function CreatePost({
 
           {/* if image exists, show image component */}
           {image === "" ? null : (
-            <Image source={{ uri: image }} style={styles.image} />
+            <Image
+              source={{ uri: image }}
+              style={styles.image}
+              key={imageKey}
+            />
           )}
 
           <View style={styles.createBottomContainer}>
@@ -93,7 +104,7 @@ export default function CreatePost({
                   icon={defaultIcons.folderClose}
                   onPress={handleRemoveMedia}
                   imageAdditionalStyles={{ tintColor: textColor }}
-                ></ClickableIcon>
+                />
               )}
             </View>
 

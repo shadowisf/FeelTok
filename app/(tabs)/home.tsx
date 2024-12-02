@@ -22,8 +22,9 @@ export default function Home() {
   useEffect(() => {
     async function fetchPostInfo() {
       setIsPageLoading(true);
+
       await onRefresh();
-      setImageKey(imageKey + 1);
+
       setIsPageLoading(false);
     }
 
@@ -31,14 +32,13 @@ export default function Home() {
   }, []);
 
   async function onRefresh() {
-    setImageKey(imageKey + 1);
-
     const data = await readPost({});
     // execute readPost function, empty means it will read all posts from database
 
     if (data) {
       // if data exists, assign user data to states
       setPosts(data || []);
+      setImageKey(imageKey + 1);
     }
 
     await delay(1000);

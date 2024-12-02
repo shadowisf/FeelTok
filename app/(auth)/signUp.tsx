@@ -14,6 +14,7 @@ export default function SignUp() {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [profilePicture, setProfilePicture] = useState("default");
+  const [imageKey, setImageKey] = useState(0);
 
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +46,13 @@ export default function SignUp() {
 
     if (result) {
       setProfilePicture(result);
+      setImageKey(imageKey + 1);
     }
+  }
+
+  function handleRemoveProfilePicture() {
+    setProfilePicture("default");
+    setImageKey(imageKey + 1);
   }
 
   async function handleSignUp() {
@@ -104,11 +111,12 @@ export default function SignUp() {
                 handleButtonPress={handleUploadProfilePicture}
                 size={100}
                 source={profilePicture}
+                imageKey={imageKey}
               />
 
               <CustomButton
                 label="Remove Profile Picture"
-                handlePress={() => setProfilePicture("default")}
+                handlePress={handleRemoveProfilePicture}
                 color={defaultColors.primary}
                 isDisabled={profilePicture === "default"}
               />
