@@ -5,7 +5,7 @@
 
 &emsp;
 
-## SETUP
+## CLIENT APP SETUP
 1. Clone this repository
 2. Open in VSCODE
 3. Install dependencies
