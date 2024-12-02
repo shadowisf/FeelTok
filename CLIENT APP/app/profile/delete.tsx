@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
 import { defaultStyle, defaultColors, delay } from "@/constants/defaultStuff";
-import { readUser, killEmAll } from "@/constants/userCRUD";
+import { readUser, killEmAll } from "@/utils/userCRUD";
 import { router } from "expo-router";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 

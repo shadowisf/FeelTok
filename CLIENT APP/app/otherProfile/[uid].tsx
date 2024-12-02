@@ -7,11 +7,11 @@ import {
   RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { readUser } from "@/constants/userCRUD";
+import { readUser } from "@/utils/userCRUD";
 import { defaultColors, defaultStyle, delay } from "@/constants/defaultStuff";
 import Avatar from "@/components/Avatar";
 import Loader from "@/components/Loader";
-import { PostData, readPost } from "@/constants/postCRUD";
+import { PostData, readPost } from "@/utils/postCRUD";
 import DisplayPost from "@/components/DisplayPost";
 import { useLocalSearchParams } from "expo-router";
 

@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import auth from "@react-native-firebase/auth";
 import * as SplashScreen from "expo-splash-screen";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { getCredentials } from "@/constants/asyncStorage";
+import { getCredentials } from "@/utils/asyncStorage";
 
 SplashScreen.preventAutoHideAsync();
 

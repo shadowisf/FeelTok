@@ -3,10 +3,10 @@ import { View, Text, ScrollView, StyleSheet, SafeAreaView } from "react-native";
 import CustomInput from "@/components/CustomInput";
 import { useEffect, useState } from "react";
 import CustomButton from "@/components/CustomButton";
-import { createUser, verifyUser } from "@/constants/userCRUD";
+import { createUser, verifyUser } from "@/utils/userCRUD";
 import Avatar from "@/components/Avatar";
 import { Link, router } from "expo-router";
-import { runImagePicker } from "@/constants/imagePicker";
+import { runImagePicker } from "@/utils/imagePicker";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");

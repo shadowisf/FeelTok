@@ -2,7 +2,7 @@ import { Text, StyleSheet, View, Image } from "react-native";
 import Avatar from "./Avatar";
 import CustomInput from "./CustomInput";
 import { defaultColors, defaultIcons } from "@/constants/defaultStuff";
-import { giveThemeFromEmotion } from "@/constants/postCRUD";
+import { giveThemeFromEmotion } from "@/utils/postCRUD";
 import ClickableIcon from "./ClickableIcon";
 
 type CreatePostProps = {

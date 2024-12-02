@@ -15,16 +15,11 @@ import {
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import { verifyUser } from "@/constants/userCRUD";
+import { verifyUser } from "@/utils/userCRUD";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { googleSignIn } from "@/constants/googleAuth";
+import { googleSignIn } from "@/utils/googleAuth";
 import SocialAuthButton from "@/components/SocialAuthButton";
-import {
-  deleteOtp,
-  verifyOtp,
-  sendOtp,
-  checkOtp,
-} from "@/constants/twoFactorAuth";
+import { deleteOtp, verifyOtp, sendOtp, checkOtp } from "@/utils/twoFactorAuth";
 import OtpScreen from "./otp";
 
 export default function SignIn() {

@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { defaultStyle, delay } from "@/constants/defaultStuff";
 import { useEffect, useState } from "react";
-import { PostData, readPost } from "@/constants/postCRUD";
+import { PostData, readPost } from "@/utils/postCRUD";
 import Loader from "@/components/Loader";
 import DisplayPost from "@/components/DisplayPost";
 

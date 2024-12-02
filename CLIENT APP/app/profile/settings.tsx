@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { defaultColors, defaultStyle, delay } from "@/constants/defaultStuff";
 import React, { useEffect, useState } from "react";
-import { readUser, signOutUser } from "@/constants/userCRUD";
+import { readUser, signOutUser } from "@/utils/userCRUD";
 import Loader from "@/components/Loader";
 import { router } from "expo-router";
 import CustomButton from "@/components/CustomButton";

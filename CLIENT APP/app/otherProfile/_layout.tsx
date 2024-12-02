@@ -2,7 +2,7 @@ import { router, Stack, useLocalSearchParams } from "expo-router";
 import ClickableIcon from "@/components/ClickableIcon";
 import { defaultIcons } from "@/constants/defaultStuff";
 import { useEffect, useState } from "react";
-import { readUser, reportUser } from "@/constants/userCRUD";
+import { readUser, reportUser } from "@/utils/userCRUD";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { Alert } from "react-native";
 import UserMoreOptionsModal from "@/components/UserMoreOptionsModal";

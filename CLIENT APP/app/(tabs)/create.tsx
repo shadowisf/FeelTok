@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import { defaultColors, defaultStyle, delay } from "@/constants/defaultStuff";
 import React, { useEffect, useState } from "react";
-import { readUser } from "@/constants/userCRUD";
+import { readUser } from "@/utils/userCRUD";
 import CustomButton from "@/components/CustomButton";
-import { createPost } from "@/constants/postCRUD";
+import { createPost } from "@/utils/postCRUD";
 import Feeling from "@/components/Feeling";
-import { runImagePicker } from "@/constants/imagePicker";
+import { runImagePicker } from "@/utils/imagePicker";
 import CreatePost from "@/components/CreatePost";
 import firestore from "@react-native-firebase/firestore";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";

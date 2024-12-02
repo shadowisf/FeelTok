@@ -10,11 +10,7 @@ import Avatar from "./Avatar";
 import { defaultColors, defaultIcons, delay } from "@/constants/defaultStuff";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
-import {
-  deletePost,
-  giveThemeFromEmotion,
-  reportPost,
-} from "@/constants/postCRUD";
+import { deletePost, giveThemeFromEmotion, reportPost } from "@/utils/postCRUD";
 import PostMoreOptionsModal from "./PostMoreOptionsModal";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { router } from "expo-router";
