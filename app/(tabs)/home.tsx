@@ -12,6 +12,8 @@ import Loader from "@/components/Loader";
 import DisplayPost from "@/components/DisplayPost";
 
 export default function Home() {
+  const [imageKey, setImageKey] = useState(0);
+
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -28,6 +30,8 @@ export default function Home() {
   }, []);
 
   async function onRefresh() {
+    setImageKey(imageKey + 1);
+
     const data = await readPost({});
     // execute readPost function, empty means it will read all posts from database
 
@@ -78,6 +82,7 @@ export default function Home() {
                   // if author is not empty or author is test_user, display posts
                   <DisplayPost
                     key={index}
+                    imageKey={imageKey}
                     author={post.author}
                     profilePicture={post.profilePicture}
                     fullName={post.fullName}

@@ -29,6 +29,7 @@ type DisplayPostProps = {
   feeling: string;
   image?: string;
   createdAt: FirebaseFirestoreTypes.Timestamp;
+  imageKey: number;
 };
 
 export default function DisplayPost({
@@ -41,6 +42,7 @@ export default function DisplayPost({
   feeling,
   image,
   createdAt,
+  imageKey,
 }: DisplayPostProps) {
   const [reason, setReason] = useState("");
 
@@ -185,7 +187,11 @@ export default function DisplayPost({
 
             {/* if image is not empty, display image */}
             {image === "" ? null : (
-              <Image source={{ uri: image }} style={styles.image} />
+              <Image
+                key={imageKey}
+                source={{ uri: image }}
+                style={styles.image}
+              />
             )}
 
             <View>
