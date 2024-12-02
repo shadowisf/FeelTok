@@ -38,10 +38,10 @@ export default function Home() {
     if (data) {
       // if data exists, assign user data to states
       setPosts(data || []);
-      setImageKey(imageKey + 1);
     }
 
     await delay(1000);
+    setImageKey(imageKey + 1);
 
     setIsRefreshing(false);
   }
