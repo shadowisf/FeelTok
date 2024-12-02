@@ -23,6 +23,7 @@ export default function Home() {
     async function fetchPostInfo() {
       setIsPageLoading(true);
       await onRefresh();
+      setImageKey(imageKey + 1);
       setIsPageLoading(false);
     }
 
