@@ -20,12 +20,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getCredentials } from "@/constants/asyncStorage";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function Index() {
   useEffect(() => {
     // check if async storage has user credential entries
     const startup = auth().onAuthStateChanged(async (user) => {
-      SplashScreen.preventAutoHideAsync();
-
       // google account re-authentication
       if (user && user.providerData[0]?.providerId === "google.com") {
         try {
