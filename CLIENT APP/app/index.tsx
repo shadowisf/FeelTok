@@ -15,7 +15,7 @@ import {
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import auth from "@react-native-firebase/auth";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import * as SplashScreen from "expo-splash-screen";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getCredentials } from "@/utils/asyncStorage";
@@ -24,55 +24,72 @@ SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
   useEffect(() => {
-    // check if async storage has user credential entries
-    const startup = auth().onAuthStateChanged(async (user) => {
-      // google account re-authentication
-      if (user && user.providerData[0]?.providerId === "google.com") {
-        try {
-          const response = await GoogleSignin.signInSilently();
-          // execute signInSilently
+    let isMounted = true;
 
-          if (response) {
-            // if user is signed in, redirect to home
-            console.log("indexSignInPersistence", "|", "google user verified");
-            router.replace("/home");
+    const checkAuthState = async (user: FirebaseAuthTypes.User | null) => {
+      try {
+        if (!isMounted) return;
+
+        // Google account re-authentication
+        if (user && user.providerData[0]?.providerId === "google.com") {
+          try {
+            const response = await GoogleSignin.signInSilently();
+            if (response) {
+              console.log(
+                "indexSignInPersistence",
+                "|",
+                "google user verified"
+              );
+              router.replace("/home");
+              return;
+            }
+          } catch (error) {
+            console.error("indexSignInPersistence", "|", error);
           }
-        } catch (error) {
-          console.error("indexSignInPersistence", "|", error);
+        }
+
+        // Password account re-authentication
+        else if (user && user.providerData[0]?.providerId === "password") {
+          try {
+            const data = await getCredentials();
+            if (data) {
+              const result = await auth().signInWithEmailAndPassword(
+                data.email,
+                data.password
+              );
+              if (result.user) {
+                console.log(
+                  "indexSignInPersistence",
+                  "|",
+                  "password user verified"
+                );
+                router.replace("/home");
+                return;
+              }
+            }
+          } catch (error) {
+            console.error("indexSignInPersistence", "|", error);
+          }
+        }
+
+        // Redirect to sign in if no user is signed in
+        router.navigate("/");
+      } finally {
+        if (isMounted) {
+          await delay(2000);
+          SplashScreen.hideAsync();
         }
       }
+    };
 
-      // password account re-authentication
-      if (user && user.providerData[0]?.providerId === "password") {
-        try {
-          const data = await getCredentials();
-          // get data from async storage
-          const result = await auth().signInWithEmailAndPassword(
-            data?.email,
-            data?.password
-          );
-          // execute signInWithEmailAndPassword with stored credentials
-
-          if (result.user) {
-            // if user is signed in, redirect to home
-            console.log(
-              "indexSignInPersistence",
-              "|",
-              "password user verified"
-            );
-            router.replace("/home");
-          }
-        } catch (error) {
-          console.error("indexSignInPersistence", "|", error);
-        }
-      }
-
-      await delay(2000);
-
-      SplashScreen.hide();
+    const startup = auth().onAuthStateChanged((user) => {
+      checkAuthState(user);
     });
 
-    startup();
+    return () => {
+      isMounted = false;
+      startup(); // Unsubscribe from the listener
+    };
   }, []);
 
   return (
