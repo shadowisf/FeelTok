@@ -1,14 +1,34 @@
-import "./styles.css";
-import { listAllUsers } from "@/utils/userCRUD";
-import { initializeAdmin } from "@/utils/firebaseAdmin";
-import { defaultIcons, defaultImages } from "@/constants/icons";
+"use client";
 
-export default async function Home() {
-  await initializeAdmin();
-  const users = await listAllUsers();
+import Icon from "@/components/Icon";
+import { defaultIcons, defaultImages } from "@/constants/icons";
+import { useEffect, useState } from "react";
+import Avatar from "@/components/Avatar";
+
+import "./styles.css";
+
+export default function Home() {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    listAllUsers();
+  }, []);
+
+  async function listAllUsers() {
+    const response = await fetch("/api/listAllUsers", {
+      method: "GET",
+    });
+    const users = await response.json();
+
+    setUsers(users);
+  }
+
+  function handleRefresh() {}
 
   return (
     <main>
+      <button onClick={handleRefresh}>Refresh</button>
+
       <table>
         <thead>
           <tr>
@@ -30,15 +50,17 @@ export default async function Home() {
           {users?.map((user) => (
             <tr key={user?.uid}>
               <td>
-                <img
-                  style={{ width: "75px" }}
-                  src={
-                    user?.profilePicture === "default"
-                      ? defaultImages.defaultProfile
-                      : user?.profilePicture
-                  }
-                  alt="user's profile picture"
-                />
+                {user?.profilePicture === "default" ? (
+                  <Avatar
+                    image={defaultImages.defaultProfile}
+                    alt={"default profile picture"}
+                  />
+                ) : (
+                  <Avatar
+                    image={user.profilePicture}
+                    alt={"user's profile picture"}
+                  />
+                )}
               </td>
               <td>{user?.uid}</td>
               <td>{user?.fullName}</td>
@@ -48,38 +70,30 @@ export default async function Home() {
               <td>{user?.lastLogin}</td>
               <td>
                 {user?.provider === "google.com" ? (
-                  <img
-                    style={{ width: "25px" }}
-                    src={defaultIcons.google}
-                    alt="google icon"
-                  />
+                  <Icon icon={defaultIcons.google} alt="mail icon" />
                 ) : (
-                  <img
-                    style={{ width: "25px" }}
-                    src={defaultIcons.mail}
-                    alt="mail icon"
-                  />
+                  <Icon icon={defaultIcons.mail} alt="mail icon" />
                 )}
               </td>
               <td>
                 {user?.otpStatus ? (
-                  <img style={{ width: "25px" }} src={defaultIcons.check} />
+                  <Icon icon={defaultIcons.check} alt="check icon" />
                 ) : (
-                  <img style={{ width: "25px" }} src={defaultIcons.close} />
+                  <Icon icon={defaultIcons.close} alt="cross icon" />
                 )}
               </td>
               <td>
                 {user?.emailVerified ? (
-                  <img style={{ width: "25px" }} src={defaultIcons.check} />
+                  <Icon icon={defaultIcons.check} alt="check icon" />
                 ) : (
-                  <img style={{ width: "25px" }} src={defaultIcons.close} />
+                  <Icon icon={defaultIcons.close} alt="cross icon" />
                 )}
               </td>
               <td>
                 {user?.isDisabled ? (
-                  <img style={{ width: "25px" }} src={defaultIcons.check} />
+                  <Icon icon={defaultIcons.check} alt="check icon" />
                 ) : (
-                  <img style={{ width: "25px" }} src={defaultIcons.close} />
+                  <Icon icon={defaultIcons.close} alt="cross icon" />
                 )}
               </td>
             </tr>

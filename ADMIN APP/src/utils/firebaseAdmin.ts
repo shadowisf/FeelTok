@@ -1,40 +1,15 @@
-import "server-only";
 import admin from "firebase-admin";
 
-type firebaseAdminParameters = {
-  projectID: string;
-  clientEmail: string;
-  storageBucket: string;
-  privateKey: string;
-};
+const serviceAccount = require("../../serviceAccount.json");
 
-export function createFirebaseAdminApp(parameters: firebaseAdminParameters) {
-  const privateKey = parameters.privateKey.replace(/\\n/g, "\n");
-
-  if (admin.apps.length > 0) {
-    return admin.app();
-  }
-
-  const cert = admin.credential.cert({
-    projectId: parameters.projectID,
-    clientEmail: parameters.clientEmail,
-    privateKey: privateKey,
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL:
+      "https://feeltok-9a12f-default-rtdb.europe-west1.firebasedatabase.app",
   });
-
-  return admin.initializeApp({
-    credential: cert,
-    projectId: parameters.projectID,
-    storageBucket: parameters.storageBucket,
-  });
+} else {
+  admin.app();
 }
 
-export async function initializeAdmin() {
-  const parameters = {
-    projectID: process.env.FIREBASE_PROJECT_ID as string,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL as string,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET as string,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY as string,
-  };
-
-  return createFirebaseAdminApp(parameters);
-}
+export default admin;

@@ -1,18 +1,9 @@
 import { getAuth } from "firebase-admin/auth";
-import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import "server-only";
+import { getFirestore } from "firebase-admin/firestore";
 
-export async function readUser(uid: string) {
-  try {
-  } catch (error) {
-    console.log(readUser.name, "|", error);
-  }
-}
-
-export async function listAllUsers() {
+export async function GET() {
   try {
     const authUsers = await getAuth().listUsers();
-
     const allUsers = await Promise.all(
       authUsers.users.map(async (user) => {
         const userSnap = await getFirestore()
@@ -58,9 +49,10 @@ export async function listAllUsers() {
       })
     );
 
-    console.log(listAllUsers.name, "|", "users fetched successfully");
-    return allUsers;
+    return new Response(JSON.stringify(allUsers), {
+      status: 200,
+    });
   } catch (error) {
-    console.error(listAllUsers.name, "|", error);
+    console.error("listAllUsers", "|", error);
   }
 }
