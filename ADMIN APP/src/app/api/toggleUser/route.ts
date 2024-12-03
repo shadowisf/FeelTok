@@ -5,11 +5,15 @@ export async function POST(req: Request) {
   try {
     await initAdmin();
 
-    const { uid } = await req.json();
+    const body = await req.json();
 
-    await getAuth().updateUser(uid, { disabled: true });
+    await getAuth().updateUser(body.uid, { disabled: body.status });
 
-    console.log("disableUser", "|", "user disabled successfully");
+    console.log(
+      `disableUser", "|", "user ${
+        body.status === true ? "enabled" : "disabled"
+      } successfully`
+    );
     return new Response(JSON.stringify("OK"), {
       status: 200,
     });

@@ -12,3 +12,10 @@ type User = {
   lastLogin: string;
   isDisabled: boolean;
 };
+
+type UserReport = {
+  reportID: string;
+  targetUID: string;
+  author: string;
+  reason: string;
+};

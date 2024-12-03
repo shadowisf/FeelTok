@@ -21,11 +21,16 @@ export default function UserTable() {
     setUsers(users);
   }
 
-  async function handleDisableUser(uid: string) {
-    await fetch("/api/disableUser", {
+  async function handleToggleUser(uid: string, status: boolean) {
+    const response = await fetch("/api/toggleUser", {
       method: "POST",
-      body: JSON.stringify({ uid: uid }),
+      body: JSON.stringify({ uid: uid, status: status }),
     });
+
+    if (response.ok) {
+      alert("User status updated successfully");
+      listAllUsers();
+    }
   }
 
   return (
@@ -115,11 +120,19 @@ export default function UserTable() {
               </td>
 
               <td>
-                <CustomButton
-                  label="Disable"
-                  color="darkred"
-                  onClick={() => handleDisableUser(user?.uid)}
-                />
+                {user?.isDisabled ? (
+                  <CustomButton
+                    label="Unban"
+                    color="darkgreen"
+                    onClick={() => handleToggleUser(user?.uid, false)}
+                  />
+                ) : (
+                  <CustomButton
+                    label="Ban"
+                    color="darkred"
+                    onClick={() => handleToggleUser(user?.uid, true)}
+                  />
+                )}
               </td>
             </tr>
           ))}
