@@ -4,8 +4,10 @@ import Icon from "./Icon";
 import CustomButton from "./CustomButton";
 import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
+import CustomSearchBar from "./CustomSearchBar";
 
 export default function UserTable() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -13,8 +15,11 @@ export default function UserTable() {
   }, []);
 
   async function listAllUsers() {
+    setSearchQuery("");
+
     const response = await fetch("/api/listAllUsers", {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify({ uid: null }),
     });
     const users = await response.json();
 
@@ -33,16 +38,35 @@ export default function UserTable() {
     }
   }
 
+  async function handleSearchUser() {
+    const response = await fetch("/api/listAllUsers", {
+      method: "POST",
+      body: JSON.stringify({ uid: searchQuery }),
+    });
+    const users = await response.json();
+
+    setUsers(users);
+  }
+
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className="tableHeader">
         <h1>Users</h1>
+
+        <div className="searchContainer">
+          <CustomSearchBar
+            searchQuery={searchQuery}
+            placeholder={"UID"}
+            handleInputChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          <CustomButton
+            label="Search"
+            onClick={handleSearchUser}
+            color={defaultColors.primary}
+          />
+        </div>
+
         <CustomButton
           label="Refresh"
           color={defaultColors.primary}
@@ -63,7 +87,6 @@ export default function UserTable() {
             <th>Provider</th>
             <th>2FA Status</th>
             <th>Email Verified</th>
-            <th>Banned</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -71,7 +94,7 @@ export default function UserTable() {
         <tbody>
           {users?.map((user) => (
             <tr key={user?.uid}>
-              <td>
+              <td className={user.isDisabled ? "disabled" : ""}>
                 {user?.profilePicture === "default" ? (
                   <Avatar
                     image={defaultImages.defaultProfile}
@@ -84,35 +107,38 @@ export default function UserTable() {
                   />
                 )}
               </td>
-              <td>{user?.uid}</td>
-              <td>{user?.fullName}</td>
-              <td>{user?.username}</td>
-              <td>{user?.email}</td>
-              <td>{user?.userSince}</td>
-              <td>{user?.lastLogin}</td>
-              <td>
+              <td className={user.isDisabled ? "disabled" : ""}>{user?.uid}</td>
+              <td className={user.isDisabled ? "disabled" : ""}>
+                {user?.fullName}
+              </td>
+              <td className={user.isDisabled ? "disabled" : ""}>
+                {user?.username}
+              </td>
+              <td className={user.isDisabled ? "disabled" : ""}>
+                {user?.email}
+              </td>
+              <td className={user.isDisabled ? "disabled" : ""}>
+                {user?.userSince}
+              </td>
+              <td className={user.isDisabled ? "disabled" : ""}>
+                {user?.lastLogin}
+              </td>
+              <td className={user.isDisabled ? "disabled" : ""}>
                 {user?.provider === "google.com" ? (
                   <Icon icon={defaultIcons.google} alt="mail icon" />
                 ) : (
                   <Icon icon={defaultIcons.mail} alt="mail icon" />
                 )}
               </td>
-              <td>
+              <td className={user.isDisabled ? "disabled" : ""}>
                 {user?.otpStatus ? (
                   <Icon icon={defaultIcons.check} alt="check icon" />
                 ) : (
                   <Icon icon={defaultIcons.close} alt="cross icon" />
                 )}
               </td>
-              <td>
+              <td className={user.isDisabled ? "disabled" : ""}>
                 {user?.emailVerified ? (
-                  <Icon icon={defaultIcons.check} alt="check icon" />
-                ) : (
-                  <Icon icon={defaultIcons.close} alt="cross icon" />
-                )}
-              </td>
-              <td>
-                {user?.isDisabled ? (
                   <Icon icon={defaultIcons.check} alt="check icon" />
                 ) : (
                   <Icon icon={defaultIcons.close} alt="cross icon" />

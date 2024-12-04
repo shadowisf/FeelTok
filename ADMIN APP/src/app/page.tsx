@@ -1,14 +1,25 @@
 "use client";
 
-import UserReportTable from "@/components/UserReportTable";
 import "./styles.css";
-import UserTable from "@/components/UserTable";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <main>
-      <UserReportTable />
-      <UserTable />
+      <div
+        style={{
+          width: "95dvw",
+          height: "95dvh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "50px",
+          overflow: "hidden",
+        }}
+      >
+        <Link href="/users">Users</Link>
+        <Link href="/posts">Posts</Link>
+      </div>
     </main>
   );
 }

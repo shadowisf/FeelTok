@@ -9,7 +9,7 @@ table {
 
 th,
 td {
-    border: 1px solid black;
+    border: 1px solid rgb(218, 220, 224);
     padding: 8px;
     text-align: left;
 }
@@ -17,4 +17,25 @@ td {
 th {
     background-color: #883AE1;
     color: white;
+}
+
+.disabled {
+    color: red;
+    opacity: 0.5;
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input {
+    width: 500px;
+    padding: 8px;
+}
+
+.searchContainer {
+    display: flex;
+    gap: 25px;
 }

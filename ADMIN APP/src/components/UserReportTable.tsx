@@ -19,7 +19,7 @@ export default function UserReportTable() {
   }
 
   async function handleDeleteUserReport(targetUID: string, reportID: string) {
-    const response = await fetch("/api/deleteUserReport", {
+    const response = await fetch("/api/resolveUserReport", {
       method: "POST",
       body: JSON.stringify({ targetUID: targetUID, reportID: reportID }),
     });

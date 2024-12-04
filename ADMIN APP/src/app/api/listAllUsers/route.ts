@@ -2,9 +2,11 @@ import { initAdmin } from "@/utils/firebaseAdmin";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
-export async function GET() {
+export async function POST(req: Request) {
   try {
     await initAdmin();
+
+    const body = await req.json();
 
     const authUsers = await getAuth().listUsers();
     const allUsers = await Promise.all(
@@ -52,8 +54,10 @@ export async function GET() {
       })
     );
 
+    const filteredUsers = allUsers.filter((user) => user.uid === body.uid);
+
     console.log("listAllUsers", "|", "users listed successfully");
-    return new Response(JSON.stringify(allUsers), {
+    return new Response(JSON.stringify(body.uid ? filteredUsers : allUsers), {
       status: 200,
     });
   } catch (error) {

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       .doc(body.reportID)
       .delete();
 
-    console.log("disableUser", "|", "user report deleted successfully");
+    console.log("disableUser", "|", "user report resolved successfully");
     return new Response(JSON.stringify(""), {
       status: 200,
     });
