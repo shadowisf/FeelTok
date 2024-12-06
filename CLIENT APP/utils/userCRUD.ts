@@ -93,7 +93,7 @@ export async function createUser({
     // create new user entry in firestore
     await userDoc.set({
       fullName: fullName,
-      email: credential.user.email,
+      email: email,
       username: username,
       profilePicture: profileURL,
       otpStatus: false,
@@ -137,6 +137,7 @@ export async function readUser({ firebaseUser, uid }: ReadUserProps) {
       docSnap = await userDoc.get();
     }
 
+    // assign general references
     const fullName = docSnap?.data()?.fullName;
     const email = docSnap?.data()?.email;
     const username = docSnap?.data()?.username;
@@ -150,6 +151,7 @@ export async function readUser({ firebaseUser, uid }: ReadUserProps) {
     const emailVerified = firebaseUser ? firebaseUser.emailVerified : false;
 
     console.log(readUser.name, "|", "user read successfully");
+    // return user data
     return {
       email,
       fullName,
@@ -193,6 +195,7 @@ export async function updateUser({
   gender,
 }: updateUser) {
   try {
+    // assign general references
     const userDoc = firestore().collection("users").doc(firebaseUser.uid);
 
     let changes = [];
@@ -201,8 +204,10 @@ export async function updateUser({
     if (profilePicture === "default") {
       profileURL = "default";
     } else if (profilePicture === firebaseUser.photoURL) {
+      // if profile picture is same as before
       profileURL = firebaseUser.photoURL;
     } else {
+      // if profile picture is new or different
       profileURL = await uploadImage({
         uri: profilePicture,
         publicID: `user-${firebaseUser.uid}`,
@@ -210,6 +215,7 @@ export async function updateUser({
       });
     }
 
+    // password account re-authentication
     if (firebaseUser.providerData[0]?.providerId === "password") {
       const emailCredential = auth.EmailAuthProvider.credential(
         firebaseUser.email ? firebaseUser.email : "",
@@ -219,6 +225,7 @@ export async function updateUser({
       console.log(updateUser.name, "|", "password user verified");
     }
 
+    // google account re-authentication
     if (firebaseUser.providerData[0]?.providerId === "google.com") {
       const idToken = GoogleSignin.getCurrentUser()?.idToken;
       const googleCredential = auth.GoogleAuthProvider.credential(
@@ -229,6 +236,7 @@ export async function updateUser({
     }
 
     if (firebaseUser.email !== email) {
+      // if email and current email are not similar, update email
       await verifyBeforeUpdateEmail(firebaseUser, email);
       console.log(
         updateUser.name,
@@ -239,16 +247,19 @@ export async function updateUser({
     }
 
     if (newPassword !== password && newPassword !== "") {
+      // if new password and current password is not same, update password
       await updatePassword(firebaseUser, newPassword);
       console.log(updateUser.name, "|", "new password updated");
       changes.push("password");
     }
 
+    // update user profile
     await updateProfile(firebaseUser, {
       displayName: username,
       photoURL: profileURL,
     });
 
+    // update user firestore
     await userDoc.set(
       {
         email: email,
@@ -322,14 +333,17 @@ export async function killEmAll({
     }
 
     if (verified) {
+      // if verified, delete user, user posts, and references
       const postSnap = await postCol
         .where("author", "==", firebaseUser.uid)
         .get();
 
+      // for ever user's post delete every post
       postSnap.docs.map(async (postDoc) => {
         await deletePost(postDoc.id);
       });
 
+      // delete every reference of user
       await deleteUser(firebaseUser);
       await userCol.doc(firebaseUser.uid).delete();
       await deleteImage(`user-${firebaseUser.uid}`);
@@ -346,8 +360,11 @@ export async function killEmAll({
 
 export async function signOutUser() {
   try {
+    // signs out user whether password or google account
     await auth().signOut();
     await GoogleSignin.signOut();
+
+    // delete stored credentials
     await deleteCredentials();
 
     console.log(signOutUser.name, "|", "user logged out successfully");
@@ -370,15 +387,19 @@ export async function reportUser({
   reason,
 }: reportUserProps) {
   try {
+    // assign general references
     const userDoc = firestore().collection("users").doc(targetUID);
     const docSnap = await userDoc.get();
 
     if (docSnap.exists) {
+      // if user exists, add report
       const reportCol = userDoc.collection("reports");
+
       await reportCol.add({
         author: firebaseUser.uid,
         reason: reason,
       });
+
       console.log(reportUser.name, "|", "user reported successfully");
       return "ok";
     }
