@@ -56,14 +56,21 @@ export async function POST(req: Request) {
 
     const filteredUsers = allUsers.filter((user) => user.uid === body.uid);
 
-    console.log("listAllUsers", "|", "users listed successfully");
-    return new Response(JSON.stringify(body.uid ? filteredUsers : allUsers), {
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({
+        message: "Users fetched successfully",
+        data: body.uid ? filteredUsers : allUsers,
+      }),
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
-    console.error("listAllUsers", "|", error);
-    return new Response(JSON.stringify(error), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ message: "User/s not found", error: error }),
+      {
+        status: 500,
+      }
+    );
   }
 }

@@ -5,13 +5,14 @@ export async function GET() {
   try {
     await initAdmin();
 
-    const usersSnapshot = await getFirestore().collection("users").get();
-    const allUserReports = await Promise.all(
-      usersSnapshot.docs.map(async (doc) => {
-        const targetUID = doc.id;
+    const postSnap = await getFirestore().collection("posts").get();
+    const allPostReports = await Promise.all(
+      postSnap.docs.map(async (doc) => {
+        const targetPostID = doc.id;
+
         const reportSnap = await getFirestore()
-          .collection("users")
-          .doc(targetUID)
+          .collection("posts")
+          .doc(targetPostID)
           .collection("reports")
           .get();
 
@@ -19,8 +20,8 @@ export async function GET() {
           const reportData = reportDoc.exists ? reportDoc.data() : null;
 
           return {
-            reportID: reportDoc.id,
-            targetUID: targetUID,
+            id: reportDoc.id,
+            targetPostID: targetPostID,
             author: reportData?.author,
             reason: reportData?.reason,
           };
@@ -28,11 +29,11 @@ export async function GET() {
       })
     );
 
-    const flattenedReports = allUserReports.flat();
+    const flattenedReports = allPostReports.flat();
 
     return new Response(
       JSON.stringify({
-        message: "User reports fetched successfully",
+        message: "Post reports fetched successfully",
         data: flattenedReports,
       }),
       {
@@ -41,7 +42,7 @@ export async function GET() {
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ message: "User reports fetch failed", error: error }),
+      JSON.stringify({ message: "Post reports fetch failed", error: error }),
       {
         status: 500,
       }

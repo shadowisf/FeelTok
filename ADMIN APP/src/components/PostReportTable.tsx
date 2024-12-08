@@ -3,39 +3,42 @@ import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
 
-export default function UserReportTable() {
+export default function PostReportTable() {
   const [isLoading, setIsLoading] = useState(false);
-  const [userReports, setUserReports] = useState<UserReport[]>([]);
+  const [postReports, setPostReports] = useState<PostReport[]>([]);
 
   useEffect(() => {
-    listAllUserReports();
+    listAllPostReports();
   }, []);
 
-  async function listAllUserReports() {
-    const response = await fetch("/api/listAllUserReports", {
+  async function listAllPostReports() {
+    const response = await fetch("/api/listAllPostReports", {
       method: "GET",
     });
-    const userReports = await response.json();
+    const postReports = await response.json();
 
     if (response.ok) {
-      setUserReports(userReports.data);
+      setPostReports(postReports.data);
     } else {
-      listAllUserReports();
+      listAllPostReports();
     }
   }
 
-  async function handleDeleteUserReport(targetUID: string, reportID: string) {
+  async function handleResolvePostReport(
+    targetPostID: string,
+    reportID: string
+  ) {
     setIsLoading(true);
 
-    const response = await fetch("/api/resolveUserReport", {
+    const response = await fetch("/api/resolvePostReport", {
       method: "POST",
-      body: JSON.stringify({ targetUID: targetUID, reportID: reportID }),
+      body: JSON.stringify({ targetPostID: targetPostID, id: reportID }),
     });
     const data = await response.json();
 
     console.log(data);
 
-    listAllUserReports();
+    listAllPostReports();
 
     setIsLoading(false);
   }
@@ -51,38 +54,37 @@ export default function UserReportTable() {
           alignItems: "center",
         }}
       >
-        <h1>User Reports</h1>
+        <h1>Post Reports</h1>
         <CustomButton
           label="Refresh"
           color={defaultColors.primary}
-          onClick={listAllUserReports}
+          onClick={listAllPostReports}
         />
       </div>
 
-      {userReports.length === 0 ? (
-        <p>No current user reports.</p>
+      {postReports.length === 0 ? (
+        <p>No current post reports.</p>
       ) : (
         <table>
           <thead>
             <tr>
-              <th>Reported User (UID)</th>
+              <th>Reported Post (ID)</th>
               <th>Author</th>
               <th>Reason</th>
               <th>Actions</th>
             </tr>
           </thead>
-
           <tbody>
-            {userReports?.map((report) => (
-              <tr key={report.reportID}>
-                <td>{report.targetUID}</td>
+            {postReports?.map((report, index) => (
+              <tr key={index}>
+                <td>{report.targetPostID}</td>
                 <td>{report.author}</td>
                 <td>{report.reason}</td>
                 <td>
                   <CustomButton
                     label="Resolve"
                     onClick={() =>
-                      handleDeleteUserReport(report.targetUID, report.reportID)
+                      handleResolvePostReport(report.targetPostID, report.id)
                     }
                     color="darkgreen"
                   />

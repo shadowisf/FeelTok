@@ -6,10 +6,6 @@ type IconProps = {
 
 export default function Icon(parameters: IconProps) {
   return (
-    <img
-      style={{ width: "25px", ...parameters.additionalStyles }}
-      src={parameters.icon}
-      alt={parameters.alt}
-    />
+    <img style = {{ width: "25px", ...parameters.additionalStyles }} src = {parameters.icon} alt = {parameters.alt} />
   );
 }

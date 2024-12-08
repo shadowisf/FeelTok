@@ -8,16 +8,16 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     await getFirestore()
-      .collection("users")
-      .doc(body.targetUID)
+      .collection("posts")
+      .doc(body.targetPostID)
       .collection("reports")
-      .doc(body.reportID)
+      .doc(body.id)
       .delete();
 
     return new Response(
       JSON.stringify({
-        message: "User report resolved",
-        data: `user ${body.targetUID} - report ${body.reportID}`,
+        message: "Post report resolved",
+        data: `post ${body.targetPostID} - report ${body.id}`,
       }),
       {
         status: 200,
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   } catch (error) {
     return new Response(
       JSON.stringify({
-        message: "Failed to resolve user report",
+        message: "Failed to resolve post report",
         error: error,
       }),
       {

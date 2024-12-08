@@ -7,10 +7,10 @@ type CustomSearchBarProps = {
 export default function CustomSearchBar(parameters: CustomSearchBarProps) {
   return (
     <input
-      type="text"
-      value={parameters.searchQuery}
-      onChange={parameters.handleInputChange}
-      placeholder={parameters.placeholder}
+      type = "text"
+      value = {parameters.searchQuery}
+      onChange = {parameters.handleInputChange}
+      placeholder = {parameters.placeholder}
     />
   );
 }

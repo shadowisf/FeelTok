@@ -7,8 +7,8 @@ type CustomButtonProps = {
 export default function CustomButton(parameters: CustomButtonProps) {
   return (
     <button
-      onClick={parameters.onClick}
-      style={{
+      onClick = {parameters.onClick}
+      style = {{
         backgroundColor: parameters.color,
         color: "white",
         padding: 10,

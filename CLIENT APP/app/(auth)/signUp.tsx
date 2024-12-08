@@ -22,7 +22,13 @@ export default function SignUp() {
   useEffect(() => {
     function checkFields() {
       // checks if all fields are not empty
-      if (email && password && fullName && username) {
+      if (
+        email &&
+        password &&
+        fullName &&
+        username &&
+        !email.match("@feeltok")
+      ) {
         setIsDisabled(false);
       } else {
         setIsDisabled(true);

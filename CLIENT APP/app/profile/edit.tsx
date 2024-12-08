@@ -108,9 +108,13 @@ export default function EditProfile() {
         gender !== data?.gender ||
         bio !== data?.bio; // checks if any of the fields have changed
 
-      if ((mustNotBeSame && mustNotBeEmpty) || newPassword) {
+      const invalidEmail = !email.match("@feeltok");
+
+      if (mustNotBeSame && mustNotBeEmpty && invalidEmail) {
         // if check is successful, enable button
         setIsDisabled(false);
+      } else if (newPassword && invalidEmail) {
+        setIsDisabled(true);
       } else {
         setIsDisabled(true);
       }
