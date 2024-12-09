@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
 import CustomSearchBar from "./CustomSearchBar";
 import Loader from "./Loader";
+import "../app/styles.css";
 
 export default function UserTable() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,17 +14,16 @@ export default function UserTable() {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    listAllUsers("");
+    listAllUsers();
   }, []);
 
-  async function listAllUsers(uid: string) {
-    setSearchQuery(uid ? uid : "");
+  async function listAllUsers() {
+    setSearchQuery("");
 
     const response = await fetch("/api/listAllUsers", {
       method: "POST",
-      body: JSON.stringify({ uid: uid ? uid : null }),
+      body: JSON.stringify({ uid: null }),
     });
-
     const users = await response.json();
 
     console.log(users);
@@ -31,7 +31,23 @@ export default function UserTable() {
     if (response.ok) {
       setUsers(users.data);
     } else {
-      listAllUsers(uid);
+      listAllUsers();
+    }
+  }
+
+  async function handleSearchUser(uid: string) {
+    const response = await fetch("/api/listAllUsers", {
+      method: "POST",
+      body: JSON.stringify({ uid: uid }),
+    });
+    const users = await response.json();
+
+    console.log(users);
+
+    if (response.ok) {
+      setUsers(users.data);
+    } else {
+      listAllUsers();
     }
   }
 
@@ -42,12 +58,11 @@ export default function UserTable() {
       method: "POST",
       body: JSON.stringify({ uid: uid, status: status }),
     });
-
     const data = await response.json();
 
     console.log(data);
 
-    listAllUsers("");
+    listAllUsers();
 
     setIsLoading(false);
   }
@@ -68,7 +83,7 @@ export default function UserTable() {
 
           <CustomButton
             label="Search"
-            onClick={() => listAllUsers(searchQuery)}
+            onClick={() => handleSearchUser(searchQuery)}
             color={defaultColors.primary}
           />
         </div>
@@ -76,7 +91,7 @@ export default function UserTable() {
         <CustomButton
           label="Refresh"
           color={defaultColors.primary}
-          onClick={() => listAllUsers("")}
+          onClick={() => listAllUsers()}
         />
       </div>
 

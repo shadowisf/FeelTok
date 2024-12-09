@@ -2,6 +2,7 @@ import CustomButton from "./CustomButton";
 import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
+import "../app/styles.css";
 
 export default function UserReportTable() {
   const [isLoading, setIsLoading] = useState(false);

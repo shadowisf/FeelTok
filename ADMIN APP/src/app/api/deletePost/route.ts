@@ -1,3 +1,4 @@
+import { deleteImage } from "@/utils/cloudinary";
 import { initAdmin } from "@/utils/firebaseAdmin";
 import { getFirestore } from "firebase-admin/firestore";
 
@@ -7,12 +8,8 @@ export async function DELETE(req: Request) {
 
     const body = await req.json();
 
-    const postSnap = await getFirestore()
-      .collection("posts")
-      .doc(body.id)
-      .get();
-
-    await postSnap.ref.delete();
+    await getFirestore().collection("posts").doc(body.id).delete();
+    await deleteImage(`post-${body.id}`);
 
     return new Response(
       JSON.stringify({

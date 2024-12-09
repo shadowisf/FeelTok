@@ -6,15 +6,36 @@
 &emsp;
 
 ## CLIENT APP SETUP
-1. Clone this repository
-2. Open in VSCODE
-3. Install dependencies
+1. Redirect to client folder
+```bash
+cd CLIENT\ APP/
+```
+2. Install dependencies
    ```bash
    npm install
    ```
-4. Install development build on real device or simulator, using the .app or .apk provided in the zip files under "builds" folder
-5. Start Expo in development mode
+3. Install development build on real device or simulator, using the .app or .apk provided in the zip files under "builds" folder
+4. Start Expo in development mode
    ```bash
     npx expo start
    ```
-6. Open installed development build on mobile device or simulator
+5. Open installed development build on mobile device or simulator
+
+&emsp;
+
+## ADMIN APP SETUP
+1. Redirect to admin folder
+```bash
+cd ADMIN\ APP/
+```
+2. Install dependencies
+```bash
+npm install --legacy-peer-deps
+```
+3. Create admin account with email as "--@feeltok.com" via Firebase Authentication
+4. Download `serviceAccount.json` via Firebase
+5. Place `serviceAccount.json` in root of admin folder
+6. Start local server
+```bash
+npm run dev
+```

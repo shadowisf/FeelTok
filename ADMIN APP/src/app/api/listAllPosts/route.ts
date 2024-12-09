@@ -18,12 +18,18 @@ export async function POST(req: Request) {
         year: "numeric",
       });
 
+      const time = data?.createdAt?.toDate().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
       return {
         id: doc.id,
         author: data?.author,
         caption: data?.caption,
         feeling: data?.feeling,
-        createdAt: date,
+        date: date,
+        time: time,
         image: data?.image,
       };
     });

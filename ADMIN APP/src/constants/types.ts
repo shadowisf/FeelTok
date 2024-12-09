@@ -24,7 +24,8 @@ type Post = {
   id: string;
   author: string;
   caption: string;
-  createdAt: string;
+  date: string;
+  time: string;
   feeling: string;
   image: string;
 };

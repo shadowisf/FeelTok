@@ -56,7 +56,7 @@ export default function Create() {
   // check feeling and caption if they are not empty
   useEffect(() => {
     function checkFields() {
-      if (feeling && caption) {
+      if (feeling || caption) {
         setIsDisabled(false);
       } else {
         setIsDisabled(true);
