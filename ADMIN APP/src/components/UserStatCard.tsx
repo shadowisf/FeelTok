@@ -1,17 +1,35 @@
-interface StatCardProps {
-  name: string;
-  value: string;
-  option: string;
-}
+"use client";
 
-export default function StatsCard({ name, value, option }: StatCardProps) {
+import { useEffect, useState } from "react";
+
+export default function UserStatCard() {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    listAllUsers();
+  }, []);
+
+  async function listAllUsers() {
+    const response = await fetch("/api/listAllUsers", {
+      method: "POST",
+      body: JSON.stringify({ uid: null }),
+    });
+    const users = await response.json();
+
+    console.log(users);
+
+    if (response.ok) {
+      setUsers(users.data);
+    }
+  }
+
   return (
-    <div className = 'stats'>
-        <p className = 'stats-name'>{name}</p>
-        <h1>{value}</h1>
-        <p className = 'stats-options'>{option}</p>
+    <div className="stats">
+      <p className="stats-name">Users</p>
+      <h1>{users.length}</h1>
 
-        <style> {`
+      <style>
+        {`
             .stats {       
                 background-color: white;
                 width: 350px;
@@ -38,7 +56,8 @@ export default function StatsCard({ name, value, option }: StatCardProps) {
             .stats-options:hover {
                 text-decoration: underline;
             }
-        `}</style>
+        `}
+      </style>
     </div>
   );
-};
+}

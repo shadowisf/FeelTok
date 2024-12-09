@@ -118,126 +118,114 @@ export default function PostTable() {
         />
       </div>
 
-      {posts.length === 0 ? (
-        <p>No posts found.</p>
-      ) : (
-        <>
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Author</th>
-                <th>Caption</th>
-                <th>Image</th>
-                <th>Created At</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {posts.map((post, index) => (
-                <tr key={index}>
-                  <td>{post.id}</td>
-                  <td>{post.author}</td>
-                  <td>{post.caption}</td>
-                  <td>
-                    <Avatar image={post.image} alt="user's profile picture" />
-                  </td>
-                  <td>{post.date + ", " + post.time}</td>
-                  <td
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "5px",
-                    }}
-                  >
-                    <CustomButton
-                      label="Delete"
-                      color="darkred"
-                      onClick={() => handleDeletePost(post.id)}
-                    />
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Author</th>
+            <th>Caption</th>
+            <th>Image</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {posts.map((post, index) => (
+            <tr key={index}>
+              <td>{post.id}</td>
+              <td>{post.author}</td>
+              <td>{post.caption}</td>
+              <td>
+                <Avatar image={post.image} alt="user's profile picture" />
+              </td>
+              <td>{post.date + ", " + post.time}</td>
+              <td
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "5px",
+                }}
+              >
+                <CustomButton
+                  label="Delete"
+                  color="darkred"
+                  onClick={() => handleDeletePost(post.id)}
+                />
 
-                    <CustomButton
-                      label="View"
-                      color={defaultColors.primary}
-                      onClick={() => handleViewPost(post.id, post.author)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                <CustomButton
+                  label="View"
+                  color={defaultColors.primary}
+                  onClick={() => handleViewPost(post.id, post.author)}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-          {isModalOpen ? (
-            <div className="modal-overlay">
-              {selectedPost.map((post, index) => {
-                const user = selectedPostUser[0];
-                const theme = giveThemeFromEmotion(post.feeling);
-                const backgroundColor = theme.backgroundColor;
-                const textColor = theme.textColor;
-                const emotion = theme.emotion;
+      {isModalOpen && (
+        <div className="modal-overlay">
+          {selectedPost.map((post, index) => {
+            const user = selectedPostUser[0];
+            const theme = giveThemeFromEmotion(post.feeling);
+            const backgroundColor = theme.backgroundColor;
+            const textColor = theme.textColor;
+            const emotion = theme.emotion;
 
-                return (
-                  <div
-                    key={index}
-                    style={{ backgroundColor, color: textColor }}
-                    className="modal-content"
-                  >
-                    <button
-                      className="close-modal"
-                      onClick={() => setIsModalOpen(false)}
+            return (
+              <div
+                key={index}
+                style={{ backgroundColor, color: textColor }}
+                className="modal-content"
+              >
+                <button
+                  className="close-modal"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  ✕
+                </button>
+
+                <div className="user-card">
+                  <img className="user-image" src={user.profilePicture} />
+                  <div className="user-info">
+                    <span
+                      style={{ fontWeight: "bold" }}
+                      className="user-fullName"
                     >
-                      ✕
-                    </button>
+                      {user.fullName}
+                    </span>
 
-                    <div className="user-card">
-                      <img className="user-image" src={user.profilePicture} />
-                      <div className="user-info">
-                        <span
-                          style={{ fontWeight: "bold" }}
-                          className="user-fullName"
-                        >
-                          {user.fullName}
-                        </span>
-
-                        <span
-                          style={{ opacity: 0.5 }}
-                          className="user-username"
-                        >
-                          @{user.username}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="post-content">
-                      <p style={{ opacity: "0.5" }}>
-                        {user.fullName} is feeling {emotion}
-                      </p>
-                      <p className="post-caption">{post.caption}</p>
-                    </div>
-
-                    <img
-                      style={{ width: "500px" }}
-                      className="post-image"
-                      src={post.image}
-                    />
-
-                    <div className="post-created-container">
-                      <p
-                        style={{ marginBottom: 0 }}
-                        className="post-created-at"
-                      >
-                        {post.date}
-                      </p>
-                      <p style={{ margin: 0 }} className="post-created-at">
-                        {post.time}
-                      </p>
-                    </div>
+                    <span style={{ opacity: 0.5 }} className="user-username">
+                      @{user.username}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
-          ) : null}
-        </>
+                </div>
+
+                <div className="post-content">
+                  <p style={{ opacity: "0.5" }}>
+                    {user.fullName} is feeling {emotion}
+                  </p>
+                  <p className="post-caption">{post.caption}</p>
+                </div>
+
+                <img
+                  style={{ width: "500px" }}
+                  className="post-image"
+                  src={post.image}
+                />
+
+                <div className="post-created-container">
+                  <p style={{ marginBottom: 0 }} className="post-created-at">
+                    {post.date}
+                  </p>
+                  <p style={{ margin: 0 }} className="post-created-at">
+                    {post.time}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       )}
 
       <style>

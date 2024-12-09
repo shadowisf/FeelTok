@@ -1,37 +1,36 @@
-import Link from 'next/link';
-import { defaultIcons, defaultImages } from '@/constants/icons';
+import Link from "next/link";
+import { defaultIcons, defaultImages } from "@/constants/icons";
 
-export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-    return (
-        <>
-            <div className = 'container'>
-                <div className = 'left'>
-                    <div className = 'logo'>
-                        <img src = { defaultImages.logo } width = {40} height = {60} />
-                        <h1>FeelTok</h1>
-                    </div>
-                    <div className = 'links'>
-                        <Link href = '/dashboard'>Home</Link>
-                        <Link href = '/dashboard/users'>Users</Link>
-                        <Link href = '/dashboard/posts'>Post</Link>
-                    </div>
-                    <div className = 'logout'>
-                        <Link href = '/'>
-                            <div className = "logout-content">
-                                <img src = { defaultIcons.logout } width = {18} height = {18} />
-                                <span>Log Out</span>
-                            </div>
-                        </Link>
-                    </div>
-                </div>
+export default function DashboardLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <>
+      <div className="container">
+        <div className="left">
+          <div className="logo">
+            <img src={defaultImages.logo} width={40} height={60} />
+            <h1>FeelTok</h1>
+          </div>
+          <div className="links">
+            <Link href="/dashboard">Home</Link>
+            <Link href="/dashboard/users">Users</Link>
+            <Link href="/dashboard/posts">Posts</Link>
+          </div>
+          <div className="logout">
+            <Link href="/">
+              <div className="logout-content">
+                <img src={defaultIcons.logout} width={18} height={18} />
+                <span>Log Out</span>
+              </div>
+            </Link>
+          </div>
+        </div>
+        <div className="right">{children}</div>
+      </div>
 
-                <div className = 'right'>
-                    {children}
-                </div>
-            </div>
-
-            <style>
-                {`
+      <style>
+        {`
                     html, body {
                         height: 100%;
                         margin: 0;
@@ -47,6 +46,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
 
                     .left {
                         width: 15%;
+                        min-width: 150px;
                         background-color: #D2DCF0;
                         padding: 50px 0 50px 0;
                         box-sizing: border-box;
@@ -107,12 +107,14 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
 
                     .right {
                         flex: 1;
+                        flex-grow: 1;
+                        overflow-y: auto;
                         background-color: #EDF2F9;
                         padding: 20px;
                         box-sizing: border-box;
                     }
                 `}
-            </style>
-        </>
-    );
+      </style>
+    </>
+  );
 }
