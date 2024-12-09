@@ -8,6 +8,7 @@ import Loader from "./Loader";
 import { giveThemeFromEmotion } from "@/utils/postColors";
 import Avatar from "./Avatar";
 import "../app/styles.css";
+import { Post, User } from "@/constants/types";
 
 export default function PostTable() {
   const [searchQuery, setSearchQuery] = useState("");

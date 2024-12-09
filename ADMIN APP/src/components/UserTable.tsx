@@ -7,6 +7,7 @@ import { defaultColors } from "@/constants/colors";
 import CustomSearchBar from "./CustomSearchBar";
 import Loader from "./Loader";
 import "../app/styles.css";
+import { User } from "@/constants/types";
 
 export default function UserTable() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +31,6 @@ export default function UserTable() {
 
     if (response.ok) {
       setUsers(users.data);
-    } else {
-      listAllUsers();
     }
   }
 
@@ -46,8 +45,6 @@ export default function UserTable() {
 
     if (response.ok) {
       setUsers(users.data);
-    } else {
-      listAllUsers();
     }
   }
 

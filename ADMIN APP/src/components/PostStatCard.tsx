@@ -1,5 +1,6 @@
 "use client";
 
+import { Post } from "@/constants/types";
 import { useEffect, useState } from "react";
 
 export default function PostStatCard() {

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
 import "../app/styles.css";
+import { UserReport } from "@/constants/types";
 
 export default function UserReportTable() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,12 +21,10 @@ export default function UserReportTable() {
 
     if (response.ok) {
       setUserReports(userReports.data);
-    } else {
-      listAllUserReports();
     }
   }
 
-  async function handleDeleteUserReport(targetUID: string, reportID: string) {
+  async function handleResolveUserReport(targetUID: string, reportID: string) {
     setIsLoading(true);
 
     const response = await fetch("/api/resolveUserReport", {
@@ -83,7 +82,7 @@ export default function UserReportTable() {
                   <CustomButton
                     label="Resolve"
                     onClick={() =>
-                      handleDeleteUserReport(report.targetUID, report.reportID)
+                      handleResolveUserReport(report.targetUID, report.reportID)
                     }
                     color="darkgreen"
                   />

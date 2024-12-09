@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "@/constants/types";
 import { useEffect, useState } from "react";
 
 export default function UserStatCard() {

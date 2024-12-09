@@ -16,27 +16,23 @@ export async function POST(req: Request) {
           .doc(user.uid)
           .get();
 
-        const creationTimestamp = user.metadata.creationTime;
-        const creationDate = new Date(creationTimestamp).toLocaleDateString(
-          "en-US",
-          {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }
-        );
-
-        const lastLoginTimestamp = user.metadata.lastSignInTime;
-        const lastLoginDate = new Date(lastLoginTimestamp).toLocaleDateString(
-          "en-US",
-          {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }
-        );
-
         const userData = userSnap.exists ? userSnap.data() : null;
+
+        const creationDate = userData?.userSince
+          .toDate()
+          .toLocaleDateString("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          });
+
+        const lastLoginDate = new Date(
+          user.metadata.lastSignInTime
+        ).toLocaleDateString("en-US", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
 
         return {
           uid: user.uid,
@@ -50,6 +46,7 @@ export async function POST(req: Request) {
           userSince: creationDate,
           lastLogin: lastLoginDate,
           isDisabled: user.disabled,
+          rawTime: userData?.userSince,
         };
       })
     );

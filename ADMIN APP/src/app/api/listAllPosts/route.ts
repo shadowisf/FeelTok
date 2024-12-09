@@ -12,13 +12,13 @@ export async function POST(req: Request) {
     const allPosts = postsSnapshot.docs.map((doc) => {
       const data = doc.exists ? doc.data() : null;
 
-      const date = data?.createdAt?.toDate().toLocaleDateString("en-US", {
+      const date = data?.createdAt.toDate().toLocaleDateString("en-US", {
         day: "2-digit",
         month: "short",
         year: "numeric",
       });
 
-      const time = data?.createdAt?.toDate().toLocaleTimeString("en-US", {
+      const time = data?.createdAt.toDate().toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
       });
@@ -31,6 +31,7 @@ export async function POST(req: Request) {
         date: date,
         time: time,
         image: data?.image,
+        rawTime: data?.createdAt,
       };
     });
 

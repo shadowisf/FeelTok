@@ -1,4 +1,6 @@
-type User = {
+import { Timestamp } from "firebase-admin/firestore";
+
+export type User = {
   uid: string;
   email: string;
   name: string;
@@ -11,16 +13,17 @@ type User = {
   userSince: string;
   lastLogin: string;
   isDisabled: boolean;
+  rawTime: any;
 };
 
-type UserReport = {
+export type UserReport = {
   reportID: string;
   targetUID: string;
   author: string;
   reason: string;
 };
 
-type Post = {
+export type Post = {
   id: string;
   author: string;
   caption: string;
@@ -28,9 +31,10 @@ type Post = {
   time: string;
   feeling: string;
   image: string;
+  rawTime: any;
 };
 
-type PostReport = {
+export type PostReport = {
   id: string;
   targetPostID: string;
   author: string;

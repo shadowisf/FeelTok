@@ -7,11 +7,12 @@ import UserStatCard from "@/components/UserStatCard";
 
 export default function Home() {
   return (
-    <div>
+    <>
       <div className="stats-container">
         <PostStatCard />
         <UserStatCard />
       </div>
+
       {/* <div className="graphs-container">
         <div className="subgraphs-container">
           <div className="line-bar-container">
@@ -107,6 +108,6 @@ export default function Home() {
                 }
 
             `}</style>
-    </div>
+    </>
   );
 }

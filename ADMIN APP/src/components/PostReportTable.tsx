@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
 import "../app/styles.css";
+import { PostReport } from "@/constants/types";
 
 export default function PostReportTable() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,8 +21,6 @@ export default function PostReportTable() {
 
     if (response.ok) {
       setPostReports(postReports.data);
-    } else {
-      listAllPostReports();
     }
   }
 
