@@ -2,18 +2,18 @@ import CustomButton from "./CustomButton";
 import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
-import "../app/styles.css";
 import { UserReport } from "@/constants/types";
 
 export default function UserReportTable() {
-  const [isLoading, setIsLoading] = useState(false);
   const [userReports, setUserReports] = useState<UserReport[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    listAllUserReports();
+    handleListAllUserReports();
   }, []);
 
-  async function listAllUserReports() {
+  async function handleListAllUserReports() {
     const response = await fetch("/api/listAllUserReports", {
       method: "GET",
     });
@@ -29,19 +29,19 @@ export default function UserReportTable() {
 
     const response = await fetch("/api/resolveUserReport", {
       method: "POST",
-      body: JSON.stringify({ targetUID: targetUID, reportID: reportID }),
+      body: JSON.stringify({ targetUID, reportID }),
     });
     const data = await response.json();
 
     console.log(data);
 
-    listAllUserReports();
+    await handleListAllUserReports();
 
     setIsLoading(false);
   }
 
   return (
-    <>
+    <div>
       <Loader isVisible={isLoading} />
 
       <div
@@ -52,16 +52,15 @@ export default function UserReportTable() {
         }}
       >
         <h1>User Reports</h1>
+
         <CustomButton
           label="Refresh"
           color={defaultColors.primary}
-          onClick={listAllUserReports}
+          onClick={handleListAllUserReports}
         />
       </div>
 
-      {userReports.length === 0 ? (
-        <p>No current user reports.</p>
-      ) : (
+      {userReports.length > 0 ? (
         <table>
           <thead>
             <tr>
@@ -73,7 +72,7 @@ export default function UserReportTable() {
           </thead>
 
           <tbody>
-            {userReports?.map((report) => (
+            {userReports.map((report) => (
               <tr key={report.reportID}>
                 <td>{report.targetUID}</td>
                 <td>{report.author}</td>
@@ -91,7 +90,9 @@ export default function UserReportTable() {
             ))}
           </tbody>
         </table>
+      ) : (
+        <p>No current user reports.</p>
       )}
-    </>
+    </div>
   );
 }

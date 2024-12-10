@@ -2,18 +2,18 @@ import CustomButton from "./CustomButton";
 import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
-import "../app/styles.css";
 import { PostReport } from "@/constants/types";
 
 export default function PostReportTable() {
-  const [isLoading, setIsLoading] = useState(false);
   const [postReports, setPostReports] = useState<PostReport[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    listAllPostReports();
+    handleListAllPostReports();
   }, []);
 
-  async function listAllPostReports() {
+  async function handleListAllPostReports() {
     const response = await fetch("/api/listAllPostReports", {
       method: "GET",
     });
@@ -38,13 +38,13 @@ export default function PostReportTable() {
 
     console.log(data);
 
-    listAllPostReports();
+    handleListAllPostReports();
 
     setIsLoading(false);
   }
 
   return (
-    <>
+    <div>
       <Loader isVisible={isLoading} />
 
       <div
@@ -58,7 +58,7 @@ export default function PostReportTable() {
         <CustomButton
           label="Refresh"
           color={defaultColors.primary}
-          onClick={listAllPostReports}
+          onClick={handleListAllPostReports}
         />
       </div>
 
@@ -94,6 +94,6 @@ export default function PostReportTable() {
           </tbody>
         </table>
       )}
-    </>
+    </div>
   );
 }

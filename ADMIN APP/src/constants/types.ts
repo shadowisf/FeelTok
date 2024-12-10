@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase-admin/firestore";
-
 export type User = {
   uid: string;
   email: string;
@@ -13,7 +11,7 @@ export type User = {
   userSince: string;
   lastLogin: string;
   isDisabled: boolean;
-  rawTime: any;
+  year: string;
 };
 
 export type UserReport = {
@@ -31,7 +29,7 @@ export type Post = {
   time: string;
   feeling: string;
   image: string;
-  rawTime: any;
+  year: string;
 };
 
 export type PostReport = {

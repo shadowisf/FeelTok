@@ -7,23 +7,22 @@ import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
 import { giveThemeFromEmotion } from "@/utils/postColors";
 import Avatar from "./Avatar";
-import "../app/styles.css";
 import { Post, User } from "@/constants/types";
 
 export default function PostTable() {
   const [searchQuery, setSearchQuery] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post[]>([]);
-  const [selectedPostUser, setSelectedPostUser] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    listAllPosts();
+    handleListAllPosts();
   }, []);
 
-  async function listAllPosts() {
+  async function handleListAllPosts() {
     setSearchQuery("");
 
     const response = await fetch("/api/listAllPosts", {
@@ -54,6 +53,8 @@ export default function PostTable() {
   }
 
   async function handleViewPost(postID: string, uid: string) {
+    setIsLoading(true);
+
     const postResponse = await fetch("/api/listAllPosts", {
       method: "POST",
       body: JSON.stringify({ id: postID }),
@@ -71,8 +72,10 @@ export default function PostTable() {
     if (postResponse.ok || userResponse.ok) {
       setIsModalOpen(true);
       setSelectedPost(post.data);
-      setSelectedPostUser(user.data);
+      setSelectedUser(user.data);
     }
+
+    setIsLoading(false);
   }
 
   async function handleDeletePost(id: string) {
@@ -86,13 +89,13 @@ export default function PostTable() {
 
     console.log(data);
 
-    listAllPosts();
+    handleListAllPosts();
 
     setIsLoading(false);
   }
 
   return (
-    <>
+    <div>
       <Loader isVisible={isLoading} />
 
       <div className="tableHeader">
@@ -114,60 +117,64 @@ export default function PostTable() {
 
         <CustomButton
           label="Refresh"
-          onClick={() => listAllPosts()}
+          onClick={() => handleListAllPosts()}
           color={defaultColors.primary}
         />
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Author</th>
-            <th>Caption</th>
-            <th>Image</th>
-            <th>Created At</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map((post, index) => (
-            <tr key={index}>
-              <td>{post.id}</td>
-              <td>{post.author}</td>
-              <td>{post.caption}</td>
-              <td>
-                <Avatar image={post.image} alt="user's profile picture" />
-              </td>
-              <td>{post.date + ", " + post.time}</td>
-              <td
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "5px",
-                }}
-              >
-                <CustomButton
-                  label="Delete"
-                  color="darkred"
-                  onClick={() => handleDeletePost(post.id)}
-                />
-
-                <CustomButton
-                  label="View"
-                  color={defaultColors.primary}
-                  onClick={() => handleViewPost(post.id, post.author)}
-                />
-              </td>
+      {posts.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Author</th>
+              <th>Caption</th>
+              <th>Image</th>
+              <th>Created At</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {posts.map((post, index) => (
+              <tr key={index}>
+                <td>{post.id}</td>
+                <td>{post.author}</td>
+                <td>{post.caption}</td>
+                <td>
+                  <Avatar image={post.image} alt="user's profile picture" />
+                </td>
+                <td>{post.date + ", " + post.time}</td>
+                <td
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <CustomButton
+                    label="Delete"
+                    color="darkred"
+                    onClick={() => handleDeletePost(post.id)}
+                  />
+
+                  <CustomButton
+                    label="View"
+                    color={defaultColors.primary}
+                    onClick={() => handleViewPost(post.id, post.author)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No posts found.</p>
+      )}
 
       {isModalOpen && (
         <div className="modal-overlay">
           {selectedPost.map((post, index) => {
-            const user = selectedPostUser[0];
+            const user = selectedUser[0];
             const theme = giveThemeFromEmotion(post.feeling);
             const backgroundColor = theme.backgroundColor;
             const textColor = theme.textColor;
@@ -295,6 +302,6 @@ export default function PostTable() {
     flex-direction: column;
 }`}
       </style>
-    </>
+    </div>
   );
 }

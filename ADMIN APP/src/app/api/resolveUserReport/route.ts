@@ -3,10 +3,13 @@ import { getFirestore } from "firebase-admin/firestore";
 
 export async function POST(req: Request) {
   try {
+    // initialize admin
     await initAdmin();
 
+    // get body from request
     const body = await req.json();
 
+    // delete user report via report id
     await getFirestore()
       .collection("users")
       .doc(body.targetUID)

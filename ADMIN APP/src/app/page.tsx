@@ -1,152 +1,118 @@
-"use client";
+import LineGraph from "@/components/HomePageComponents/LineGraph";
+import BarGraph from "@/components/HomePageComponents/BarGraoh";
+import PieGraph from "@/components/HomePageComponents/PieGraph";
+import AreaGraph from "@/components/HomePageComponents/AreaGraph";
+import PostStatCard from "@/components/PostStatCard";
+import UserStatCard from "@/components/UserStatCard";
+import "./styles.css";
 
-import { useState } from "react";
-import { defaultIcons, defaultImages } from "@/constants/icons";
-import router from "next/router";
-
-export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = () => {
-    router.push("/dashboard");
-  };
-
+export default function Home() {
   return (
-    <div className="signin-container">
-      <div className="signin-box">
-        <div className="image-container">
-          <img
-            src={defaultImages.loginPageBackground}
-            className="login-image"
-          />
-        </div>
-
-        <form className="signin-form" onSubmit={handleSubmit}>
-          <h1>Welcome Back</h1>
-
-          <div className="input-group">
-            <img src={defaultIcons.email} className="input-icon" />
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Email"
-            />
-          </div>
-
-          <div className="input-group">
-            <img src={defaultIcons.password} className="input-icon" />
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Password"
-            />
-          </div>
-
-          <button className="signin-btn">Sign In</button>
-        </form>
+    <>
+      <div className="stats-container">
+        <PostStatCard />
+        <UserStatCard />
       </div>
 
+      <div className="graphs-container">
+        <LineGraph />
+      </div>
+
+      {/* <div className="graphs-container">
+        <div className="subgraphs-container">
+          <div className="line-bar-container">
+            <LineGraph />
+            <BarGraph />
+          </div>
+          <div className="area-graph-container">
+            <AreaGraph />
+          </div>
+        </div>
+        <div className="pie-container">
+          <PieGraph />
+        </div>
+      </div> */}
+
       <style>{`
-        html, body {
-          height: 100%;
-          margin: 0;
-          font-family: Arial, sans-serif;
-          overflow: hidden;
-        }
+                .stats-container {
+                    justify-content: center;
+                    align-items: center;
+                    gap: 50px;
+                    display: flex;
+                    flex-direction: row;
+                    box-sizing: border-box;
+                    padding: 20px;
+                    width: 100%
+                    flex-wrap: wrap;
+                }
+                .graphs-container {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    flex-wrap: wrap;
+                }
+                .subgraphs-container {
+                    width: 70%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 30px;
+                    margin-top: 50px;
+                }
+                .line-bar-container {
+                    display: flex;
+                    gap: 20px;
+                    flex: 1;
+                    flex-wrap: wrap;
+                }
+                .pie-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex: 0 0 300px;
+                    margin-right: 50px;
+                }
+                .area-graph-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 75%;
+                }
 
-        .signin-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          background-color: #f5f5f5;
-        }
+                @media (max-width: 1024px) {
+                    .stats-container {
+                        flex-direction: column;
+                        gap: 30px;
+                    }
 
-        .signin-box {
-          display: flex;
-          width: 1200px;
-          height: 80%;
-          background-color: white;
-          border-radius: 72px;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          border: 2px solid black;
-        }
+                    .graphs-container {
+                        flex-direction: column;
+                        gap: 30px;
+                    }
 
-        .image-container {
-          flex: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          overflow: hidden;
-          background-color: #e0e0e0;
-          border-radius: 72px;
-          border-right: 2px solid gray;
-        }
+                    .subgraphs-container {
+                        width: 100%;
+                    }
 
-        .login-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+                    .line-bar-container {
+                        flex-direction: column;
+                        gap: 30px;
+                    }
 
-        .signin-form {
-          flex: 0.5;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 30px;
-        }
+                    .pie-container {
+                        width: 100%;
+                        margin-right: 0;
+                    }
 
-        h1 {
-          text-align: center;
-          font-size: 2rem;
-          margin-bottom: 30px;
-        }
+                    .area-graph-container {
+                        width: 100%;
+                    }
+                }
 
-        .input-group {
-          display: flex;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-
-        .input-icon {
-          width: 20px;
-          height: 20px;
-          margin-right: 10px;
-        }
-
-        input {
-          flex: 1;
-          padding: 10px 10px 10px 20px;
-          font-size: 1rem;
-          border: 2px solid black;
-          border-radius: 8px;
-          box-sizing: border-box;
-        }
-
-        .signin-btn {
-          width: 100%;
-          padding: 10px;
-          background-color: black;
-          color: white;
-          border: none;
-          margin-top: 20px;
-          border-radius: 8px;
-          font-size: 1.1rem;
-          cursor: pointer;
-        }
-
-        .signin-btn:hover {
-          background-color: #333;
-        }
-      `}</style>
-    </div>
+            `}</style>
+    </>
   );
 }

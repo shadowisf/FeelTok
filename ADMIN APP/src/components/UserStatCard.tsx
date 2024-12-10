@@ -7,10 +7,10 @@ export default function UserStatCard() {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    listAllUsers();
+    handleListAllUsers();
   }, []);
 
-  async function listAllUsers() {
+  async function handleListAllUsers() {
     const response = await fetch("/api/listAllUsers", {
       method: "POST",
       body: JSON.stringify({ uid: null }),

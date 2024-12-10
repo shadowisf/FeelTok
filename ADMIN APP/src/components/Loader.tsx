@@ -17,7 +17,7 @@ export default function Loader({ isVisible }: LoaderProps) {
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: defaultColors.secondary,
+        backgroundColor: "rgb(0, 0, 0, 0.25)",
         zIndex: 9999,
       }}
     >

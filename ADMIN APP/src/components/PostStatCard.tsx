@@ -7,10 +7,10 @@ export default function PostStatCard() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    listAllPosts();
+    handleListAllPosts();
   }, []);
 
-  async function listAllPosts() {
+  async function handleListAllPosts() {
     const response = await fetch("/api/listAllPosts", {
       method: "POST",
       body: JSON.stringify({ id: null }),

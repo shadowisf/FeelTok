@@ -1,40 +1,85 @@
 "use client";
 
+import { Post, User } from "@/constants/types";
+import React, { useState, useEffect } from "react";
 import {
   LineChart,
+  Line,
   XAxis,
   YAxis,
-  Line,
   Tooltip,
   Legend,
   CartesianGrid,
 } from "recharts";
 
 export default function LineGraph() {
-  const data = [
-    { date: "2016", sale: 450, profit: 120 },
-    { date: "2017", sale: 700, profit: 200 },
-    { date: "2018", sale: 600, profit: 180 },
-    { date: "2019", sale: 850, profit: 250 },
-    { date: "2020", sale: 920, profit: 300 },
-    { date: "2021", sale: 1100, profit: 350 },
-    { date: "2022", sale: 1150, profit: 400 },
-    { date: "2023", sale: 900, profit: 280 },
-    { date: "2024", sale: 750, profit: 220 },
-    { date: "2025", sale: 1050, profit: 320 },
-  ];
+  const [isClient, setIsClient] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [data, setData] = useState<
+    { date: string; users: number; posts: number }[]
+  >([]);
+
+  useEffect(() => {
+    setIsClient(true);
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (users.length > 0 && posts.length > 0) {
+      processData();
+    }
+  }, [users, posts]);
+
+  async function fetchData() {
+    const userResponse = await fetch("/api/listAllUsers", {
+      method: "POST",
+      body: JSON.stringify({ uid: null }),
+    });
+    const userData = await userResponse.json();
+
+    const postResponse = await fetch("/api/listAllPosts", {
+      method: "POST",
+      body: JSON.stringify({ id: null }),
+    });
+    const postData = await postResponse.json();
+
+    if (userResponse.ok && postResponse.ok) {
+      setUsers(userData.data);
+      setPosts(postData.data);
+    }
+  }
+
+  function processData() {
+    const years = ["2023", "2024", "2025"];
+
+    const result = years.map((year) => {
+      const userCount = users.filter((user) => user.year === year).length;
+      const postCount = posts.filter((post) => post.year === year).length;
+
+      return {
+        date: year,
+        users: userCount,
+        posts: postCount,
+      };
+    });
+
+    setData(result);
+  }
 
   return (
     <div>
-      <LineChart height={250} width={500} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-        <YAxis dataKey="sale" tick={{ fontSize: 10 }} />
-        <Line dataKey="sale" type="monotone" stroke="blue" />
-        <Line dataKey="profit" type="monotone" stroke="green" />
-        <Tooltip contentStyle={{ fontSize: 10 }} />
-        <Legend wrapperStyle={{ fontSize: 10 }} />
-      </LineChart>
+      {isClient && (
+        <LineChart height={250} width={500} data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} />
+          <Line dataKey="users" type="monotone" stroke="blue" name="Users" />
+          <Line dataKey="posts" type="monotone" stroke="green" name="Posts" />
+          <Tooltip contentStyle={{ fontSize: 10 }} />
+          <Legend wrapperStyle={{ fontSize: 10 }} />
+        </LineChart>
+      )}
     </div>
   );
 }
