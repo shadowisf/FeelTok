@@ -73,7 +73,9 @@ export default function Index() {
         }
 
         // Redirect to sign in if no user is signed in
-        router.navigate("/");
+        else {
+          router.navigate("/");
+        }
       } finally {
         if (isMounted) {
           await delay(2000);

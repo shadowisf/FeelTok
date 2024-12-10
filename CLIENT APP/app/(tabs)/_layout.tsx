@@ -7,6 +7,7 @@ import {
 import { TabIcon } from "@/components/TabIcon";
 import ClickableIcon from "@/components/ClickableIcon";
 import { StyleSheet, Text } from "react-native";
+import Timer from "@/components/Timer";
 
 export default function TabsLayout() {
   function handleProfileSettings() {
@@ -33,6 +34,10 @@ export default function TabsLayout() {
           ),
           headerLeft: () => (
             <Text style={[defaultStyle.h3, styles.feeltok]}>FeelTok!</Text>
+          ),
+
+          headerRight: () => (
+            <Timer seconds={3600} additionalStyles={{ paddingRight: 20 }} />
           ),
         }}
       />
