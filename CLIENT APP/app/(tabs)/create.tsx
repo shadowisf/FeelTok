@@ -90,7 +90,7 @@ export default function Create() {
 
   // upload image function
   async function handleUploadImage() {
-    const result = await runImagePicker(4, 3);
+    const result = await runImagePicker(1, 1);
 
     if (result) {
       setImage(result);

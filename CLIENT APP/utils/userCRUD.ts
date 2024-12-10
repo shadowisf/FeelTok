@@ -10,7 +10,11 @@ import auth, {
 import firestore from "@react-native-firebase/firestore";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Alert } from "react-native";
-import { deleteCredentials, setCredentials } from "./asyncStorage";
+import {
+  deleteCredentials,
+  getCredentials,
+  setCredentials,
+} from "./asyncStorage";
 import { deleteImage, uploadImage } from "./cloudinaryAPI";
 import { deletePost } from "./postCRUD";
 
@@ -293,8 +297,12 @@ export async function killEmAll({
   email,
 }: deleteUserProps) {
   try {
+    // assign general references
     const userCol = firestore().collection("users");
     const postCol = firestore().collection("posts");
+
+    const userSnap = await userCol.doc(firebaseUser.uid).get();
+    const userData = userSnap.exists ? userSnap.data() : null;
 
     let verified;
 
@@ -346,7 +354,11 @@ export async function killEmAll({
       // delete every reference of user
       await deleteUser(firebaseUser);
       await userCol.doc(firebaseUser.uid).delete();
-      await deleteImage(`user-${firebaseUser.uid}`);
+
+      if (userData?.profilePicture !== "") {
+        await deleteImage(`user-${firebaseUser.uid}`);
+      }
+
       await deleteCredentials();
 
       console.log(killEmAll.name, "|", "deleted user and all related data");

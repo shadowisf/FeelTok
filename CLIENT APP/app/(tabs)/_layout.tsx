@@ -10,10 +10,6 @@ import { StyleSheet, Text } from "react-native";
 import Timer from "@/components/Timer";
 
 export default function TabsLayout() {
-  function handleProfileSettings() {
-    router.navigate("/profile/settings");
-  }
-
   return (
     <Tabs
       screenOptions={{
@@ -72,7 +68,7 @@ export default function TabsLayout() {
           headerRight: () => (
             <ClickableIcon
               icon={defaultIcons.settings}
-              onPress={handleProfileSettings}
+              onPress={() => router.navigate("/profile/settings")}
               touchableAdditionalStyles={{ paddingRight: 20 }}
             />
           ),

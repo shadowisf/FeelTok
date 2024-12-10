@@ -166,9 +166,11 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: "100%",
+    alignSelf: "center",
+    width: 330,
     height: 330,
     resizeMode: "contain",
+    borderRadius: 8,
   },
 
   createBottomContainer: {

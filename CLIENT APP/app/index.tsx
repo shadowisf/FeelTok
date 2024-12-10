@@ -15,7 +15,7 @@ import {
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import auth from "@react-native-firebase/auth";
 import * as SplashScreen from "expo-splash-screen";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { getCredentials } from "@/utils/asyncStorage";
@@ -26,13 +26,22 @@ export default function Index() {
   useEffect(() => {
     let isMounted = true;
 
-    const checkAuthState = async (user: FirebaseAuthTypes.User | null) => {
+    async function checkAuthState() {
       try {
         if (!isMounted) return;
 
-        // Google account re-authentication
+        const user = auth().currentUser;
+
+        // If there's a Google account
         if (user && user.providerData[0]?.providerId === "google.com") {
           try {
+            const webClientID = process.env
+              .EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID as string;
+
+            GoogleSignin.configure({
+              webClientId: webClientID,
+            });
+
             const response = await GoogleSignin.signInSilently();
             if (response) {
               console.log(
@@ -48,7 +57,7 @@ export default function Index() {
           }
         }
 
-        // Password account re-authentication
+        // If there's a password account
         else if (user && user.providerData[0]?.providerId === "password") {
           try {
             const data = await getCredentials();
@@ -72,7 +81,7 @@ export default function Index() {
           }
         }
 
-        // Redirect to sign in if no user is signed in
+        // No user signed in
         else {
           router.navigate("/");
         }
@@ -82,15 +91,12 @@ export default function Index() {
           SplashScreen.hideAsync();
         }
       }
-    };
+    }
 
-    const startup = auth().onAuthStateChanged((user) => {
-      checkAuthState(user);
-    });
+    checkAuthState();
 
     return () => {
       isMounted = false;
-      startup(); // Unsubscribe from the listener
     };
   }, []);
 

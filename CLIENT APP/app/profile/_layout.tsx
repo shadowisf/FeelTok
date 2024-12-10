@@ -11,9 +11,7 @@ export default function ProfileSettingsLayout() {
         headerLeft: () => (
           <ClickableIcon
             icon={defaultIcons.arrowLeft}
-            onPress={() => {
-              router.back();
-            }}
+            onPress={() => router.back()}
           />
         ),
       }}

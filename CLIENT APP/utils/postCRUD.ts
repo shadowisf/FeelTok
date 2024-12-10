@@ -223,10 +223,16 @@ export async function readPost({ firebaseUser, uid }: readPostProps) {
 export async function deletePost(postID: string) {
   try {
     // assign general references
+    const postSnap = await firestore().collection("posts").doc(postID).get();
+    const postData = postSnap.exists ? postSnap.data() : null;
+
+    // deletes post from firestore
     await firestore().collection("posts").doc(postID).delete();
 
     // deletes post image from cloudinary
-    await deleteImage(`post-${postID}`);
+    if (postData?.image !== "") {
+      await deleteImage(`post-${postID}`);
+    }
 
     console.log(deletePost.name, "|", "post deleted successfully");
     return "ok";

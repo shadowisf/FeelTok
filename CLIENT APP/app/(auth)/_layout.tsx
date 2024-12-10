@@ -9,9 +9,7 @@ export default function AuthLayout() {
         headerLeft: () => (
           <ClickableIcon
             icon={defaultIcons.arrowLeft}
-            onPress={() => {
-              router.back();
-            }}
+            onPress={() => router.back()}
           />
         ),
       }}
