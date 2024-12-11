@@ -34,7 +34,7 @@ th {
     align-items: center;
 }
 
-input {
+.search-bar-input {
     width: 500px;
     padding: 8px;
 }
@@ -313,7 +313,7 @@ h1 {
     margin-right: 10px;
 }
 
-input {
+.sign-in-input {
     flex: 1;
     padding: 10px 10px 10px 20px;
     font-size: 1rem;

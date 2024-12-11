@@ -11,6 +11,7 @@ export default function CustomSearchBar(parameters: CustomSearchBarProps) {
       value = {parameters.searchQuery}
       onChange = {parameters.handleInputChange}
       placeholder = {parameters.placeholder}
+      className="search-bar-input"
     />
   );
 }

@@ -5,7 +5,7 @@ import { defaultIcons, defaultImages } from "@/constants/icons";
 import { useRouter } from "next/navigation";
 import "@/app/styles.css";
 
-export default function SignIn() {
+export default function Index() {
   const [clientEmail, setClientEmail] = useState("");
   const [privateKeyID, setPrivateKey] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
@@ -61,6 +61,7 @@ export default function SignIn() {
               onChange={(e) => setClientEmail(e.target.value)}
               required
               placeholder="GService Email"
+              className="sign-in-input"
             />
           </div>
 
@@ -73,6 +74,7 @@ export default function SignIn() {
               onChange={(e) => setPrivateKey(e.target.value)}
               required
               placeholder="Private Key ID"
+              className="sign-in-input"
             />
           </div>
 
