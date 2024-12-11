@@ -370,11 +370,16 @@ export async function killEmAll({
   }
 }
 
-export async function signOutUser() {
+export async function signOutUser(firebaseUser: FirebaseAuthTypes.User) {
   try {
-    // signs out user whether password or google account
-    await auth().signOut();
-    await GoogleSignin.signOut();
+    if (firebaseUser.providerData[0]?.providerId === "google.com") {
+      await auth().signOut();
+      await GoogleSignin.signOut();
+    }
+
+    if (firebaseUser.providerData[0]?.providerId === "password") {
+      await auth().signOut();
+    }
 
     // delete stored credentials
     await deleteCredentials();

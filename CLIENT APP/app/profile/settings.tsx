@@ -81,7 +81,7 @@ export default function ProfileSettings() {
 
   async function handleSignOut() {
     // execute sign out for all user types
-    const result = await signOutUser();
+    const result = await signOutUser(firebaseUser);
 
     if (result === "ok") {
       // if result is ok, redirect to index
