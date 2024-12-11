@@ -6,8 +6,8 @@ import CustomSearchBar from "@/components/CustomSearchBar";
 import { defaultColors } from "@/constants/colors";
 import Loader from "./Loader";
 import { giveThemeFromEmotion } from "@/utils/postColors";
-import Avatar from "./Avatar";
 import { Post, User } from "@/constants/types";
+import { defaultImages } from "@/constants/icons";
 
 export default function PostTable() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,6 +128,7 @@ export default function PostTable() {
             <tr>
               <th>ID</th>
               <th>Author</th>
+              <th>Feeling</th>
               <th>Caption</th>
               <th>Image</th>
               <th>Created At</th>
@@ -137,20 +138,23 @@ export default function PostTable() {
           <tbody>
             {posts.map((post, index) => (
               <tr key={index}>
-                <td>{post.id}</td>
+                <td style={{ fontWeight: "bold" }}>{post.id}</td>
                 <td>{post.author}</td>
+                <td>{post.feeling}</td>
                 <td>{post.caption}</td>
                 <td>
-                  <Avatar image={post.image} alt="user's profile picture" />
+                  {post.image ? (
+                    <img
+                      className="postTableImage"
+                      src={post.image}
+                      alt={"post's picture"}
+                    />
+                  ) : (
+                    <p>N/A</p>
+                  )}
                 </td>
                 <td>{post.date + ", " + post.time}</td>
-                <td
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
+                <td className="tableActions">
                   <CustomButton
                     label="Delete"
                     color="darkred"
@@ -194,7 +198,14 @@ export default function PostTable() {
                 </button>
 
                 <div className="user-card">
-                  <img className="user-image" src={user.profilePicture} />
+                  <img
+                    className="user-image"
+                    src={
+                      user.profilePicture === "default"
+                        ? defaultImages.defaultProfile
+                        : user.profilePicture
+                    }
+                  />
                   <div className="user-info">
                     <span
                       style={{ fontWeight: "bold" }}
@@ -216,11 +227,13 @@ export default function PostTable() {
                   <p className="post-caption">{post.caption}</p>
                 </div>
 
-                <img
-                  style={{ width: "500px" }}
-                  className="post-image"
-                  src={post.image}
-                />
+                {post.image ? (
+                  <img
+                    style={{ width: "500px", borderRadius: 8 }}
+                    className="post-image"
+                    src={post.image}
+                  />
+                ) : null}
 
                 <div className="post-created-container">
                   <p style={{ marginBottom: 0 }} className="post-created-at">
@@ -235,73 +248,6 @@ export default function PostTable() {
           })}
         </div>
       )}
-
-      <style>
-        {`
-        .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-/* Modal Content */
-.modal-content {
-    border-radius: 12px;
-    padding: 20px;
-    max-width: 500px;
-    max-height: auto;
-    overflow-y: auto;
-    position: relative;
-}
-
-/* Close Button */
-.close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.user-image {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-}
-
-.user-card {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5px;
-}
-
-.post-created-at {
-    opacity: 0.5;
-    text-align: end;
-}
-
-.post-created-container {
-    display: flex;
-    flex-direction: column;
-}`}
-      </style>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { defaultImages, defaultIcons } from "@/constants/icons";
 import Avatar from "./Avatar";
 import Icon from "./Icon";
@@ -113,19 +115,19 @@ export default function UserTable() {
             {users.map((user, index) => (
               <tr key={index}>
                 <td className={user.isDisabled ? "disabled" : ""}>
-                  {user?.profilePicture === "default" ? (
-                    <Avatar
-                      image={defaultImages.defaultProfile}
-                      alt={"default profile picture"}
-                    />
-                  ) : (
-                    <Avatar
-                      image={user.profilePicture}
-                      alt={"user's profile picture"}
-                    />
-                  )}
+                  <Avatar
+                    image={
+                      user.profilePicture === "default"
+                        ? defaultImages.defaultProfile
+                        : user.profilePicture
+                    }
+                    alt={"default profile picture"}
+                  />
                 </td>
-                <td className={user.isDisabled ? "disabled" : ""}>
+                <td
+                  style={{ fontWeight: "bold" }}
+                  className={user.isDisabled ? "disabled" : ""}
+                >
                   {user?.uid}
                 </td>
                 <td className={user.isDisabled ? "disabled" : ""}>

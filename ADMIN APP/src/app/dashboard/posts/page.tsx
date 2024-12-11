@@ -1,5 +1,3 @@
-"use client";
-
 import PostReportTable from "@/components/PostReportTable";
 import PostTable from "@/components/PostTable";
 import "@/app/styles.css";

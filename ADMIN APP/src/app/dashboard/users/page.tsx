@@ -1,5 +1,3 @@
-"use client";
-
 import UserReportTable from "@/components/UserReportTable";
 import UserTable from "@/components/UserTable";
 import "@/app/styles.css";

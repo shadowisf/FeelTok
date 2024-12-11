@@ -1,3 +1,5 @@
+"use client";
+
 import CustomButton from "./CustomButton";
 import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
@@ -74,7 +76,7 @@ export default function UserReportTable() {
           <tbody>
             {userReports.map((report) => (
               <tr key={report.reportID}>
-                <td>{report.targetUID}</td>
+                <td style={{ fontWeight: "bold" }}>{report.targetUID}</td>
                 <td>{report.author}</td>
                 <td>{report.reason}</td>
                 <td>

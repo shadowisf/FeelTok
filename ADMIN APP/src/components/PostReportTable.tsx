@@ -1,3 +1,5 @@
+"use client";
+
 import CustomButton from "./CustomButton";
 import { useState, useEffect } from "react";
 import { defaultColors } from "@/constants/colors";
@@ -47,13 +49,7 @@ export default function PostReportTable() {
     <div>
       <Loader isVisible={isLoading} />
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className="tableHeader">
         <h1>Post Reports</h1>
         <CustomButton
           label="Refresh"
@@ -77,7 +73,7 @@ export default function PostReportTable() {
           <tbody>
             {postReports?.map((report, index) => (
               <tr key={index}>
-                <td>{report.targetPostID}</td>
+                <td style={{ fontWeight: "bold" }}>{report.targetPostID}</td>
                 <td>{report.author}</td>
                 <td>{report.reason}</td>
                 <td>
