@@ -108,15 +108,21 @@ export default function EditProfile() {
         gender !== data?.gender ||
         bio !== data?.bio; // checks if any of the fields have changed
 
-      const invalidEmail = !email.match("@feeltok");
+      const textConstraints =
+        fullName.length >= 3 &&
+        username.length >= 3 &&
+        email.match("@") &&
+        !email.match("@feeltok");
 
-      if (mustNotBeSame && mustNotBeEmpty && invalidEmail) {
+      if (mustNotBeSame && mustNotBeEmpty && textConstraints) {
         // if check is successful, enable button
         setIsDisabled(false);
-      } else if (newPassword && invalidEmail) {
-        setIsDisabled(true);
       } else {
         setIsDisabled(true);
+      }
+
+      if (newPassword) {
+        setIsDisabled(false);
       }
     }
 
@@ -136,7 +142,7 @@ export default function EditProfile() {
   useEffect(() => {
     function checkPassword() {
       // checks if password is not empty
-      if (password) {
+      if (password && password.length >= 7) {
         setIsDisabled(false);
       } else {
         setIsDisabled(true);
@@ -164,7 +170,7 @@ export default function EditProfile() {
 
   async function handleSignOut() {
     // execute sign out for all user types
-    const result = await signOutUser();
+    const result = await signOutUser(firebaseUser);
 
     if (result === "ok") {
       // if result is ok, redirect to index

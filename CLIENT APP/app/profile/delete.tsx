@@ -38,7 +38,12 @@ export default function DeleteProfile() {
       // checks if emailReEnter or password is not empty
       // emailResend is for social accounts only
       // password is for normal accounts only
-      if (emailReEnter || password) {
+      if (
+        (emailReEnter &&
+          emailReEnter.match("@") &&
+          !emailReEnter.match("@feeltok")) ||
+        (password && password.length >= 7)
+      ) {
         setIsDisabled(false);
       } else {
         setIsDisabled(true);

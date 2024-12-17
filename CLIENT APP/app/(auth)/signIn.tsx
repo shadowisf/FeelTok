@@ -42,7 +42,13 @@ export default function SignIn() {
   useEffect(() => {
     function checkEmailAndPasswordFields() {
       // checks if email and password are not empty
-      if (email && password && !email.match("@feeltok")) {
+      if (
+        email &&
+        email.match("@") &&
+        !email.match("@feeltok") &&
+        password &&
+        password.length >= 7
+      ) {
         SetIsDisabled(false);
       } else {
         SetIsDisabled(true);

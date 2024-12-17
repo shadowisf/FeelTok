@@ -24,10 +24,14 @@ export default function SignUp() {
       // checks if all fields are not empty
       if (
         email &&
+        !email.match("@feeltok") &&
+        email.match("@") &&
         password &&
+        password.length >= 7 &&
         fullName &&
+        fullName.length >= 3 &&
         username &&
-        !email.match("@feeltok")
+        username.length >= 3
       ) {
         setIsDisabled(false);
       } else {
