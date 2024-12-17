@@ -6,6 +6,7 @@ import { readUser, reportUser } from "@/utils/userCRUD";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { Alert } from "react-native";
 import UserMoreOptionsModal from "@/components/UserMoreOptionsModal";
+import React from "react";
 
 export default function OtherProfileLayout() {
   const [fullName, setFullName] = useState("");

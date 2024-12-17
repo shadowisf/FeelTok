@@ -21,6 +21,7 @@ import { googleSignIn } from "@/utils/googleAuth";
 import SocialAuthButton from "@/components/SocialAuthButton";
 import { deleteOtp, verifyOtp, sendOtp, checkOtp } from "@/utils/twoFactorAuth";
 import OtpScreen from "./otp";
+import React from "react";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");

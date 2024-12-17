@@ -1,9 +1,9 @@
 import { Modal, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { defaultStyle, delay, defaultColors } from "@/constants/defaultStuff";
 import CustomButton from "./CustomButton";
 import CustomInput from "./CustomInput";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 type PostMoreOptionsModalProps = {
   firebaseUser: FirebaseAuthTypes.User;

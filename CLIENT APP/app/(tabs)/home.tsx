@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { PostData, readPost } from "@/utils/postCRUD";
 import Loader from "@/components/Loader";
 import DisplayPost from "@/components/DisplayPost";
+import React from "react";
 
 export default function Home() {
   const [imageKey, setImageKey] = useState(0);

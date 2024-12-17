@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, Alert, AppState } from "react-native";
+import { Text, Alert, AppState } from "react-native";
 
 type TimerProps = {
   seconds: number;

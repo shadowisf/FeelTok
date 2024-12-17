@@ -10,11 +10,7 @@ import auth, {
 import firestore from "@react-native-firebase/firestore";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Alert } from "react-native";
-import {
-  deleteCredentials,
-  getCredentials,
-  setCredentials,
-} from "./asyncStorage";
+import { deleteCredentials, setCredentials } from "./asyncStorage";
 import { deleteImage, uploadImage } from "./cloudinaryAPI";
 import { deletePost } from "./postCRUD";
 

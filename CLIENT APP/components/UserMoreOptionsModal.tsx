@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { defaultStyle, defaultColors } from "@/constants/defaultStuff";
 import CustomButton from "./CustomButton";
 import CustomInput from "./CustomInput";

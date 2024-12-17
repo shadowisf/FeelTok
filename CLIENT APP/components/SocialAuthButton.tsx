@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { defaultStyle } from "@/constants/defaultStuff";
+import React from "react";
 
 type CustomButtonWithIconProps = {
   label: string;

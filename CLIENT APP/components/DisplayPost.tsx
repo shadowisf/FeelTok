@@ -14,6 +14,7 @@ import { deletePost, giveThemeFromEmotion, reportPost } from "@/utils/postCRUD";
 import PostMoreOptionsModal from "./PostMoreOptionsModal";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { router } from "expo-router";
+import React from "react";
 
 type DisplayPostProps = {
   author: string;
