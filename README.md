@@ -30,16 +30,16 @@
 
 ## ADMIN APP SETUP
 1. Redirect to admin folder
-```bash
-cd ADMIN\ APP/
-```
+   ```bash
+   cd ADMIN\ APP/
+   ```
 2. Install dependencies
-```bash
-npm install --legacy-peer-deps
-```
+   ```bash
+   npm install --legacy-peer-deps
+   ```
 3. Download `serviceAccount.json` via Firebase
 4. Place `serviceAccount.json` in root of admin folder
 5. Start local server
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
