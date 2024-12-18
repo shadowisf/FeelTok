@@ -12,9 +12,9 @@
 
 ## CLIENT APP SETUP
 1. Redirect to client folder
-```bash
-cd CLIENT\ APP/
-```
+   ```bash
+   cd CLIENT\ APP/
+   ```
 2. Install dependencies
    ```bash
    npm install
