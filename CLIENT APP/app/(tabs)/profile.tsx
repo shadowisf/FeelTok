@@ -5,6 +5,7 @@ import {
   View,
   SafeAreaView,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { readUser } from "@/utils/userCRUD";
@@ -15,6 +16,7 @@ import { PostData, readPost } from "@/utils/postCRUD";
 import DisplayPost from "@/components/DisplayPost";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
 export default function Profile() {
   const [fullName, setFullName] = useState("");
@@ -29,6 +31,49 @@ export default function Profile() {
   const [posts, setPosts] = useState<PostData[]>([]);
 
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
+
+  useEffect(() => {
+    async function fetchUserInfo() {
+      setIsPageLoading(true);
+      await onRefresh();
+      setIsPageLoading(false);
+    }
+
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    // listender for real-time updates
+    const unsubscribePost = firestore()
+      .collection("posts")
+      .orderBy("createdAt", "desc")
+      .onSnapshot(async (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+        }));
+
+        if (data) {
+          onRefresh();
+        }
+      });
+
+    const unsubscribeUser = firestore()
+      .collection("users")
+      .onSnapshot(async (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+        }));
+
+        if (data) {
+          onRefresh();
+        }
+      });
+
+    return () => {
+      unsubscribePost();
+      unsubscribeUser();
+    }; // cleanup listener on unmount
+  }, []);
 
   async function onRefresh() {
     // execute readUser and readPost function of currentUser
@@ -48,7 +93,15 @@ export default function Profile() {
 
     if (postData) {
       // if postData exists, assign postData to states
-      setPosts(postData || []);
+
+      // sort post by time, latest is first
+      const sortedData = postData.sort((a, b) => {
+        const date1 = b.createdAt.seconds * 1000;
+        const date2 = a.createdAt.seconds * 1000;
+        return date1 - date2;
+      });
+
+      setPosts(sortedData || []);
       setImageKey(imageKey + 1);
     }
 
@@ -56,18 +109,6 @@ export default function Profile() {
 
     setIsRefreshing(false);
   }
-
-  useEffect(() => {
-    async function fetchUserInfo() {
-      setIsPageLoading(true);
-
-      await onRefresh();
-
-      setIsPageLoading(false);
-    }
-
-    fetchUserInfo();
-  }, []);
 
   return (
     <>
@@ -108,30 +149,25 @@ export default function Profile() {
                 <View style={styles.line} />
               </View>
 
-              <View>
-                {posts
-                  // sort the posts with latest being at the top
-                  .sort(
-                    (a, b) =>
-                      b.createdAt.seconds * 1000 - a.createdAt.seconds * 1000
-                  )
-                  .map((post, index) => (
-                    // display posts of currentUser
-                    <DisplayPost
-                      key={index}
-                      author={post.author}
-                      profilePicture={post.profilePicture}
-                      fullName={post.fullName}
-                      username={post.username}
-                      caption={post.caption}
-                      feeling={post.feeling}
-                      createdAt={post.createdAt}
-                      image={post.image}
-                      id={post.id}
-                      imageKey={imageKey}
-                    />
-                  ))}
-              </View>
+              <FlatList
+                scrollEnabled={false}
+                data={posts}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <DisplayPost
+                    imageKey={imageKey}
+                    author={item.author}
+                    profilePicture={item.profilePicture}
+                    fullName={item.fullName}
+                    username={item.username}
+                    caption={item.caption}
+                    feeling={item.feeling}
+                    createdAt={item.createdAt}
+                    image={item.image}
+                    id={item.id}
+                  />
+                )}
+              />
             </View>
           </View>
         </ScrollView>
@@ -168,10 +204,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     marginBottom: 15,
-  },
-
-  resend: {
-    color: defaultColors.primary,
-    fontWeight: "bold",
   },
 });

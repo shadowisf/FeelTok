@@ -54,6 +54,17 @@ export default function EditProfile() {
 
   let content;
 
+  useEffect(() => {
+    async function startup() {
+      setIsPageLoading(true);
+      await onRefresh();
+      setIsPageLoading(false);
+    }
+
+    // on startup, fetch user info
+    startup();
+  }, []);
+
   async function onRefresh() {
     // execut readUser function of currentUser
     const data = await readUser({ firebaseUser });
@@ -77,19 +88,6 @@ export default function EditProfile() {
 
     setIsRefreshing(false);
   }
-
-  useEffect(() => {
-    async function fetchUserInfo() {
-      setIsPageLoading(true);
-
-      await onRefresh();
-
-      setIsPageLoading(false);
-    }
-
-    // on startup, fetch user info
-    fetchUserInfo();
-  }, []);
 
   useEffect(() => {
     async function checkEditFields() {

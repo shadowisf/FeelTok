@@ -16,6 +16,7 @@ import CustomButton from "@/components/CustomButton";
 import ProfileInfo from "@/components/ProfileInfo";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
 export default function ProfileSettings() {
   const [profilePicture, setProfilePicture] = useState("default");
@@ -31,6 +32,34 @@ export default function ProfileSettings() {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
+
+  useEffect(() => {
+    async function startup() {
+      setIsPageLoading(true);
+      await onRefresh();
+      setIsPageLoading(false);
+    }
+
+    // on startup, fetch user info
+    startup();
+  }, []);
+
+  useEffect(() => {
+    // listender for real-time updates
+    const unsubscribe = firestore()
+      .collection("users")
+      .onSnapshot(async (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+        }));
+
+        if (data) {
+          onRefresh();
+        }
+      });
+
+    return () => unsubscribe(); // cleanup listener on unmount
+  }, []);
 
   async function onRefresh() {
     // execute readUser function of currentUser
@@ -54,19 +83,6 @@ export default function ProfileSettings() {
 
     setIsRefreshing(false);
   }
-
-  useEffect(() => {
-    async function fetchUserInfo() {
-      setIsPageLoading(true);
-
-      await onRefresh();
-
-      setIsPageLoading(false);
-    }
-
-    // on startup, fetch user info
-    fetchUserInfo();
-  }, []);
 
   async function handleResendVerificationEmail() {
     // execute verification email

@@ -4,6 +4,7 @@ import {
   View,
   SafeAreaView,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import { defaultStyle, delay } from "@/constants/defaultStuff";
 import { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import { PostData, readPost } from "@/utils/postCRUD";
 import Loader from "@/components/Loader";
 import DisplayPost from "@/components/DisplayPost";
 import React from "react";
+import firestore from "@react-native-firebase/firestore";
 
 export default function Home() {
   const [imageKey, setImageKey] = useState(0);
@@ -21,15 +23,46 @@ export default function Home() {
   const [posts, setPosts] = useState<PostData[]>([]);
 
   useEffect(() => {
-    async function fetchPostInfo() {
+    async function startup() {
       setIsPageLoading(true);
-
       await onRefresh();
-
       setIsPageLoading(false);
     }
 
-    fetchPostInfo();
+    startup();
+  }, []);
+
+  useEffect(() => {
+    // listender for real-time updates
+    const unsubscribePost = firestore()
+      .collection("posts")
+      .orderBy("createdAt", "desc")
+      .onSnapshot(async (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+        }));
+
+        if (data) {
+          onRefresh();
+        }
+      });
+
+    const unsubscribeUser = firestore()
+      .collection("users")
+      .onSnapshot(async (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+        }));
+
+        if (data) {
+          onRefresh();
+        }
+      });
+
+    return () => {
+      unsubscribePost();
+      unsubscribeUser();
+    }; // cleanup listener on unmount
   }, []);
 
   async function onRefresh() {
@@ -38,11 +71,19 @@ export default function Home() {
 
     if (data) {
       // if data exists, assign user data to states
-      setPosts(data || []);
+
+      // sort posts by time, latest is first
+      const sortedData = data.sort((a, b) => {
+        const date1 = b.createdAt.seconds * 1000;
+        const date2 = a.createdAt.seconds * 1000;
+        return date1 - date2;
+      });
+
+      setPosts(sortedData || []);
+      setImageKey(imageKey + 1);
     }
 
-    await delay(1000);
-    setImageKey(imageKey + 1);
+    await delay(500);
 
     setIsRefreshing(false);
   }
@@ -73,30 +114,25 @@ export default function Home() {
               },
             ]}
           >
-            {posts
-              // sort the posts with latest being at the top
-              .sort(
-                (a, b) =>
-                  b.createdAt.seconds * 1000 - a.createdAt.seconds * 1000
-              )
-              .map((post, index) =>
-                post.author === "" || post.author === "test_user" ? null : (
-                  // if author is not empty or author is test_user, display posts
-                  <DisplayPost
-                    key={index}
-                    imageKey={imageKey}
-                    author={post.author}
-                    profilePicture={post.profilePicture}
-                    fullName={post.fullName}
-                    username={post.username}
-                    caption={post.caption}
-                    feeling={post.feeling}
-                    createdAt={post.createdAt}
-                    image={post.image}
-                    id={post.id}
-                  />
-                )
+            <FlatList
+              scrollEnabled={false}
+              data={posts}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <DisplayPost
+                  imageKey={imageKey}
+                  author={item.author}
+                  profilePicture={item.profilePicture}
+                  fullName={item.fullName}
+                  username={item.username}
+                  caption={item.caption}
+                  feeling={item.feeling}
+                  createdAt={item.createdAt}
+                  image={item.image}
+                  id={item.id}
+                />
               )}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>

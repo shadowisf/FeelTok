@@ -33,7 +33,7 @@ export default function Create() {
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
 
   useEffect(() => {
-    async function fetchUserInfo() {
+    async function startup() {
       // execute readUser function of currentUser
       const data = await readUser({ firebaseUser });
 
@@ -50,7 +50,7 @@ export default function Create() {
       await delay(500);
     }
 
-    fetchUserInfo();
+    startup();
   }, []);
 
   // check feeling and caption if they are not empty

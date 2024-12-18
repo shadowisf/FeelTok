@@ -24,6 +24,20 @@ export default function OtherProfileLayout() {
   const firebaseUser = auth().currentUser as FirebaseAuthTypes.User;
 
   useEffect(() => {
+    async function startup() {
+      // execute readUser function using dynamic uid
+      const data = await readUser({ uid });
+
+      if (data) {
+        // if data exists, assign full name to state
+        setFullName(data.fullName);
+      }
+    }
+
+    startup();
+  }, []);
+
+  useEffect(() => {
     function checkField() {
       if (reason) {
         // check if reason is not empty
@@ -36,20 +50,6 @@ export default function OtherProfileLayout() {
     checkField();
     // execute checkField function every time reason value changes
   }, [reason]);
-
-  useEffect(() => {
-    async function fetchUserInfo() {
-      // execute readUser function using dynamic uid
-      const data = await readUser({ uid });
-
-      if (data) {
-        // if data exists, assign full name to state
-        setFullName(data.fullName);
-      }
-    }
-
-    fetchUserInfo();
-  }, []);
 
   async function handleReportUser() {
     setIsLoading(true);

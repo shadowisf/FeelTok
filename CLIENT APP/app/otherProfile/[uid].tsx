@@ -5,6 +5,7 @@ import {
   View,
   SafeAreaView,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { readUser } from "@/utils/userCRUD";
@@ -30,6 +31,17 @@ export default function OtherProfile() {
   const { uid } = useLocalSearchParams<{ uid: string }>();
   // get dynamic uid from url
 
+  useEffect(() => {
+    async function startup() {
+      setIsPageLoading(true);
+      await onRefresh();
+      setIsPageLoading(false);
+    }
+
+    // on startup, execute startup
+    startup();
+  }, []);
+
   async function onRefresh() {
     // execute readUser and readPost function using dynamic uid
     const userData = await readUser({ uid });
@@ -48,7 +60,15 @@ export default function OtherProfile() {
 
     if (postData) {
       // if postData exists, assign postData to states
-      setPosts(postData || []);
+
+      // sort posts by time, latest is first
+      const sortedData = postData.sort((a, b) => {
+        const date1 = b.createdAt.seconds * 1000;
+        const date2 = a.createdAt.seconds * 1000;
+        return date1 - date2;
+      });
+
+      setPosts(sortedData || []);
       setImageKey(imageKey + 1);
     }
 
@@ -56,19 +76,6 @@ export default function OtherProfile() {
 
     setIsRefreshing(false);
   }
-
-  useEffect(() => {
-    async function fetchUserInfo() {
-      setIsPageLoading(true);
-
-      await onRefresh();
-
-      setIsPageLoading(false);
-    }
-
-    // on startup, execute fetchUserInfo
-    fetchUserInfo();
-  }, []);
 
   return (
     <>
@@ -110,30 +117,24 @@ export default function OtherProfile() {
                 <View style={styles.line} />
               </View>
 
-              <View>
-                {posts
-                  // sort the posts with latest being at the top
-                  .sort(
-                    (a, b) =>
-                      b.createdAt.seconds * 1000 - a.createdAt.seconds * 1000
-                  )
-                  .map((post, index) => (
-                    // display posts of other user
-                    <DisplayPost
-                      key={index}
-                      author={post.author}
-                      profilePicture={post.profilePicture}
-                      fullName={post.fullName}
-                      username={post.username}
-                      caption={post.caption}
-                      feeling={post.feeling}
-                      createdAt={post.createdAt}
-                      image={post.image}
-                      id={post.id}
-                      imageKey={imageKey}
-                    />
-                  ))}
-              </View>
+              <FlatList
+                scrollEnabled={false}
+                data={posts}
+                renderItem={({ item }) => (
+                  <DisplayPost
+                    imageKey={imageKey}
+                    author={item.author}
+                    profilePicture={item.profilePicture}
+                    fullName={item.fullName}
+                    username={item.username}
+                    caption={item.caption}
+                    feeling={item.feeling}
+                    createdAt={item.createdAt}
+                    image={item.image}
+                    id={item.id}
+                  />
+                )}
+              />
             </View>
           </View>
         </ScrollView>
@@ -170,10 +171,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     marginBottom: 15,
-  },
-
-  resend: {
-    color: defaultColors.primary,
-    fontWeight: "bold",
   },
 });
